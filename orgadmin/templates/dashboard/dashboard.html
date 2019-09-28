@@ -1,12 +1,105 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h1>
+{% extends "home/base.html" %}
+{% load staticfiles %}
 
-    </h1>
-  </body>
-</html>
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'dashboard/style.css' %}"/>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="sidenav">
+
+  <div class="profile-header-img">
+          <img class="img-circle" src="{% static 'dashboard/photo.jpg' %}" />
+          <div class="rank-label-container">
+              <span class="label label-default rank-label">100 puntos</span>
+          </div>
+  </div>
+
+
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#clients">Clients</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<div class="main">
+
+
+  <div style="height:5%;margin-top:1.5%">
+
+    <div style="float:left;margin-left:5%">
+      <table style="margin-top:5%;float:left">
+        <tr class="card" style="height:5em">
+          <td>
+            <div>
+              <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" height="100px" width="100px">
+            </div>
+          </td>
+          <td style="padding:5%;height:5%;width:200px;">
+            <p>No of Employees</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="float:left;margin-left:5%">
+      <table style="margin-top:5%;float:left">
+        <tr class="card" style="height:5em">
+          <td>
+            <div>
+              <img src="{% static 'dashboard/revenue.png' %}" alt="Avatar" height="100px" width="100px">
+            </div>
+          </td>
+          <td style="padding:5%;height:5%;width:200px;">
+            <p>Revenue</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="float:left;margin-left:5%">
+      <table style="margin-top:5%;float:left">
+        <tr class="card" style="height:5em">
+          <td>
+            <div>
+              <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" height="100px" width="100px">
+            </div>
+          </td>
+          <td style="padding:5%;height:5%;width:200px;">
+            <p>Complaint</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="emp_list">
+    <div class="card">
+      <div class="sec_scrollable">
+        <p style="margin-left:2%;margin-up:2%;margin-right:2%">This sidebar is of full height (100%) and always shown.</p>
+        <p style="margin-left:2%;margin-up:2%;margin-right:2%">Scroll down the page to see the result.</p>
+        <p style="margin-left:2%;margin-up:2%;margin-right:2%">Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
+        <p style="margin-left:2%;margin-up:2%;margin-right:2%">Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
+        <p style="margin-left:2%;margin-up:2%;margin-right:2%">Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="departments">
+    <div class="card" style="height:380px">
+      <center><h2>Departments</h2></center>
+      <hr>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
+{% endblock %}
