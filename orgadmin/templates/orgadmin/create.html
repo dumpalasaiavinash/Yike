@@ -9,29 +9,31 @@
 
 {% block body %}
    <h1 style="margin-left: 7% ; margin-top: 5%">Organizations created by you</h1>
-  <div class="card" style="width:10.5%;height:280px;margin-top:2%;margin-left: 5%;float: left">
-      <img src="{% static 'orgadmin/plus.png' %}" alt="Avatar"  width="200px">
+  <div class="card" style="width:10.5%;height:30%;margin-top:2%;margin-left: 5%;float: left">
+      <img src="{% static 'orgadmin/plus.png' %}" alt="Avatar"  width="90%">
       <div style="text-align: center">
           <h1> Create</h1>
       </div>
     </div>
 
-  <div class="card" style="width:10.5%;height:280px;margin-top: 2%;margin-left: 5%; float:left">
-      <img src="{% static 'orgadmin/admin.png' %}" alt="Avatar"  width="200px">
+  <div class="card" style="width:10.5%;height:30%;margin-top: 2%;margin-left: 5%; float:left">
+      <img src="{% static 'orgadmin/admin.png' %}" alt="Avatar"  width="90%">
       <div style="text-align: center">
           <h1> Org1</h1>
       </div>
-    </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    </div><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <hr>
-    <button type="button" class="btn btn-primary btn-lg" style="float: right;margin-right:13%; width:8% ">Join New Org</button>
+    <button type="button" class="btn btn-primary btn-lg" style="float: right;margin-right:13%; width:9% onclick="popupjoin()">Join</button>
 
 <h1 style="margin-left: 7% ; margin-top: 1%">Joined organizations</h1>
-  <div class="card" style="width:10.5%;height:280px;margin-top: 2%;margin-left: 5%;">
-      <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar"  width="200px">
+  <div class="card" style="width:10.5%;height:30%;margin-top: 2%;margin-left: 5%;">
+      <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar"  width="90%">
       <div style="text-align: center">
           <h1> Joined 1</h1>
       </div>
     </div>
+
+
 
 
 
