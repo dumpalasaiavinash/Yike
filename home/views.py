@@ -44,7 +44,7 @@ def home_reg(request):
         table = dynamodb.Table('users')
         response = table.scan(
             ProjectionExpression="email",
-            FilterExpression=Attr('email').eq(username)
+            FilterExpression=Attr('email').eq(email)
         )
         response1 = table.scan(ProjectionExpression="email")
         u_id=len(response1['Items'])+1
