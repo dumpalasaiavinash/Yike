@@ -5,7 +5,12 @@ from boto3.dynamodb.conditions import Key, Attr
 
 
 # Create your views here.
+
 def home(request):
+    return render(request, 'home/home.html')
+
+
+def home_log(request):
     # if request.method == 'POST':
     email = request.POST.get('email')
     password = request.POST.get('pass')
