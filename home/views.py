@@ -15,21 +15,22 @@ def home_log(request):
     email = request.POST.get('email')
     password = request.POST.get('pass')
     dynamodb = boto3.resource('dynamodb')
-
-    table = dynamodb.Table('users')
-    response = table.scan(
+    if(email != '' or password!=''):
+        table = dynamodb.Table('users')
+        response = table.scan(
         ProjectionExpression="email,password",
         FilterExpression=Attr('email').eq(email)
-    )
-    # print(response['Items'][0]['password'])
-    if(len(response['Items'])>0):
-        if(response['Items'][0]['password']==password):
-            return redirect('home:home')
+        )
+        # print(response['Items'][0]['password'])
+        if(len(response['Items'])>0):
+            if(response['Items'][0]['password']==password):
+                return redirect('home:home')
+            else:
+                return redirect('home:login')
         else:
             return redirect('home:login')
     else:
         return redirect('home:login')
-
 
 def home_reg(request):
     # if request.method == 'POST':
@@ -37,38 +38,40 @@ def home_reg(request):
     email = request.POST.get('email')
     password = request.POST.get('pass')
     re_password = request.POST.get('re_pass')
-    print(password)
-    print(re_password)
-    if(password==re_password):
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table('users')
-        response = table.scan(
-            ProjectionExpression="email",
-            FilterExpression=Attr('email').eq(email)
-        )
-        response1 = table.scan(ProjectionExpression="email")
-        u_id=len(response1['Items'])+1
-        # print('\n')
-        # print(response)
-        # print('\n')
-        # print(response1)
-
-        if(len(response['Items'])==0):
-            response = table.put_item(
-               Item={
-                'u_id': u_id,
-                'username': username,
-                'email': email,
-                'password': password,
-                }
+    # print(password)
+    # print(re_password)
+    if(username!='' or email!='' or password!='' or re_password!=''):
+        if(password==re_password):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('users')
+            response = table.scan(
+                ProjectionExpression="email",
+                FilterExpression=Attr('email').eq(email)
             )
-            return redirect('home:home')
+            response1 = table.scan(ProjectionExpression="email")
+            u_id=len(response1['Items'])+1
+            # print('\n')
+            # print(response)
+            # print('\n')
+            # print(response1)
 
+            if(len(response['Items'])==0):
+                response = table.put_item(
+                   Item={
+                    'u_id': u_id,
+                    'username': username,
+                    'email': email,
+                    'password': password,
+                    }
+                )
+                return redirect('home:home')
+
+            else:
+                return redirect('home:signup')
         else:
             return redirect('home:signup')
     else:
         return redirect('home:signup')
-
 
 
 def login(request):
