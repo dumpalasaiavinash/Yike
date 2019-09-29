@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 
@@ -21,14 +21,14 @@ def home_log(request):
         ProjectionExpression="email,password",
         FilterExpression=Attr('email').eq(email)
     )
-    print(response['Items'][0]['password'])
+    # print(response['Items'][0]['password'])
     if(len(response['Items'])>0):
         if(response['Items'][0]['password']==password):
-            return render(request, 'home/home.html')
+            return redirect('home:home')
         else:
-            return render(request, 'home/login.html')
+            return redirect('home:login')
     else:
-        return render(request, 'home/signup.html')
+        return redirect('home:login')
 
 
 def home_reg(request):
@@ -48,10 +48,10 @@ def home_reg(request):
         )
         response1 = table.scan(ProjectionExpression="email")
         u_id=len(response1['Items'])+1
-        print('\n')
-        print(response)
-        print('\n')
-        print(response1)
+        # print('\n')
+        # print(response)
+        # print('\n')
+        # print(response1)
 
         if(len(response['Items'])==0):
             response = table.put_item(
@@ -62,12 +62,12 @@ def home_reg(request):
                 'password': password,
                 }
             )
-            return render(request, 'home/home.html')
+            return redirect('home:home')
 
         else:
-            return render(request, 'home/signup.html')
+            return redirect('home:signup')
     else:
-        return render(request, 'home/signup.html')
+        return redirect('home:signup')
 
 
 
