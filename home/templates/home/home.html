@@ -1,14 +1,71 @@
 {% extends 'home/base.html' %}
 
 
+{% block extrahead %}
+
+<style>
+  .container {
+  position: relative;
+  text-align: center;
+  color: white;
+  }
+
+  .centered1 {
+  position: absolute;
+  top: 56%;
+  left: 22%;
+  transform: translate(-50%, -50%);
+  }
+
+  .centered2 {
+  position: absolute;
+  top: 56%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  }
+
+  #grad1 {
+    height: 200px;
+    background-image: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1)); /* Standard syntax (must be last) */
+  }
+
+  .button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  border-radius: 40px;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  Width: 160px;
+  }
+
+  .button2 {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+  }
+
+</style>
+{% load static %}
+{% endblock %}
+
 {% block body %}
 
-<br><br><br><br><br>
-<center>
-<div class="">
-<span style="font-size:360%;text-align:left;">YIKE</span><br>
-<span style="font-size:260%;text-align:left;">Complaints Tracking System</span>
+<br>
+
+  <img src="{% static 'home.png' %}" alt="home" style="width:1694px;height:930px;">
+  <button class='centered1 button button2'> Log In </button>
+  <button class='centered2 button button2'> Sign Up </button>
+
 </div>
-</center>
+
+
 
 {% endblock %}
