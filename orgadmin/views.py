@@ -6,3 +6,5 @@ def dashboard(request):
 
 def create(request):
     return render(request, 'orgadmin/create.html')
+def createform(request):
+    return render(request,'orgadmin/createform.html')
