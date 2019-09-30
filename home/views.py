@@ -24,7 +24,7 @@ def home_log(request):
         # print(response['Items'][0]['password'])
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
-                return redirect('home:home')
+                return redirect('orgadmin:create')
             else:
                 return redirect('home:login')
         else:
@@ -64,7 +64,7 @@ def home_reg(request):
                     'password': password,
                     }
                 )
-                return redirect('home:home')
+                return redirect('orgadmin:create')
 
             else:
                 return redirect('home:signup')

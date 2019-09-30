@@ -2,6 +2,8 @@
 from django.urls import path, include, re_path
 from . import views
 
+app_name = 'orgadmin'
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('dashboard/', views.dashboard, name='dashboard'),
