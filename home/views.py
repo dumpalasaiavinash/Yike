@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from django.contrib import sessions
 
 
 
@@ -21,9 +25,10 @@ def home_log(request):
         ProjectionExpression="email,password",
         FilterExpression=Attr('email').eq(email)
         )
-        # print(response['Items'][0]['password'])
+        print(response['Items'][0])
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
+                # request.session['email']=response['Items'][0]['email']
                 return redirect('orgadmin:create')
             else:
                 return redirect('home:login')
@@ -79,3 +84,34 @@ def login(request):
 
 def signup(request):
     return render(request, 'home/signup.html')
+
+
+
+
+
+class user_logged_in(APIView):
+    def post(self,request):
+        print(request.data)
+        for each in request.data:
+            email = each['email']
+
+        # email = request.data['email']
+        request.session['email'] = email
+        print(email)
+        return Response()
+
+    def get(self, request):
+        email=request.session['email']
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table('users')
+        response = table.scan(
+        ProjectionExpression="email,username",
+        FilterExpression=Attr('email').eq(email)
+        )
+        data = []
+        print(response['Items'][0]['username'])
+        var = {
+            'username': response['Items'][0]['username']
+        }
+        data.append(var)
+        return Response(data)

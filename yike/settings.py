@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'employee.apps.EmployeeConfig',
     'orgadmin.apps.OrgadminConfig',
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [
