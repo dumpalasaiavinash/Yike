@@ -1,29 +1,25 @@
-<!doctype html>
-<html lang="en">
+{% extends 'home/base.html' %}
 
+{% load static %}
 
-<!-- Mirrored from demo.dashboardpack.com/architectui-html-pro/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Oct 2019 05:08:14 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-<head>
+{% block extrahead %}
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Analytics Dashboard - This is an example dashboard created using build-in elements and components.</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/>
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
-
-    <!-- Disable tap highlight on IE -->
     <meta name="msapplication-tap-highlight" content="no">
 
-<link href="main.cba69814a806ecc7945a.css" rel="stylesheet"></head>
-<body>
+<link href="{% static 'dashboard/main.cba69814a806ecc7945a.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     <div class="ui-theme-settings">
-        <button type="button" id="TooltipDemo" class="btn-open-options btn btn-warning">
-            <i class="fa fa-cog fa-w-16 fa-spin fa-2x"></i>
-        </button>
         <div class="theme-settings__inner">
             <div class="scrollbar-container">
                 <div class="theme-settings__options-wrapper">
@@ -190,25 +186,6 @@
                     </h3>
                     <div class="p-3">
                         <ul class="list-group">
-                            <!--<li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="switch has-switch" data-on-label="ON" data-off-label="OFF">
-                                                <div class="switch-animate switch-off">
-                                                    <input type="checkbox" data-toggle="toggle" data-onstyle="success">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Sidebar Background Image
-                                            </div>
-                                            <div class="widget-subheading">Enable background images for sidebar!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>-->
                             <li class="list-group-item">
                                 <h5 class="pb-2">Choose Color Scheme
                                 </h5>
@@ -289,88 +266,6 @@
                                     </div>
                                 </div>
                             </li>
-                            <!--<li class="theme-settings-swatches d-none list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Background Opacity
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-right">
-                                            <div role="group" class="btn-group-sm btn-group">
-                                                <button type="button" class="btn-shadow opacity-3 active btn btn-primary">4%
-                                                </button>
-                                                <button type="button" class="btn-shadow opacity-4 btn btn-primary">6%
-                                                </button>
-                                                <button type="button" class="btn-shadow opacity-5 btn btn-primary">8%
-                                                </button>
-                                                <button type="button" class="btn-shadow opacity-6 btn btn-primary">10%
-                                                </button>
-                                                <button type="button" class="btn-shadow opacity-7 btn btn-primary">15%
-                                                </button>
-                                                <button type="button" class="btn-shadow opacity-8 btn btn-primary">20%
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>-->
-                            <!--<li class="theme-settings-swatches d-none list-group-item">
-                                <h5>Sidebar Image Background
-                                </h5>
-                                <div class="divider">
-                                </div>
-                                <div class="swatch-holder swatch-holder-img active">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/city1.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/city2.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/city3.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/city4.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/city5.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/abstract1.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/abstract2.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/abstract3.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/abstract4.jpg">
-                                    </a>
-                                </div>
-                                <div class="swatch-holder swatch-holder-img">
-                                    <a class="img-holder switch-trigger">
-                                        <img alt=" " src="assets/images/sidebar/abstract5.jpg">
-                                    </a>
-                                </div>
-                            </li>-->
                         </ul>
                     </div>
                     <h3 class="themeoptions-heading">
@@ -380,44 +275,6 @@
                     </h3>
                     <div class="p-3">
                         <ul class="list-group">
-                            <!--<li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="switch has-switch" data-on-label="ON" data-off-label="OFF">
-                                                <div class="switch-animate switch-on">
-                                                    <input type="checkbox" data-toggle="toggle" data-onstyle="success">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Page Title Icon
-                                            </div>
-                                            <div class="widget-subheading">Enable the icon box for page titles!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="switch has-switch" data-on-label="ON" data-off-label="OFF">
-                                                <div class="switch-animate switch-on">
-                                                    <input type="checkbox" data-toggle="toggle" data-onstyle="success">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Page Title Description
-                                            </div>
-                                            <div class="widget-subheading">Enable the description below page title!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>-->
                             <li class="list-group-item">
                                 <h5 class="pb-2">Page Section Tabs
                                 </h5>
@@ -704,9 +561,6 @@
                                     <i class="header-icon lnr-charts icon-gradient bg-happy-green"> </i>
                                     Portfolio Performance
                                 </div>
-                                <div class="btn-actions-pane-right text-capitalize">
-                                    <button class="btn-wide btn-outline-2x mr-md-2 btn btn-outline-focus btn-sm">View All</button>
-                                </div>
                             </div>
                             <div class="no-gutters row">
                                 <div class="col-sm-6 col-md-4 col-xl-4">
@@ -774,7 +628,6 @@
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Easy Dynamic Tables</div>
                                 <div class="btn-actions-pane-right actions-icon-btn">
                                     <div class="btn-group dropdown">
-                                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-icon btn-icon-only btn btn-link"><i class="pe-7s-menu btn-icon-wrapper"></i></button>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-right rm-pointers dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu"><h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-inbox"> </i><span>Menus</span></button>
                                             <button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-file-empty"> </i><span>Settings</span></button>
@@ -1659,7 +1512,8 @@
             </div>
     </div>
 </div>
-<div class="app-drawer-overlay d-none animated fadeIn"></div><script type="text/javascript" src="assets/scripts/main.cba69814a806ecc7945a.js"></script></body>
+<div class="app-drawer-overlay d-none animated fadeIn"></div>
+<script type="text/javascript" src=" {% static 'dashboard/main.cba69814a806ecc7945a.js' %}"></script>
+{% endblock %}
 
-<!-- Mirrored from demo.dashboardpack.com/architectui-html-pro/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Oct 2019 05:09:01 GMT -->
-</html>
+
