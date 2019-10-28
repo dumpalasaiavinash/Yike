@@ -28,7 +28,7 @@ def home_log(request):
         print(response['Items'][0])
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
-                # request.session['email']=response['Items'][0]['email']
+                request.session['email']=response['Items'][0]['email']
                 return redirect('orgadmin:create')
             else:
                 return redirect('home:login')
@@ -67,6 +67,9 @@ def home_reg(request):
                     'username': username,
                     'email': email,
                     'password': password,
+                    'organizations_created':[101],
+                    'organizations_joined':[102],
+
                     }
                 )
                 return redirect('orgadmin:create')

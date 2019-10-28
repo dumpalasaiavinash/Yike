@@ -1,0 +1,50 @@
+{% extends 'home/base2.html' %}
+{% load static %}
+
+{% block extrahead %}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<style>
+.contain {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+<div style="margin-top:10%">
+    {% if topics_created_size > 0 %}
+        {% for i, j in topics_created %}
+                <div class="contain">
+                      <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.4;" href="{%  %}">
+                        <div class="centered" style="color:black">{{i}}</div>
+
+                </div>
+        {% endfor %}
+        {% endif %}
+</div>
+
+
+
+
+
+
+
+{% endblock %}
