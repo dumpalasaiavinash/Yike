@@ -29,7 +29,7 @@ def home_log(request):
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
                 request.session['email']=response['Items'][0]['email']
-                return redirect('orgadmin:create')
+                return redirect('orgadmin:departments')
             else:
                 return redirect('home:login')
         else:

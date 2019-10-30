@@ -94,3 +94,7 @@ def create(request):
 
 def createform(request):
     return render(request,'orgadmin/createform.html')
+
+
+def departments(request):
+    return render(request,'orgadmin/departments.html')    
