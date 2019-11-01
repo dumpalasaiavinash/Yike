@@ -1,0 +1,90 @@
+{%load static%}
+ <!doctype html>
+ <html>
+  <head>
+    <style>
+      #d10{background-color: #f5f7ff;color:black;height: 100px;width:95%;padding: 10px; font-size: 50px ;border-radius:25px;margin-top:10px}
+      #d10:hover{background-image: url("background.jpg");;color:#000000;width:99%}
+      #d1{background-image: url("{%static 'background.jpg'%}");color: black;height: 100px;width: 99%;padding: 10px; font-size: 80px}
+      #d2{float:left;width:80px;border-radius:80px;overflow: hidden; height: 80px; margin:10px}
+      #img{width:80px;height: 80px}
+      #d3{font-size:30px}
+      #id_recid{width:100%;border-radius:10px;font-size:30px;padding:10px 15px}
+      #btn1{width:100%;padding:10px 2px;font-size:30px;border-radius:10px}
+      #btn1:hover{background-color:red;color:ffffff}
+      #div_hidden{postion:fixed;left:0px;bottom:0px}
+      .table1{width:100%;padding:0.2%;}
+    </style>
+  </head>
+  <body>
+    <div id="d1">
+      <div id="d2">
+          <img src="{%static user_data.0.dp|slice:'7::' %}" alt="" id="img">
+     </div>
+     {{user_data.0.fname}} {{user_data.0.lname}}
+    </div>
+    {% for doc in doctor_list%}
+      <form id="{{doc.0}}" method="POST" action="/chat/chatbox/">
+        <div id="d10" onclick="document.getElementById('{{doc.0}}').submit();">
+          <div id="d2"><input type="hidden" value="{{doc.0}}" name="rec">
+          {% csrf_token %}
+          <img src="{%static doc.2|slice:'7::'%}" id="img" alt=""></div>
+          <div>{{doc.1}}<div id="d3">msg</div></div>
+       </div>
+    </form>
+
+       {%endfor%}
+
+
+<div style="width:100px;position:fixed; right:30px;bottom:30px;height:100px;" id='div_add'><button style="width:100%; height:100px; font-size:50px ; border-radius:50px" onclick='a()'>+</button></div>
+<div style="width:100%;;background-image: url('{%static 'background.jpg'%}');display:none" id='div_hidden' >
+<table class='table1'>
+<tr>
+<td colspan='2'>
+<iframe src='/chat/addnew/' id='iframe1' onload="c()"" alt='No user Found' style="width:100%;scrolling:'no';height:30px;background-color:#ffffff"></iframe>
+<input type='text' name='recid' id='id_recid' onkeyup="b()"></td>
+</tr>
+</table>
+
+</div>
+<script>
+function a(){
+  document.getElementById('div_add').style.display='none';
+  var avar=document.getElementById('div_hidden');
+  avar.style.display='inline-block';
+  avar.style.position='fixed'
+  avar.style.bottom='0px'
+  }
+function b(){
+avar=document.getElementById('iframe1');
+avar.src='/chat/addnew/?usearch='+document.getElementById('id_recid').value;
+}
+function c(){
+avar=document.getElementById('iframe1');
+avar.style.height="0px";
+avar.style.height=avar.contentWindow.document.body.scrollHeight+"px";
+}
+
+var chatSocket = new WebSocket( 'ws://' + window.location.host + '/chat/chatbox/');
+chatSocket.onmessage=function(e){
+  document.getElementById('d3').innerHTML=e.data
+  console.log('messages',e)
+
+}
+chatSocket.onopen=function(e){
+  console.log('open',e)
+
+}
+chatSocket.onclose=function(e){
+  console.log('close',e)
+
+}
+chatSocket.onerror=function(e){
+  console.log('error',e)
+
+}
+
+</script>
+
+  </body>
+ </html>
