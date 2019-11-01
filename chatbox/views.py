@@ -91,9 +91,10 @@ def getContacts(email):
     table = dynamodb.Table('lastmessage')
     response = table.scan(
         ProjectionExpression="sender,reciver",
-        FilterExpression=Attr('sender').eq(email) or Attr('sender').eq(email)
+        FilterExpression=Attr('sender').eq(email) or Attr('reciver').eq(email)
     )
     data = response['Items']
+    print(data)
     contacts= []
     for datum in data:
         if datum['sender']==email:
@@ -145,25 +146,40 @@ def send(sender,reciver,msg):
 def getContactdetails(contacts):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('users')
-    response  = table.scan(
-        ProjectionExpression="username,email",
-        FilterExpression=Attr('email').is_in(contacts)
-    )
-    return response['Items']
+    if(len(contacts)>0):
+        response  = table.scan(
+            ProjectionExpression="username,email",
+            FilterExpression=Attr('email').is_in(contacts)
+        )
+        return response['Items'] 
+    return contacts
 
 def preview(req):
     return render(req,'Chatbox/chatui.html')
 
 
 def recents(req):
+    contactsdetails=[]
+    messages = []
     if ('email' in req.session):
         email=req.session['email']
+        print(email)
         if(userisvalid(email)):
             username = getUserName(email)
             contacts = getContacts(email)
+            print(contacts)
+            messages = getLastMessageList(email,contacts)
             contactsdetails = getContactdetails(contacts)
-            print(contactsdetails)
-            return render(req,'Chatbox/recentchatui.html',{'contacts':contactsdetails})
+            j=0
+            recents=[]
+            for contact in contactsdetails : 
+                recents.append([contact,messages[j]])
+                j+=1
+
+            print(recents)
+            return render(req,'Chatbox/recentchatui.html',{'recents':recents})
+        return HttpResponseRedirect('/login/')
+    return HttpResponseRedirect('/login/')
 
 def mesgs(req):
     return render(req,'Chatbox/mesgs.html')
@@ -175,3 +191,17 @@ def getMessageList(email,person):
         FilterExpression = (Attr('sender').eq(email) and Attr('reciver').eq(person)) or (Attr('reciver').eq(email) and Attr('sender').eq(person))
     )
     return response['Items']
+
+def getLastMessageList(email,person):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('lastmessage')
+    if len(person) > 0 :
+        response = table.scan(
+            FilterExpression = (Attr('sender').eq(email) and Attr('reciver').is_in(person)) or (Attr('reciver').eq(email) and Attr('sender').is_in(person))
+        )
+        mesgs = response['Items']
+        for msg in mesgs:
+            if len(msg['messages']) > 110 : 
+                msg['messages'] = msg['messages'][:105]+"....."
+        return mesgs
+    return []
