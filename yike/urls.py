@@ -20,6 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('orgadmin/', include('orgadmin.urls')),
-
+    path('chat/',include('chatbox.urls'))
 
 ]

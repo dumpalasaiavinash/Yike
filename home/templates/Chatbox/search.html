@@ -1,0 +1,35 @@
+{%load static %}
+<html>
+<head>
+<style>
+#d10{background-color: #f5f7ff;color:black;height:40px;width:100%;font-size: 30px ;border-radius:25px;}
+#d10:hover{background-image: url("{%static 'background.jpg'%}");;color:#000000;width:99%}
+#img{width:40px;height: 40px}
+#d2{float:left;width:40px;border-radius:40px;overflow: hidden; height: 40px}
+.form{margin-bottom:0px}
+</style>
+<base target='_parent'>
+</head>
+
+<body>
+{%if User%}
+<table style="width:100%">
+  {% for u in User%}
+    <tr>
+    <td style='width:100%;margin-bottom:0px'>
+    <form id="{{u.uid}}" method="POST" action="/chat/addnew/" class='form'>
+      <div id="d10" onclick="document.getElementById('{{u.uid}}').submit();">
+        <div id="d2"> {% csrf_token %}<input type="hidden" value="{{u.uid}}" name="rec">
+        <img src="{%static u.dp|slice:'7::'%}" id="img"></div>
+        <div>{{u.fname}}</div>
+     </div>
+  </form>
+  </td>
+    </tr>
+  {%endfor%}
+  </table>
+{%elif b%}
+   <h6> No user Found </h6>
+{%endif%}
+</body>
+</html>

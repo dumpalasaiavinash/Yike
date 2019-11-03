@@ -1,0 +1,84 @@
+{%load static%}
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+<style>
+
+#sp1{background-color:blue;color:white ;font-size:40px ;float:left; padding:15px;border-radius:10px}
+#sp2{background-color:white;color:blue;font-size:40px;float:right; text-align:right; padding:15px;border-radius:10px}
+body{background-image: url("{% static 'msgback.jpg' %}");background-repeat: no-repeat;background-size: cover;}
+#d2{float:left;width:100%}
+#img1{width:20%}
+</style>
+</head>
+<body>
+<div id='msg'>
+<table style='width:100%' id='t1'>
+	{%for a in msg_list%}
+  <tr><td style ='width:50%'>
+    {%if a.suid == uid%}
+		  <ul type='none'>
+		{% if a.imgmsg %}
+
+        <div id='sp1'><li><img src="{% static a.imgmsg|slice:'7::'%}" id='img1'></li>
+			{%endif%}
+        <li><div id='sp1'> {{a.msg}} </div></li></ul>
+    {%endif%}
+    {%if a.ruid == uid%}
+    <ul type='none'>
+		{% if a.imgmsg %}
+      <div id='sp2'><li><img src="{% static a.imgmsg|slice:'7::'%}" id='img1'>
+		{%endif%}
+      </li><div id='sp2'> {{a.msg}} </div></li></ul>
+    {%endif%}
+    </td</tr>
+  {%endfor%}
+</div>
+</body>
+<script>
+
+var chatSocket = new ReconnectingWebSocket( 'ws://' + window.location.host + '/chat/chat/');
+
+chatSocket.onmessage=function(e){
+	var msgData=JSON.parse(e.data)
+	if(msgData.message){
+	var uid='{{uid}}'
+	var table=document.getElementById('t1')
+	var row = table.insertRow(0)
+	var cell1 = row.insertCell(0)
+	if(uid==msgData.reciver){
+		if(msgData.imgmsg){
+			var dp=msgData.imgmsg
+			var htdata=" <ul type='none'><div id='sp2'><li><img src='/static/"+dp+"'</li><li> "+msgData.message+" </div></li></ul>"
+		}
+		else{
+			var htdata=" <ul type='none'><li><div id='sp2'> "+msgData.message+" </div></li></ul>"
+		}
+  cell1.innerHTML=htdata
+}
+else{
+if(msgData.imgmsg){
+	var dp =msgData.imgmsg
+	var htdata=" <ul type='none'><div id='sp1'><li><img src='/static/"+dp+"'</li><li> "+msgData.message+" </div></li></ul>"
+}
+else{
+	var htdata=" <ul type='none'><li><div id='sp1'> "+msgData.message+" </div></li></ul>"
+}
+cell1.innerHTML=htdata
+}
+}
+
+}
+chatSocket.onopen=function(e){
+	console.log('open',e)
+}
+chatSocket.onclose=function(e){
+  console.log('close',e)
+
+}
+chatSocket.onerror=function(e){
+  console.log('error',e)
+
+}
+</script>
+</html>

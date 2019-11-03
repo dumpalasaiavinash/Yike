@@ -16,6 +16,7 @@ def home(request):
 
 def home_log(request):
     # if request.method == 'POST':
+
     email = request.POST.get('email')
     password = request.POST.get('pass')
     dynamodb = boto3.resource('dynamodb')
@@ -29,7 +30,7 @@ def home_log(request):
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
                 request.session['email']=response['Items'][0]['email']
-                return redirect('orgadmin:create')
+                return redirect('orgadmin:departments')
             else:
                 return redirect('home:login')
         else:
@@ -43,9 +44,8 @@ def home_reg(request):
     email = request.POST.get('email')
     password = request.POST.get('pass')
     re_password = request.POST.get('re_pass')
-    # print(password)
-    # print(re_password)
-    if(username!='' or email!='' or password!='' or re_password!=''):
+
+    if(username!='' and email!='' and password!='' and re_password!=''):
         if(password==re_password):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('users')
@@ -53,17 +53,10 @@ def home_reg(request):
                 ProjectionExpression="email",
                 FilterExpression=Attr('email').eq(email)
             )
-            response1 = table.scan(ProjectionExpression="email")
-            u_id=len(response1['Items'])+1
-            # print('\n')
-            # print(response)
-            # print('\n')
-            # print(response1)
 
             if(len(response['Items'])==0):
                 response = table.put_item(
                    Item={
-                    'u_id': u_id,
                     'username': username,
                     'email': email,
                     'password': password,
@@ -72,7 +65,7 @@ def home_reg(request):
 
                     }
                 )
-                return redirect('orgadmin:create')
+                return redirect('orgadmin:departments')
 
             else:
                 return redirect('home:signup')
@@ -89,16 +82,12 @@ def signup(request):
     return render(request, 'home/signup.html')
 
 
-
-
-
 class user_logged_in(APIView):
     def post(self,request):
         print(request.data)
         for each in request.data:
             email = each['email']
 
-        # email = request.data['email']
         request.session['email'] = email
         print(email)
         return Response()
