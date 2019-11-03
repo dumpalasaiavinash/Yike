@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="{% static 'orgadmin/dummy.css' %}"/>
+<!--<link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/dummy.css' %}">-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
@@ -21,7 +21,7 @@
   border-radius: 10px;
   margin-bottom: 3%;
 	margin-left: 3%;
-	
+
 }
 .card1 {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -30,12 +30,38 @@
   border-radius: 10px;
   margin-bottom: 3%;
 	margin-left: 3%;
-	
+
 }
 .centered {
   margin-left: 6%;
- 
+
 }
+a.button{
+display:inline-block;
+padding:0.3em 1.2em;
+margin:0 0.3em 0.3em 0;
+border-radius:7%;
+box-sizing: border-box;
+text-decoration:none;
+font-family:'Roboto',sans-serif;
+font-weight:300;
+color:#FFFFFF;
+background-color:#0055b4;
+text-align:center;
+transition: all 0.2s;
+width:11.5%
+}
+a.button:hover{
+  color:#000000;
+  background-color:#3377ff;
+}
+@media all and (max-width:30em){
+ a.button{
+display:block;
+margin:0.2em auto;
+ }
+}
+
 
 
 
@@ -51,8 +77,8 @@
       <td style="width: 50%;">
         <h2 style="margin-left:4%;" >Organization's Joined</h2>
       </td>
-      <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-          <a href="something" class="button">Button</a>
+      <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+          <a href="something" class="button">Create</a>
       </td>
     </tr>
   </table> <br>
@@ -66,7 +92,7 @@
                 </div>
         {% endfor %}
         {% endif %}<br><br><br><br><br><br><br><br><br><br>
-        
+
 <div>
     <div style="margin-top:5%;" >
         <table style="width: 100%;">
@@ -75,8 +101,8 @@
                   <h2 style="margin-left:4%;position: absolute;" >Organization's Created</h2>
               </td>
               <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-                  <a href="something" class="button">create</a>
-                    </button>
+                  <a href="something" class="button">Join</a>
+
                   </div>
               </td>
             </tr>
@@ -84,7 +110,7 @@
      <br> <br><br><br><br>
         {% if topics_size > 0 %}
             {% for i, j in topics %}
-                    <div class="card1" style="float:left;"> 
+                    <div class="card1" style="float:left;">
                         <div>  <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.8;" >
                         </div>
                     <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
