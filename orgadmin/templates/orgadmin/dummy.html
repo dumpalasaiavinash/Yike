@@ -71,7 +71,7 @@ margin:0.2em auto;
 
 {% block body %}
 
-<div style="margin-top:5%;width:100%;position:relative;" >
+<div style="margin-top:5% ;width:100%;position:relative;" >
   <table style="width: 100%;">
     <tr>
       <td style="width: 50%;">
@@ -85,7 +85,7 @@ margin:0.2em auto;
     {% if topics_created_size > 0 %}
         {% for i, j in topics_created %}
                 <div class="card" style="float: left;">
-                    <div>  <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.8;" >
+                    <div>  <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" style="opacity:0.8;" >
                     </div>
                 <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
                   </div>
@@ -111,7 +111,7 @@ margin:0.2em auto;
         {% if topics_size > 0 %}
             {% for i, j in topics %}
                     <div class="card1" style="float:left;">
-                        <div>  <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.8;" >
+                        <div>  <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" style="opacity:0.8;" >
                         </div>
                     <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
                       </div>
