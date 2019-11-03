@@ -27,9 +27,16 @@
     <button id="zoom_out">
         Zoom Out
     </button>
+    <button id="back">
+        Back
+    </button>
+    <button id="changename">
+        Change name
+    </button>
     <div class="section">
         Information Panel
     </div>
+
     <div id="information_panel">
 
     </div>
@@ -39,6 +46,11 @@
 </div>
 <div id="main">
     <canvas id="canvas"></canvas>
+</div>
+
+
+<div>
+  <p id='nodes'>  </p>
 </div>
 
 <script>
@@ -562,6 +574,9 @@ function initialize() {
         remove_node = document.getElementById("remove_node"),
         zoom_in = document.getElementById("zoom_in"),
         zoom_out = document.getElementById("zoom_out");
+        back = document.getElementById("back");
+        changename = document.getElementById('changename')
+
 
     canvas.addEventListener("click", function (event) {
         var x = event.pageX - canvas.offsetLeft,
@@ -624,9 +639,27 @@ function initialize() {
         TREE.clear(context);
         TREE.draw(context, tree);
     }, false);
+
+    back.addEventListener('click', function (event) {
+        nodes = TREE.getNodeList(tree);
+        // document.getElementById('nodes').innerHTML=nodes
+        console.log(nodes)
+    }, false);
+
+
+
+    changename.addEventListener('click', function (event) {
+      var name = prompt("Please enter the name");
+      currNode.text=name
+      TREE.clear(context);
+      nodes = TREE.getNodeList(tree);
+      TREE.draw(context, tree);
+  }, false);
+
+
+
     context.canvas.width = document.getElementById("main").offsetWidth;
     context.canvas.height = document.getElementById("main").offsetHeight;
-    populateDummyData(tree);
     nodes = TREE.getNodeList(tree);
     TREE.draw(context, tree);
     maintree = tree;
