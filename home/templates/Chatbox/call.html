@@ -1,0 +1,218 @@
+{%load static%}
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+  <style>
+  body{background-image:url("{% static 'background2.jpeg' %}");
+  background-repeat: repeat;
+  background-size:100%
+  }
+  #d2{
+    margin-left:25%;
+    margin-right:25%;
+    width:50%;
+    margin-top: 100px;
+  }
+  #d3{
+    margin-left:25%;margin-right: 25%;
+    overflow:hidden;border-radius: 50px;
+  }
+  #img1{
+    width:100%
+  }
+  #btn1{width:20%; padding:10px;border-radius:11px;font-size:30px;color:red;background-color: white;margin-right:20%;display:none ;margin-left:10%}
+  #btn1:hover{color: white;background-color: green;}
+  #btn2{width:20%; padding:10px;border-radius:11px;font-size:30px;color:red;background-color: white;margin-left:20%;display:none}
+  #btn2:hover{color: white;background-color: red;}
+  #btn1_5{width:40%; padding:10px;border-radius:11px;font-size:30px;color:red;background-color: white;margin-left:30%}
+  #btn1_5:hover{color:green}
+  #sp1{display:none}
+  </style>
+</head>
+<body>
+  <div id='d2'>
+    <div id='d3'>
+      <img src="{%static dp.dp|slice:'7::'%}" id='img1'>
+    </div>
+    <br>
+  <span id='sp1'>Caling.......</span>
+  <br>
+  <button id='btn1' onclick="Accpt()">Accept</button>
+  <button id='btn1_5' onclick="callD()">Call</button>
+  <button id='btn2' onclick="rejectC()">Decline</button>
+  </div>
+<div id='A'></div>
+<div id='B'></div>
+<script>
+let t=0
+var uid='{{dp.uid}}'
+var callSocket = new ReconnectingWebSocket( 'ws://' + window.location.host + '/chat/call/');
+function callD(){
+  var callD_data={
+    'action':'call'
+  }
+  callSocket.send(JSON.stringify(callD_data));
+}
+function Accpt(){
+  var callD_data={
+    'action':'accept'
+  }
+  callSocket.send(JSON.stringify(callD_data));
+  recordStop()
+  document.getElementById('btn1').style.display="none";
+  document.getElementById('btn2').style.marginLeft='40%';
+  document.getElementById('btn1_5').style.display='none';
+
+}
+function rejectC(){
+  var callD_data={
+    'action':'reject'
+  }
+  callSocket.send(JSON.stringify(callD_data));
+  recordStop()
+  document.getElementById('btn1').style.display="none";
+  document.getElementById('btn2').style.display='none';
+  document.getElementById('btn1_5').style.display='inline-block';
+  t=0
+}
+const recordAudio = () =>
+  new Promise(async resolve => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
+
+
+    mediaRecorder.addEventListener("dataavailable", event => {
+      console.log(event.data)
+      audioChunks.push(event.data);
+      callSocket.send(event.data)
+    });
+    mediaRecorder.addEventListener("start", event => {
+
+    mediaRecorder.requestData()
+    });
+
+    mediaRecorder.addEventListener("stop", event => {myStopFunction()
+
+    });
+
+
+
+
+
+
+
+
+    const start = () => mediaRecorder.start('0.1');
+
+    const stop = () =>
+      new Promise(resolve => {
+        mediaRecorder.addEventListener("stop", () => {
+          const audioBlob = new Blob(audioChunks);
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new Audio(audioUrl);
+          const play = () => audio.play();
+          resolve({ audioBlob, audioUrl, play });
+        });
+
+        mediaRecorder.stop();
+
+      });
+
+    resolve({ start, stop });
+
+var da=setInterval(function(){
+      if(mediaRecorder){var blob=mediaRecorder.requestData()}},600)
+
+      function myStopFunction() {
+            clearInterval(da);
+        }
+  });
+
+let recorder = null;
+let audio = null;
+
+const recordStop = async () => {
+  if (recorder) {
+    audio = await recorder.stop();
+    recorder = null;
+  } else {
+    console.log('recorder')
+    recorder = await recordAudio();
+    recorder.start();
+  }
+};
+
+const playAudio = () => {
+  if (audio && typeof audio.play === "function") {
+    audio.play();
+  }
+};
+console.log('A')
+let b1=''
+let c1=''
+let c2=''
+let c3=''
+let c4=''
+callSocket.onmessage=async function(e){
+
+  if(typeof e.data=='string'){
+  var actnData=JSON.parse(e.data)
+  if(actnData.action){
+    switch(actnData.action){
+        case 'incoming':document.getElementById('btn1').style.display='inline-block';
+                    document.getElementById('btn1_5').style.display='none';
+                    document.getElementById('btn2').style.display='inline-block';
+
+                    break;
+        case 'outgoing':recordStop()
+              document.getElementById('btn2').style.display='inline-block';
+              document.getElementById('btn2').style.marginLeft='40%';
+              document.getElementById('btn1_5').style.display='none';
+              break;
+        case 'dicline':recordStop()
+                    document.getElementById('btn1').style.display='none';
+                    document.getElementById('btn1_5').style.display='incline-block';
+                    document.getElementById('btn2').style.display='none';
+
+
+    }
+
+  }
+}else{
+console.log(t)
+var achunk=[]
+  if(t==0){
+    b1=e.data
+    t=1
+  }
+  else{
+
+    achunk.push(b1)
+    achunk.push(c1)
+    achunk.push(c2)
+    achunk.push(e.data)
+    c1=c2
+    c2=e.data
+
+  var blob = new Blob(achunk, {type: "audio/ogg"});
+
+  var url = URL.createObjectURL(blob);
+  document.getElementById('B').innerHTML=url
+  t++
+  document.getElementById('A').innerHTML="<audio autoplay id='D'><source src='"+url+"' type='audio/ogg'></audio><h2> reciving "+t+" </h2>";
+}}
+}
+</script>
+</body>
+
+
+
+
+
+
+
+
+
+
+</html>

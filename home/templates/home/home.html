@@ -64,9 +64,9 @@
 
 {% block body %}
 
-<br><br><br><br><br><br><br><br>
+<div style="margin-top:5%">
 
-  <img src="{% static 'home/home.png' %}" alt="home" style="width:1694px;height:800px;">
+  <img src="{% static 'home/home.png' %}" alt="home" style="width:100%;height:80%;">
   <a href={% url 'home:login' %}><button class='centered1 button button2'> Log In </button></a>
   <a href={% url 'home:signup' %}><button class='centered2 button button2'> Sign Up </button></a>
 
