@@ -8,5 +8,6 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('create/',views.create, name='create'),
-    path('createform/',views.createform, name='createform')
+    path('createform/',views.createform, name='createform'),
+    path('form/',views.form,name='form'),
 ]
