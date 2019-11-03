@@ -4,22 +4,24 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/css/main2.css' %}"/>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
 {% endblock %}
 
 {% block body %}
 <body onload="initialize()">
-<div id="header">
-    Family Name
-</div>
+
 <div id="control_panel">
     <div class="section">
-        Control Panel
-    </div>
+Operations    </div>
     <button id="add_child">
-        Add Child
+        Add hierarchy
     </button>
     <button id="remove_node">
-        Remove Node
+        Del hierarchy
     </button>
     <button id="zoom_in">
         Zoom In
@@ -28,29 +30,24 @@
         Zoom Out
     </button>
     <button id="back">
-        Back
+      Change name
     </button>
     <button id="changename">
-        Change name
+      Save
     </button>
     <div class="section">
-        Information Panel
-    </div>
+    Information
+</div>
+<div id="information_panel">
 
-    <div id="information_panel">
+</div>
 
-    </div>
 </div>
 <div id="divider">
 
 </div>
 <div id="main">
     <canvas id="canvas"></canvas>
-</div>
-
-
-<div>
-  <p id='nodes'>  </p>
 </div>
 
 <script>
@@ -668,10 +665,8 @@ function initialize() {
 function updatePage(tree) {
     var info_panel = document.getElementById("information_panel");
     var header = document.getElementById("header");
-    header.innerHTML = "Targaryen Family";
     var info_panel_html = "<ul>";
     info_panel_html += "<li>First Name: " +tree.text +"</li>";
-    info_panel_html += "<li>Last Name: " +"Targaryen" +"</li>";
     info_panel_html += "</ul>";
     info_panel.innerHTML = info_panel_html;
 }

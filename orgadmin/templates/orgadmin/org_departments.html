@@ -1,0 +1,44 @@
+{% load static %}
+{% block extrahead %}
+
+<meta charset="UTF-8">
+<title>Title</title>
+
+<!--Google Fonts	-->
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Oswald" rel="stylesheet">
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block body %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<!-- Main Content -->
+<!-- Search Bar -->
+<div class="container">
+<div class="row">
+  <p style="font-family: Josefin Sans;font-size:45px">Departments in your organizations</p>
+</div>
+    <br>
+    <div class="card-body row no-gutters align-items-center">
+      <form method="post" >
+        {% csrf_token %}
+      <div class="col-sm-8 input-group dropdown" style="width: 700px;">
+                    <select class="form-control select2 dropdown-toggle" name="doct" value=" " >
+                      {%for i in dep %}
+                        <a href="{% url 'orgadmin:hierarchy' 'i.1' %}">
+                          <option style="width: 700px;"> {{i.0}} </option>
+                        </a>
+                      {%endfor%}
+                    </select>
+      </div>
+      <br>
+    </form>
+    </div>
+    <br><br><br>
+    <br><br><br><br><br><br><br><br>
+
+</div>
+{% endblock %}
