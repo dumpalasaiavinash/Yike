@@ -32,7 +32,7 @@ def home_log(request):
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
                 request.session['email']=response['Items'][0]['email']
-                return redirect('orgadmin:create')
+                return redirect('orgadmin:departments')
             else:
                 return redirect('home:login')
         else:
@@ -56,8 +56,6 @@ def home_reg(request):
                 ProjectionExpression="email",
                 FilterExpression=Attr('email').eq(email)
             )
-            response1 = table.scan(ProjectionExpression="email")
-            u_id=len(response1['Items'])+1
             # print('\n')
             # print(response)
             # print('\n')
@@ -66,7 +64,6 @@ def home_reg(request):
             if(len(response['Items'])==0):
                 response = table.put_item(
                    Item={
-                    'u_id': u_id,
                     'username': username,
                     'email': email,
                     'password': password,
@@ -75,7 +72,7 @@ def home_reg(request):
 
                     }
                 )
-                return redirect('orgadmin:create')
+                return redirect('orgadmin:departments')
 
             else:
                 return redirect('home:signup')
