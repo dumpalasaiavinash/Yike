@@ -6,22 +6,38 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'orgadmin/dummy.css' %}"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
+
 <style>
-.contain {
-  position: relative;
-  text-align: center;
-  color: white;
+
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 15%;
+  border-radius: 10px;
+  margin-bottom: 3%;
+	margin-left: 3%;
+	
+}
+.card1 {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 15%;
+  border-radius: 10px;
+  margin-bottom: 3%;
+	margin-left: 3%;
+	
+}
+.centered {
+  margin-left: 6%;
+ 
 }
 
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+
 
 </style>
 {% endblock %}
@@ -29,21 +45,55 @@
 
 {% block body %}
 
-<div style="margin-top:10%">
+<div style="margin-top:5%;width:100%;position:relative;" >
+  <table style="width: 100%;">
+    <tr>
+      <td style="width: 50%;">
+        <h2 style="margin-left:4%;" >Organization's Joined</h2>
+      </td>
+      <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+          <a href="something" class="button">Button</a>
+      </td>
+    </tr>
+  </table> <br>
     {% if topics_created_size > 0 %}
         {% for i, j in topics_created %}
-                <div class="contain">
-                      <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.4;" href="{%  %}">
-                        <div class="centered" style="color:black">{{i}}</div>
-
+                <div class="card" style="float: left;">
+                    <div>  <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.8;" >
+                    </div>
+                <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
+                  </div>
                 </div>
         {% endfor %}
-        {% endif %}
+        {% endif %}<br><br><br><br><br><br><br><br><br><br>
+        
+<div>
+    <div style="margin-top:5%;" >
+        <table style="width: 100%;">
+            <tr>
+              <td style="width: 50%;">
+                  <h2 style="margin-left:4%;position: absolute;" >Organization's Created</h2>
+              </td>
+              <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+                  <a href="something" class="button">create</a>
+                    </button>
+                  </div>
+              </td>
+            </tr>
+          </table> <br>
+     <br> <br><br><br><br>
+        {% if topics_size > 0 %}
+            {% for i, j in topics %}
+                    <div class="card1" style="float:left;"> 
+                        <div>  <img src="{% static 'dashboard/employee.jpg' %}" alt="Avatar" style="opacity:0.8;" >
+                        </div>
+                    <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
+                      </div>
+                    </div>
+            {% endfor %}
+            {% endif %}
+    </div>
 </div>
-
-
-
-
 
 
 
