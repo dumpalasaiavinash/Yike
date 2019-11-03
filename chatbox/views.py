@@ -91,7 +91,7 @@ def getContacts(email):
     table = dynamodb.Table('lastmessage')
     response = table.scan(
         ProjectionExpression="sender,reciver",
-        FilterExpression=Attr('sender').eq(email) or Attr('reciver').eq(email)
+        FilterExpression=Attr('sender').eq(email) | Attr('reciver').eq(email)
     )
     data = response['Items']
     print(data)
@@ -173,6 +173,7 @@ def recents(req):
             j=0
             recents=[]
             for contact in contactsdetails : 
+                print(messages)
                 recents.append([contact,messages[j]])
                 j+=1
 
@@ -197,7 +198,7 @@ def getLastMessageList(email,person):
     table = dynamodb.Table('lastmessage')
     if len(person) > 0 :
         response = table.scan(
-            FilterExpression = (Attr('sender').eq(email) and Attr('reciver').is_in(person)) or (Attr('reciver').eq(email) and Attr('sender').is_in(person))
+            FilterExpression = (Attr('sender').eq(email) & Attr('reciver').is_in(person)) | (Attr('reciver').eq(email) & Attr('sender').is_in(person))
         )
         mesgs = response['Items']
         for msg in mesgs:

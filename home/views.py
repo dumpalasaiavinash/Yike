@@ -16,9 +16,12 @@ def home(request):
 
 def home_log(request):
     # if request.method == 'POST':
+    print("a")
+
     email = request.POST.get('email')
     password = request.POST.get('pass')
     dynamodb = boto3.resource('dynamodb')
+    print("b")
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
         response = table.scan(
