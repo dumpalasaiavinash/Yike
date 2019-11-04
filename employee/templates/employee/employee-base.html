@@ -480,6 +480,7 @@
                                     Portfolio Performance
                                 </div>
                             </div>
+
                             <div class="no-gutters row">
                                 <div class="col-sm-6 col-md-4 col-xl-4">
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
@@ -487,8 +488,8 @@
                                             <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
                                             <i class="lnr-laptop-phone text-dark opacity-8"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">Cash Deposits</div>
-                                            <div class="widget-numbers">1,7M</div>
+                                            <div class="widget-subheading">To be solved today</div>
+                                            <div class="widget-numbers">8</div>
                                             <div class="widget-description opacity-8 text-focus">
                                                 <div class="d-inline text-danger pr-1">
                                                     <i class="fa fa-angle-down"></i>
@@ -506,8 +507,8 @@
                                             <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
                                             <i class="lnr-graduation-hat text-white"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">Invested Dividents</div>
-                                            <div class="widget-numbers"><span>9M</span></div>
+                                            <div class="widget-subheading">High Priority</div>
+                                            <div class="widget-numbers"><span>4</span></div>
                                             <div class="widget-description opacity-8 text-focus">
                                                 Grow Rate:
                                                 <span class="text-info pl-1">
@@ -525,8 +526,8 @@
                                             <div class="icon-wrapper-bg opacity-9 bg-success"></div>
                                             <i class="lnr-apartment text-white"></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">Capital Gains</div>
-                                            <div class="widget-numbers text-success"><span>$563</span></div>
+                                            <div class="widget-subheading">Total left</div>
+                                            <div class="widget-numbers text-success"><span>24</span></div>
                                             <div class="widget-description text-focus">
                                                 Increased by
                                                 <span class="text-warning pl-1">
@@ -538,6 +539,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="text-center d-block p-3 card-footer">
                             </div>
                         </div>
@@ -546,9 +548,9 @@
 
 <!-- ##################################### Complaints #####################################-->
 
-                        <div class="card mb-3" style="width:100%;">
+                        <div class="card mb-3" style="width:70%; float:left">
                             <div class="card-header-tab card-header">
-                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Easy Dynamic Tables</div>
+                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Complaints</div>
                                 <div class="btn-actions-pane-right actions-icon-btn">
                                     <div class="btn-group dropdown">
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-right rm-pointers dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu"><h6 tabindex="-1" class="dropdown-header">Header</h6>
@@ -564,7 +566,6 @@
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="card-body">
                                 <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
@@ -598,56 +599,110 @@
                             </div>
                         </div>
 
-                        <div class="card mb-3" style="width:100%;">
+<!-- ######################################################################################-->
+
+<!-- ##################################### Notifications #####################################-->
+
+                        <div class="card mb-3" style="width:27.5%; height:25%; float:right">
                             <div class="card-header-tab card-header">
-                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Easy Dynamic Tables</div>
-                                <div class="btn-actions-pane-right actions-icon-btn">
-                                    <div class="btn-group dropdown">
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-right rm-pointers dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu"><h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-inbox"> </i><span>Menus</span></button>
-                                            <button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-file-empty"> </i><span>Settings</span></button>
-                                            <button type="button" tabindex="0" class="dropdown-item"><i class="dropdown-icon lnr-book"> </i><span>Actions</span></button>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <div class="p-3 text-right">
-                                                <button class="mr-2 btn-shadow btn-sm btn btn-link">View Details</button>
-                                                <button class="mr-2 btn-shadow btn-sm btn btn-primary">Action</button>
+                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Notifications</div>
+                            </div>
+
+                            {% for item in notifications %}
+
+                            {% endfor %}
+
+                        </div>
+
+<!-- ######################################################################################-->
+
+<!-- ##################################### Juniors Tabs #####################################-->
+
+                        <div class="card mb-3" style="width:27.5%; height:25%; float:right">
+
+                            <div class="card-header-tab card-header">
+                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Juniors Tab</div>
+                            </div>
+
+                            <div class="no-gutters row">
+
+                                <div class="col-sm-6 col-md-9 col-xl-4">
+
+                                    <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
+
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">Total Complaints</div>
+                                            <div class="widget-numbers">
+                                              <div class="icon-wrapper rounded-circle">
+                                                <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
+                                                <i class="lnr-laptop-phone text-dark opacity-8"></i>
+                                              </div>
+                                            </div>
+                                            <div class="widget-numbers">216</div>
+                                            <div class="widget-description opacity-8 text-focus">
+                                                <div class="d-inline text-danger pr-1">
+                                                    <i class="fa fa-angle-down"></i>
+                                                    <span class="pl-1">54.1%</span>
+                                                </div>
+                                                less earnings
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="divider m-0 d-md-none d-sm-block"></div>
+
+                                </div>
+
+                                <div class="col-sm-6 col-md-4 col-xl-4">
+                                    <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
+
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">Passed over Complaints</div>
+                                            <div class="widget-numbers">
+                                              <div class="icon-wrapper rounded-circle">
+                                                  <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
+                                                  <i class="lnr-graduation-hat text-white"></i>
+                                              </div>
+                                            </div>
+                                            <div class="widget-numbers"><span>36</span></div>
+                                            <div class="widget-description opacity-8 text-focus">
+                                                Grow Rate:
+                                                <span class="text-info pl-1">
+                                                    <i class="fa fa-angle-down"></i>
+                                                    <span class="pl-1">14.1%</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="divider m-0 d-md-none d-sm-block"></div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-4 col-xl-4">
+                                    <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
+
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">Overdue Complaints</div>
+                                            <div class="widget-numbers">
+                                              <div class="icon-wrapper rounded-circle">
+                                                  <div class="icon-wrapper-bg opacity-9 bg-success"></div>
+                                                  <i class="lnr-apartment text-white"></i>
+                                              </div>
+                                            </div>
+                                            <div class="widget-numbers"><span>8</span></div>
+                                            <div class="widget-description text-focus">
+                                                Increased by
+                                                <span class="text-warning pl-1">
+                                                    <i class="fa fa-angle-up"></i>
+                                                    <span class="pl-1">7.35%</span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
-
-                            <div class="card-body">
-                                <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for name,department,hierarchy,no_complaints in info_list %}
-                                        <tr>
-                                            <td>{{ name }}</td>
-                                            <td>{{ department }}</td>
-                                            <td>{{ hierarchy }}</td>
-                                            <td>{{ no_complaints }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
                         </div>
 
 <!-- ######################################################################################-->
@@ -661,9 +716,7 @@
 </div>
 
 
-<div class="app-drawer-overlay d-none animated fadeIn"></div>
 <script type="text/javascript" src=" {% static 'dashboard/main.cba69814a806ecc7945a.js' %}"></script>
-
 
 
 {% endblock %}
