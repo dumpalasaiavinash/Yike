@@ -6,6 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!--<link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/dummy.css' %}">-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -14,28 +15,39 @@
 <style>
 
 
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  width: 15%;
-  border-radius: 10px;
-  margin-bottom: 3%;
-	margin-left: 3%;
 
+.w3-card-4:hover{
+box-shadow: 10px 10px 20px grey;
 }
-.card1 {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  width: 15%;
-  border-radius: 10px;
-  margin-bottom: 3%;
-	margin-left: 3%;
 
+.bottom{
+border-top-color:rgb(224, 224, 224);
+border-top-style: solid;
+border-top-width: 0.0625rem;
 }
-.centered {
-  margin-left: 6%;
 
+.image {
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    float: right;
+    height: 4.6875rem;
+    position: relative;
+    margin-top: -3.09375rem;
+    width: 4.6875rem;
 }
+
+.middle{
+
+box-flex: 1;
+flex-grow: 1;
+min-height: 100;
+padding: 1rem;
+padding-top: 1rem;
+padding-top: .75rem;
+padding-bottom:6rem;
+}
+
+
 .button{
 display:inline-block;
 padding:0.3em 1.2em;
@@ -78,7 +90,7 @@ margin:0.2em auto;
 
 /* Modal Content */
 .modal-content {
-  background-color:#64B9E0;
+  background-color:#FFFFFF;
   background: url("/static/orgadmin/images/Complaint2.jpg") 50% 0 no-repeat fixed );
   margin: auto;
   padding: 20px;
@@ -111,7 +123,7 @@ margin:0.2em auto;
 
 {% block body %}
 
-<div style="margin-top:5%;width:100%;position:relative;" >
+<div style="margin-top:5%;width:100%;" >
   <table style="width: 100%;">
     <tr>
       <td style="width: 50%;">
@@ -124,21 +136,38 @@ margin:0.2em auto;
   </table> <br>
     {% if topics_created_size > 0 %}
         {% for i, j in topics_created %}
-                <div class="card" style="float: left;">
-                    <div>  <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" style="opacity:0.8;" >
-                    </div>
-                <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
-                  </div>
-                </div>
-        {% endfor %}
-        {% endif %}<br><br><br><br><br><br><br><br><br><br>
+        <div class="main" style="margin-left:2%;" >
 
-<div>
+          
+            <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
+              <div class="w3-container w3-blu" style="height:50%;background-color:powderblue">
+          <br>{{i}}<br><br>
+              </div>
+          
+              <div class="middle" >
+                  <!-- <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" > -->
+              <img class="image" aria-hidden="true" src="//lh3.googleusercontent.com/a-/AAuE7mBhXW5QT3UXXW5eAXXfNiEsqhzTkeL-5vZup3yo=s75-c">
+                
+              </div>
+          
+              <div class="bottom">
+                <br><br>
+              </div>
+            </div>
+          </div>
+
+
+        
+               
+        {% endfor %}
+        {% endif %}<br><br><br><br>
+
+
     <div style="margin-top:5%;" >
         <table style="width: 100%;">
             <tr>
-              <td style="width: 50%;">
-                  <h2 style="margin-left:4%;position: absolute;" >Organization's Created</h2>
+              <td style="width: 50%;"><br>
+                  <h2 style="margin-left:4%;" >Organization's Created</h2>
               </td>
               <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
                   <button  class="button" onclick="openForm()">Join</button>
@@ -147,19 +176,32 @@ margin:0.2em auto;
               </td>
             </tr>
           </table> <br>
-     <br> <br>
+     
         {% if topics_size > 0 %}
             {% for i, j in topics %}
-                    <div class="card1" style="float:left;">
-                        <div>  <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" style="opacity:0.8;" >
-                        </div>
-                    <div>    <h4 class="centered" style="color:black;text-align: center ;">{{i}}</h4>
-                      </div>
+            <div class="main" style="margin-left:2%;" >
+
+                
+                  <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
+                    <div class="w3-container w3-blu" style="height:50%;background-color:powderblue">
+                <br>{{i}}<br><br>
                     </div>
+                
+                    <div class="middle" >
+                        <!-- <img src="{% static 'dashboard/complaint.png' %}" alt="Avatar" > -->
+                    <img class="image" aria-hidden="true" src="//lh3.googleusercontent.com/a-/AAuE7mBhXW5QT3UXXW5eAXXfNiEsqhzTkeL-5vZup3yo=s75-c">
+                      
+                    </div>
+                    <div class="bottom">
+                        <br><br>
+                      </div>
+                      </div>
+            </div>
+
             {% endfor %}
             {% endif %}
     </div>
-</div>
+
 
 
 <div id="myModal" class="modal">

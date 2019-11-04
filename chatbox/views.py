@@ -94,7 +94,6 @@ def getContacts(email):
         FilterExpression=Attr('sender').eq(email) | Attr('reciver').eq(email)
     )
     data = response['Items']
-    print(data)
     contacts= []
     for datum in data:
         if datum['sender']==email:
@@ -155,7 +154,21 @@ def getContactdetails(contacts):
     return contacts
 
 def preview(req):
-    return render(req,'Chatbox/chatui.html')
+    email = req.session['email']
+    rec = req.session['rec']
+    if req.method=='POST':
+        form=msgForm(req.POST)
+        if form.is_valid():
+            print("dil")
+            if (form.cleaned_data['msg'] is not None) | (form.cleaned_data['img'] is not None):
+                msg=form.cleaned_data['msg']
+                if msg != "" : 
+                    send(email,rec,msg)
+        else : 
+            print("ummmmmmmm")
+
+    rec = getUserName(req.session['rec'])
+    return render(req,'Chatbox/chatui.html',{ 'rec' : rec})
 
 
 def recents(req):
@@ -163,33 +176,35 @@ def recents(req):
     messages = []
     if ('email' in req.session):
         email=req.session['email']
-        print(email)
         if(userisvalid(email)):
             username = getUserName(email)
             contacts = getContacts(email)
-            print(contacts)
             messages = getLastMessageList(email,contacts)
             contactsdetails = getContactdetails(contacts)
             j=0
             recents=[]
             for contact in contactsdetails : 
-                print(messages)
                 recents.append([contact,messages[j]])
                 j+=1
-
-            print(recents)
-            return render(req,'Chatbox/recentchatui.html',{'recents':recents})
+            return render(req,'Chatbox/recentchatui.html',{'recents':recents,'rec':req.session['rec']})
         return HttpResponseRedirect('/login/')
     return HttpResponseRedirect('/login/')
 
 def mesgs(req):
-    return render(req,'Chatbox/mesgs.html')
+    email =  req.session['email']
+    reciver = req.session['rec']
+    mesgs = getMessageList(email, reciver )
+    print(mesgs)
+    return render(req,'Chatbox/mesgs.html',{
+        'mesgs'  : mesgs , 
+         'rec' : reciver ,
+    })
 
 def getMessageList(email,person):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('messages')
     response = table.scan(
-        FilterExpression = (Attr('sender').eq(email) and Attr('reciver').eq(person)) or (Attr('reciver').eq(email) and Attr('sender').eq(person))
+        FilterExpression = (Attr('sender').eq(email) & Attr('reciver').eq(person)) | (Attr('reciver').eq(email) & Attr('sender').eq(person))
     )
     return response['Items']
 

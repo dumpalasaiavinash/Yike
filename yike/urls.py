@@ -22,5 +22,6 @@ urlpatterns = [
     path('orgadmin/', include('orgadmin.urls')),
     path('chat/', include('chatbox.urls')),
     path('employee/', include('employee.urls')),
+    path('form/',include('formCreation.urls')),
 
 ]
