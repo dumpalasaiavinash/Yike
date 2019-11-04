@@ -255,9 +255,6 @@
 </head>
 
 <body>
-   
-    
-    
     <div class="headind_srch">
         <div class="recent_heading">
             <h4>Recent</h4>
@@ -265,14 +262,13 @@
     </div>
     <div class="inbox_chat">
      {% for recent in recents %}
-        {% if recent.0.username == rec %}
+        {% if recent.0.email == rec %}
             <div class="chat_list active_chat">
                 <div class="chat_people">
                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
                     <div class="chat_ib_active">
-                        <h5>{{contact.username}} <span class="chat_date">Dec 25</span></h5>
-                        <p>Test, which is a new approach to have all solutions
-                            astrology under one roof.</p>
+                        <h5>{{recent.0.username}} <span class="chat_date">{{recent.1.date}}</span></h5>
+                        <p>{{recent.1.messages}}.</p>
                     </div>
                 </div>
             </div>

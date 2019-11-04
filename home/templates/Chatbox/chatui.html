@@ -196,7 +196,7 @@ padding: 10px;}
         <div class="mesgs">
         <div class="active_chat_bar">
                     <div  class="dp_div" float="left"><img  class="dp" src="https://ptetutorials.com/images/user-profile.png" alt="sunil"></div>
-                    <div class="active_chat_person" float="right"> <span>John Nile</span>
+                    <div class="active_chat_person" float="right"> <span>{{rec}}</span>
                         <div style="font-size: 10px;">Online</div>
                     </div>
                     
@@ -205,8 +205,11 @@ padding: 10px;}
           <iframe class = "iframe2" scrolling="no" src= "/chat/mesgs"></iframe>
           <div class="type_msg">
             <div class="input_msg_write">
-              <input type="text" class="write_msg" placeholder="Type a message" />
-              <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              <form action="/chat/temp/"  METHOD="POST" id='id_form1' enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" class="write_msg" placeholder="Type a message" name="msg" />
+                <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              </form>
             </div>
           </div>
         </div>
