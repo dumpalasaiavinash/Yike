@@ -1,14 +1,73 @@
-{% extends 'home/base.html' %}
+{% extends 'home/basef.html' %}
 
+{% block extrahead %}
+
+<style>
+  .container {
+  position: relative;
+  text-align: center;
+  color: white;
+  }
+
+  .centered1 {
+  position: absolute;
+  top: 70%;
+  left: 12%;
+  transform: translate(-50%, -50%);
+  }
+
+  .centered2 {
+  position: absolute;
+  top: 70%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  }
+
+  #grad1 {
+    height: 200px;
+    background-image: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1)); /* Standard syntax (must be last) */
+  }
+
+  .button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  border-radius: 40px;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  Width: 190px;
+  }
+
+  .button2 {
+    background-color: white;
+    color: black;
+    border: 1px solid rgb(10,165,252);
+  }
+
+  .button2:hover {
+  background-color: rgb(10,165,252);
+  color: white;
+  }
+
+
+</style>
+{% load static %}
+{% endblock %}
 
 {% block body %}
 
-<br><br><br><br><br>
-<center>
-<div class="">
-<span style="font-size:360%;text-align:left;">YIKE</span><br>
-<span style="font-size:260%;text-align:left;">Complaints Tracking System</span>
-</div>
-</center>
+
+  <img src="{% static 'home/index.png' %}" alt="home" style="width:100%;height:10%;">
+  <a href={% url 'home:login' %}><button class='centered1 button button2'> Log In </button></a>
+  <a href={% url 'home:signup' %}><button class='centered2 button button2'> Sign Up </button></a>
+
+
 
 {% endblock %}

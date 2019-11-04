@@ -1,0 +1,146 @@
+{%load static%}
+<html>
+<head>
+	<script src="{%static 'js/jqu.js'%}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+	<title>Chat</title>
+	<style>
+      #id_msg{width:100%;padding:10px 20px; border-radius:11px;font-size:30px;margin-top: 10px;}
+      #btn1{width:100%; padding:10px;border-radius:11px;font-size:30px;color:red;background-color: white;}
+      #btn1:hover{color: white;background-color: red;}
+      #d2{background-image: url("{% static 'background.jpg' %}");color:white;width:100%;font-size:50px;overflow:hidden;}
+      #img1{width:70px;height: 75px;float:left;overflow:hidden;border-radius:45px; margin:10px;}
+      #table1{width:100%}
+      #td1{width:80%}
+      #td3{width:10%}
+			#td2{width:10%}
+			#d3{font-size:20px}
+  </style>
+
+</head>
+<body>
+   <div id="d2"><img src="{%static user_data.0.dp|slice:'7::'%}" alt="{%static 'A@DOCA@IIIT@DPdefualt.png' %}"id="img1">
+<div style="float:left;font-size:50px">
+{{user_data.0.fname}} {{user_data.0.lname}}
+<div id='d3'><li >active</li></div>
+
+</div>
+</div>
+	<div id="d1">
+		<form action="/chat/chat/"  METHOD="POST" id='id_form1' enctype="multipart/form-data">
+			<table id='table1'>
+        <tr><td id='td1' >{% csrf_token %}{{form.msg}}</td>
+        <td id='td2'>{{form.img}}<div id="btn1" onclick="document.getElementById('id_img').click()">image</div></td>
+        <td id='td3'><button id="btn1">Send</button></td>
+        </tr>
+      </table>
+		</form>
+	</div><br>
+<iframe src="/chat/msg" width="100%" height="1300px" id="ifr1">
+</iframe>
+</body>
+<script>
+
+var chatSocket = new ReconnectingWebSocket( 'ws://' + window.location.host + '/chat/chat/');
+var formData = $('#id_form1')
+var msgData=$('#id_msg')
+var fileData=$('#id_img')
+
+chatSocket.onmessage=function(e){
+	var msgData=JSON.parse(e.data)
+	if(msgData.status){
+	 if(msgData.sender=='{{user_data.0.uid}}'){
+		document.getElementById('d3').innerHTML="<li>"+msgData.status+"</li>"
+	}
+	}
+
+
+
+	var load_data = function(index) {
+			this.file = document.getElementById('id_img').files[0];
+	    var end =  index +4096 ;
+	    if (index >=this.file.size)
+	        return;
+	    if (end > this.file.size)
+	        end = this.file.size;
+	    chatSocket.send(this.file.slice(index, end));
+			console.log('sending')
+	}.bind(this);
+	switch (msgData.action) {
+        case 'progress':
+            // This is called each time a chunk is written
+            load_data(msgData.file_size);
+            break;
+        case 'ready':
+            load_data(0);
+            break;
+        case 'complete':
+            // Handle complete
+            break;
+            }
+
+
+}
+
+
+
+
+chatSocket.onopen=function(e){
+	console.log('open',e)
+	formData.submit(function(event){
+	event.preventDefault()
+		var msg=msgData.val()
+		var img=fileData.val()
+		if(img!=''){
+			this.file = document.getElementById('id_img').files[0];
+		var msg_data={
+			'message':msg,
+			'action' :'prepare',
+			'file_name':this.file.name,
+			'file_size':this.file.size
+		}
+	}
+	else{
+		var msg_data={
+			'message':msg
+		}
+	}
+	chatSocket.send(JSON.stringify(msg_data));
+	formData[0].reset()
+	formData[1].reset()
+})
+}
+chatSocket.onclose=function(e){
+  console.log('close',e)
+
+}
+chatSocket.onerror=function(e){
+  console.log('error',e)
+
+}
+function stats() {
+	var msg_data={
+		'status':'typing'
+	}
+chatSocket.send(JSON.stringify(msg_data))
+}
+function stats2() {
+	var msg_data={
+		'status':'Active'
+	}
+
+chatSocket.send(JSON.stringify(msg_data))
+}
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

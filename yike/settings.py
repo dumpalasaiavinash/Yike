@@ -25,7 +25,7 @@ SECRET_KEY = '@+@8#p&uk!ku=%h^&va89-2^l-ox4y0#@0fl2k_wkv$dwpe#%y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'employee.apps.EmployeeConfig',
     'orgadmin.apps.OrgadminConfig',
+    'rest_framework',
+    'chatbox'
+
 ]
 
 MIDDLEWARE = [
