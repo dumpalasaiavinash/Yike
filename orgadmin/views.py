@@ -61,11 +61,9 @@ def dashboard(request):
     return render(request, 'dashboard/index.html',context)
 
 def form(request):
-
     return render(request,'dashboard/form.html')
 
 def create(request):
-
     print(request.session['email'])
 
     email="yashukikkuri@gmail.com"
