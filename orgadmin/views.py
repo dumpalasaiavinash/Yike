@@ -36,7 +36,7 @@ def dashboard(request):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     response2=table.scan()
-    
+
     name=[]
     department=[]
     hierarchy=[]
@@ -60,25 +60,23 @@ def dashboard(request):
     return render(request, 'dashboard/index.html',context)
 
 def form(request):
-
     return render(request,'dashboard/form.html')
 
 def create(request):
-
     print(request.session['email'])
 
     email="yashukikkuri@gmail.com"
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('users')
-    
+
     response = dynamoTable.scan(
         ProjectionExpression="organizations_created,organizations_joined",
         FilterExpression=Attr('email').eq(email)
     )
-    
+
     print(response)
     print('\n**\n')
-    
+
     organizations_created=response['Items'][0]['organizations_created']
     organizations_joined=response['Items'][0]['organizations_joined']
     total_org_ids=copy.deepcopy(organizations_created)
@@ -96,7 +94,7 @@ def create(request):
         #     print(response['Item']['topic'])
         #     topics+=[response['Item']['topic']]
         # print(topics)
-    
+
     org_names=[]
     dynamoTable=dynamoDB.Table('organization')
     for i in total_org_ids:
@@ -117,8 +115,8 @@ def create(request):
         count=count+1
     print(organizations_joined_names)
     print(organizations_created_names)
-    
-    
+
+
     # dynamoDB=boto3.resource('dynamodb')
     # dynamoTable=dynamoDB.Table('topics')
     # response=dynamoTable.scan(
@@ -136,8 +134,8 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
-    
-    
+
+
     extra = (len(organizations_created)%4)-1
     data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,organizations_joined), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra}
     return render(request, 'orgadmin/dummy.html', data)
@@ -149,4 +147,4 @@ def createform(request):
 
 
 def departments(request):
-    return render(request,'orgadmin/departments.html')    
+    return render(request,'orgadmin/departments.html')
