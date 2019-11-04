@@ -483,7 +483,7 @@
                                         <th style="width:25%">No Of Complaints Handling</th>
                                     </tr>
                                     </thead>
-                                    <tbody>    
+                                    <tbody>
                                     {% for name,department,hierarchy,no_complaints in info_list %}
                                         <tr>
                                             <td>{{ name }}</td>
@@ -512,9 +512,5 @@
 </div>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <script type="text/javascript" src=" {% static 'dashboard/main.cba69814a806ecc7945a.js' %}"></script>
-<div>
-{% for item in context %}
-    {{ item }}
-{% endfor %}
-</div>
+
 {% endblock %}
