@@ -37,7 +37,7 @@ def dashboard(request):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     response2=table.scan()
-    
+
     name=[]
     department=[]
     hierarchy=[]
@@ -61,25 +61,23 @@ def dashboard(request):
     return render(request, 'dashboard/index.html',context)
 
 def form(request):
-
     return render(request,'dashboard/form.html')
 
 def create(request):
-
     print(request.session['email'])
 
     email="yashukikkuri@gmail.com"
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('users')
-    
+
     response = dynamoTable.scan(
         ProjectionExpression="organizations_created,organizations_joined",
         FilterExpression=Attr('email').eq(email)
     )
-    
+
     print(response)
     print('\n**\n')
-    
+
     organizations_created=response['Items'][0]['organizations_created']
     organizations_joined=response['Items'][0]['organizations_joined']
     total_org_ids=copy.deepcopy(organizations_created)
@@ -97,7 +95,7 @@ def create(request):
         #     print(response['Item']['topic'])
         #     topics+=[response['Item']['topic']]
         # print(topics)
-    
+
     org_names=[]
     dynamoTable=dynamoDB.Table('organization')
     for i in total_org_ids:
@@ -118,8 +116,8 @@ def create(request):
         count=count+1
     print(organizations_joined_names)
     print(organizations_created_names)
-    
-    
+
+
     # dynamoDB=boto3.resource('dynamodb')
     # dynamoTable=dynamoDB.Table('topics')
     # response=dynamoTable.scan(
@@ -141,7 +139,7 @@ def create(request):
     colors1 = ["#ff4d4d", "#66ffff", "#1aff8c","#ff471a","#ffff33","#a3a375","#3333ff"]
     joined_color=[]
     created_color=[]
-    
+
     for k in range(0,len(organizations_joined)):
         x=random.randint(0,7)
         joined_color.append(colors[x])
@@ -165,4 +163,4 @@ def createform(request):
 
 
 def departments(request):
-    return render(request,'orgadmin/departments.html')    
+    return render(request,'orgadmin/departments.html')

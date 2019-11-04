@@ -1,31 +1,121 @@
 <html>
 <head>
+ <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+ <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>       
+ <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <style>
     .div1{
         width:60%;
         background-color:red;
         float:left;
-        height:600px;
+        height:100%;
         }
     .div2{
-        width:20%;
-        background-color:red;
+        border:1px dotted grey; 
+        width:19.85% ;
+        background-color:white;
         float:right;
-        height:600px;
+        height:100%;
         }
     .div3{
         width:20%;
-        background-color:red;
-        float:right 
-        height:600px;
+        background-color:green;
+        float:right; 
+        height:100%;
         }
-
+    #dropzone{
+        background-color : white;
+        width:50%;
+        height:90%;
+        margin-left:25%;
+        margin-top:20px;
+        padding: 20px 20px 20px 20px;
+        overflow-x:hidden;
+        overflow-x:auto;
+    }
+    .object_of_form{
+        width:80%;
+        margin-left:10%;
+        margin-top:16px;
+        margin-bottom:16px;
+    }
+    .comp_heading{
+        margin-left:16px;
+        margin-bottom:0px;
+    }
+    
 </style>
+<script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+ 
+function drop(ev) {
+  ev.preventDefault();
+  console.log("called")
+  var data = ev.dataTransfer.getData("text");
+  var node = document.createElement("div");
+  node.innerHTML = node.innerHTML + tf ;
+  ev.target.appendChild(node);
+  window.mdc.autoInit();
+}
+
+</script>
 </head>
 
 <body>
-    <div class="div1"></div>
-    <div class="div1"></div>
-    <div class="div1"></div>
+    <div class="div1">
+     <div id="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+    <div class="div2">
+        <h2 class="mdc-typography--subtitle1 comp_heading">Components</h3>
+        <ul class="mdc-list demo-list comp_ul">
+        <li id="drag1" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            TextField
+        </li>
+        <li id="drag2" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            TextArea
+        </li>
+        <li id="drag3" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Radio
+        </li>
+        <li id="drag4" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Button
+        </li>
+        <li id="drag5" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            DatePicker
+        </li>
+        <li id="drag6" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Mobile Number
+        </li>
+        <li id="drag7" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Checkbox
+        </li>
+        <li id="drag8" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Image
+        </li>
+        <li id="drag9" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Location
+        </li>
+       
+        
+    </div>
+    <div class="div3">
+        
+    
+    </div>
 </body>
 </html>
+<script>
+
+
+ var tf = "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input class=\"mdc-text-field__input\" id=\"text-field-hero-input\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
+   "<div class=\"mdc-notched-outline__notch\"><label for=\"text-field-hero-input\" class=\"mdc-floating-label\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div>";
+ var ta = "<div class=\"mdc-text-field mdc-text-field--textarea\"><textarea id=\"textarea\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
+    "<div class=\"mdc-notched-outline__notch\"><label for=\"textarea\" class=\"mdc-floating-label\">Textarea Label</label></div><div class=\"mdc-notched-outline__trailing\"></div></div></div>";
+</script>
