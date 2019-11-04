@@ -9,7 +9,59 @@ from boto3.dynamodb.conditions import Key, Attr
 def dashboard(request):
     # email=request.session['email']
 
-    return render(request, 'dashboard/index.html')
+    if request.method=='POST':
+        name=request.POST.get('emp_name')
+        department=request.POST.get('department')
+        hierarchy=request.POST.get('hierarchy')
+        no_comp=request.POST.get('no_complaints')
+
+        dynamodb=boto3.resource('dynamodb')
+        table=dynamodb.Table('employees')
+
+        response=table.scan
+        response = table.scan(
+                    ProjectionExpression="emp_id",
+                )
+
+        table.put_item(
+            Item={
+                'emp_id':len(response['Items'])+1,
+                'emp_name':name,
+                'department':department,
+                'hierarchy':hierarchy,
+                'no_complaints':no_comp,
+            }
+        )
+
+    dynamodb=boto3.resource('dynamodb')
+    table=dynamodb.Table('employees')
+    response2=table.scan()
+    
+    name=[]
+    department=[]
+    hierarchy=[]
+    no_complaints=[]
+
+    print(response2['Items'])
+
+    for dic in response2['Items']:
+        name.append(dic['emp_name'])
+        department.append(dic['department'])
+        hierarchy.append(dic['hierarchy'])
+        no_complaints.append(dic['no_complaints'])
+
+    info_list=zip(name,department,hierarchy,no_complaints)
+
+    context={
+        "info_list":info_list,
+    }
+
+
+    return render(request, 'dashboard/index.html',context)
+
+def form(request):
+
+    return render(request,'dashboard/form.html')
 
 def create(request):
 

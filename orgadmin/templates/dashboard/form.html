@@ -1,0 +1,15 @@
+<!DOCTYPE>
+<html>
+<head>
+</head>
+<body>
+    <form action="{% url 'orgadmin:dashboard' %}" method='post'>
+        {% csrf_token %}
+        <input type="text" name="emp_name" placeholder="Enter Name" required>
+        <input type="text" name="department" placeholder="Enter Department" required>
+        <input type="text" name="hierarchy" placeholder="Enter Hierarchy" required>
+        <input type="text" name="no_complaints" placeholder="No_of_complaints_handling" required>
+        <input type="submit">
+    </form>
+</body>
+</html>
