@@ -21,7 +21,7 @@ def home_log(request):
         ProjectionExpression="email,password",
         FilterExpression=Attr('email').eq(email)
     )
-    print(response['Items'][0]['password'])
+    print(response)
     if(len(response['Items'])>0):
         if(response['Items'][0]['password']==password):
             return render(request, 'home/home.html')
@@ -39,12 +39,13 @@ def home_reg(request):
     re_password = request.POST.get('re_pass')
     print(password)
     print(re_password)
+	print(email)
     if(password==re_password):
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table('users')
         response = table.scan(
             ProjectionExpression="email",
-            FilterExpression=Attr('email').eq(username)
+            FilterExpression=Attr('email').eq(email)
         )
         response1 = table.scan(ProjectionExpression="email")
         u_id=len(response1['Items'])+1
