@@ -3,6 +3,7 @@ from django.contrib import sessions
 import copy
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+import json
 
 
 # Create your views here.
@@ -36,7 +37,7 @@ def dashboard(request):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     response2=table.scan()
-    
+
     name=[]
     department=[]
     hierarchy=[]
@@ -169,6 +170,36 @@ def departments(request):
 
 
 
-def hierarchy(request,dep_id):
-    print(dep_id)
-    return render(request,'orgadmin/departments.html')
+def hierarchy(request):
+    res = request.POST.get('dep')
+    print(res)
+    data=res.split('_')
+    dep_id=data[0]
+    dep_name=data[1]
+    return render(request,'orgadmin/departments.html',{'dep_name':dep_name,'dep_id':dep_id})
+
+
+
+def departments_hierarchy_update(request,hierarchy):
+    print(type(hierarchy))
+    print(hierarchy)
+    y = json.loads(hierarchy)
+    print(y)
+    # py_obj = demjson.decode(hierarchy)
+    # print(py_obj)
+    organization_id = 105
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name,department_id",
+        FilterExpression=Attr('organization_id').eq(organization_id)
+    )
+    departments = []
+    dep_id=[]
+    for i in response['Items']:
+        departments.append(i['department_name'])
+        dep_id.append(i['department_id'])
+    print(departments)
+
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})

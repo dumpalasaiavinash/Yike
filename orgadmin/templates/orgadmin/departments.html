@@ -29,10 +29,10 @@ Operations    </div>
     <button id="zoom_out">
         Zoom Out
     </button>
-    <button id="back">
+    <button id="changename">
       Change name
     </button>
-    <button id="changename">
+    <button id="back">
       Save
     </button>
     <div class="section">
@@ -562,9 +562,10 @@ var TREE = (function () {
 //comment
 var maintree;
 function initialize() {
+    var temp = "{{dep_name}}";
     var canvas = document.getElementById("canvas"),
         context = canvas.getContext("2d"),
-        tree = TREE.create("Maekar I"),
+        tree = TREE.create(temp),
         nodes = TREE.getNodeList(tree),
         currNode = tree,
         add_child_button = document.getElementById("add_child"),
@@ -638,9 +639,12 @@ function initialize() {
     }, false);
 
     back.addEventListener('click', function (event) {
-        nodes = TREE.getNodeList(tree);
+        var nodes = TREE.getNodeList(tree);
+        // var nodes = TREE
         // document.getElementById('nodes').innerHTML=nodes
-        console.log(nodes)
+        var url = ["http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/"];
+        console.log(typeof(nodes[0]))
+        location.replace(url+nodes)
     }, false);
 
 
@@ -670,36 +674,6 @@ function updatePage(tree) {
     info_panel_html += "</ul>";
     info_panel.innerHTML = info_panel_html;
 }
-
-// function populateDummyData(tree) {
-//     tree.selected(true);
-//     updatePage(tree);
-//     tree.addChild(TREE.create("Aerion"));
-//     tree.addChild(TREE.create("Daeron"));
-//     tree.addChild(TREE.create("Aemon"));
-//     tree.addChild(TREE.create("Aegon V"));
-//     tree.addChild(TREE.create("Rhae"));
-//     tree.addChild(TREE.create("Daella"));
-//     tree.getChildAt(0).addChild(TREE.create("Maegor"));
-//     tree.getChildAt(1).addChild(TREE.create("Vaella"));
-//     tree.getChildAt(3).addChild(TREE.create("Duncan"));
-//     tree.getChildAt(3).addChild(TREE.create("Jaehaerys II"));
-//     tree.getChildAt(3).addChild(TREE.create("Shaera"));
-//     tree.getChildAt(3).addChild(TREE.create("Daeron"));
-//     tree.getChildAt(3).addChild(TREE.create("Rhaelle"));
-//     tree.getDescendent(11).addChild(TREE.create("Aerys II"));
-//     tree.getDescendent(11).addChild(TREE.create("Rhaella"));
-//     tree.getDescendent(15).addChild(TREE.create("Rhaegar"));
-//     tree.getDescendent(15).addChild(TREE.create("Shaena"));
-//     tree.getDescendent(15).addChild(TREE.create("Daeron"));
-//     tree.getDescendent(15).addChild(TREE.create("Aegon"));
-//     tree.getDescendent(15).addChild(TREE.create("Jaehaerys"));
-//     tree.getDescendent(15).addChild(TREE.create("Viserys"));
-//     tree.getDescendent(15).addChild(TREE.create("Daenerys"));
-//     tree.getDescendent(17).addChild(TREE.create("Rhaenys"));
-//     tree.getDescendent(17).addChild(TREE.create("Aegon"));
-//     tree.getDescendent(23).addChild(TREE.create("Rhaego"));
-// }
 
 </script>
 

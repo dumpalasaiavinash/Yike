@@ -23,18 +23,19 @@
 </div>
     <br>
     <div class="card-body row no-gutters align-items-center">
-      <form action="" method="post" >
+      <form action="{% url 'orgadmin:hierarchy' %}" method="post" >
         {% csrf_token %}
       <div class="col-sm-8 input-group dropdown" style="width: 700px;">
-                    <select class="form-control select2 dropdown-toggle" name="doct" value=" " >
+                    <select class="form-control select2 dropdown-toggle" name="dep" value=" " >
                       {%for i in dep %}
-                        <a href="{% url 'orgadmin:hierarchy' 'i.1' %}">
-                          <option style="width: 700px;"> {{i.0}} </option>
-                        </a>
+                          <option value={{i.1}}_{{i.0}} style="width: 700px;"> {{i.0}} </option>
                       {%endfor%}
                     </select>
       </div>
       <br>
+      <div class="col-sm-4">
+              <input type="submit" value="check hierarchy" name="submit" class="btn btn-outline-success btn-lg">
+      </div>
     </form>
     </div>
     <br><br><br>
