@@ -3,6 +3,7 @@ from django.contrib import sessions
 import copy
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+import random
 
 
 # Create your views here.
@@ -134,10 +135,25 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
+    colors=["linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1))","radial-gradient(circle, red, yellow, green)","linear-gradient(red, yellow)","linear-gradient(to bottom right, red, yellow)","linear-gradient(red, yellow, green)","linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,219,255,1) 47%)","linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(188,0,255,0.9080766095500701) 46%)","linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,153,29,1) 48%, rgba(252,176,69,1) 100%)"]
+    colors1 = ["#ff4d4d", "#66ffff", "#1aff8c","#ff471a","#ffff33","#a3a375","#3333ff"]
+    joined_color=[]
+    created_color=[]
 
+    for k in range(0,len(organizations_joined)):
+        x=random.randint(0,7)
+        joined_color.append(colors[x])
+        print(x)
+
+    for l in range(0,len(organizations_created)):
+        y=random.randint(0,7)
+        print(y)
+        created_color.append(colors[x])
+
+    print(created_color,x,joined_color)
 
     extra = (len(organizations_created)%4)-1
-    data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,organizations_joined), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra}
+    data = {'topics' : zip(organizations_created_names,organizations_created,created_color), 'topics_created' : zip(organizations_joined_names,organizations_joined,joined_color), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,'color_created':created_color,'color_joined':joined_color}
     return render(request, 'orgadmin/dummy.html', data)
 
 
