@@ -2,7 +2,7 @@
 
 
 body {
-    background-color: #f5f7fa; !important;
+    background-color: #f5f7fa !important;
 
 }
 
@@ -18,12 +18,12 @@ body {
 }
 
 .navbar-default .navbar-brand{
-    color:white; !important;
+    color:white !important;
     padding-right: 50px;
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: white; !important;
+    color: white !important;
 }
 .nav-list {
     list-style-type: none;
