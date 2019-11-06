@@ -181,8 +181,8 @@ def hierarchy(request):
 def departments_hierarchy_update(request,hierarchy):
     print(type(hierarchy))
     print(hierarchy)
-    y = json.loads(hierarchy)
-    print(y)
+    # y = json.loads(hierarchy)
+    # print(y)
     # py_obj = demjson.decode(hierarchy)
     # print(py_obj)
     organization_id = 105
