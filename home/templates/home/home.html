@@ -1,5 +1,7 @@
 {% extends 'home/basef.html' %}
 
+{% load static %}
+
 {% block extrahead %}
 
 <style>
@@ -31,7 +33,7 @@
   .button {
   background-color: #4CAF50; /* Green */
   border: none;
-  border-radius: 40px;
+  border-radius: 30px;
   color: white;
   padding: 16px 32px;
   text-align: center;
@@ -42,7 +44,12 @@
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   cursor: pointer;
-  Width: 190px;
+  Width: 12%;
+  max-height:5%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+
   }
 
   .button2 {
@@ -56,6 +63,15 @@
   color: white;
   }
 
+  .container {
+  position: relative;
+  width: 100%;
+  }
+
+  .container img {
+    width: 110%;
+  }
+
 
 </style>
 {% load static %}
@@ -64,9 +80,27 @@
 {% block body %}
 
 
-  <img src="{% static 'home/index.png' %}" alt="home" style="width:100%;height:10%;">
+<div class="container">
+  <img src="{% static 'home/index.png' %}" alt="home" style="width:100%;height:100%;">
   <a href={% url 'home:login' %}><button class='centered1 button button2'> Log In </button></a>
   <a href={% url 'home:signup' %}><button class='centered2 button button2'> Sign Up </button></a>
+</div>
+
+<div class="">
+  <img src="{% static 'home/images/about.png' %}" alt="about" style="width:100%;height:100%;">
+</div>
+<br>
+<div class="">
+  <img src="{% static 'home/images/features.png' %}" alt="about" style="width:100%;height:100%;">
+</div>
+<br>
+<div class="">
+  <img src="{% static 'home/images/pricing.png' %}" alt="about" style="width:100%;height:100%;">
+</div>
+<br>
+<div class="">
+  <img src="{% static 'home/images/freetrial.png' %}" alt="about" style="width:100%;height:100%;">
+</div>
 
 
 
