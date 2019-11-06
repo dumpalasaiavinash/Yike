@@ -142,8 +142,6 @@ function drop2(ev){
   console.log(ev.target.style.height)
 
 }
-
-
  
 function drop(ev) {
   ev.preventDefault();
@@ -248,10 +246,12 @@ function drop(ev) {
     }
 
     function genrate_new_textField(){
-        return   "<div onclick=\"editor('divtextfield"+yiketf+"')\" class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input class=\"mdc-text-field__input\" id=\"textfield"+yiketf+"\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
+        return   "<div onclick=\"editor('textfield"+yiketf+"')\" class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input class=\"mdc-text-field__input\" id=\"textfield"+yiketf+"\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
    "<div class=\"mdc-notched-outline__notch\"><label for=\"textfield"+yiketf+"\" class=\"mdc-floating-label\" id=\"labeltextfield"+yiketf+"\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helpertextfield"+yiketf+"\"class=\"mdc-text-field-helper-line helpertext\"></div>";
 
     }
+
+   
 
     var helpertext ="<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\" id=\"text-field-outlined-cc1-helper-text\">Helper Text</p>";
     var count = "<div class=\"mdc-text-field-character-counter\">0 / 25</div>";
@@ -270,7 +270,7 @@ function drop(ev) {
             "<tr> <td>Helper Text</td><td><input type='Text' disabled id=\"helpertf\"></td></tr>"+
             "<tr><td colspan='2'><Button class='button1'>Delete</Button></td></tr>"+
             "<tr><td colspan='2'><Button class='button1'>Move up</Button></td></tr>"+
-            "<tr><td colspan='2'><Button class='button1'>Move Down</Button></td></tr>"+
+            "<tr><td colspan='2'><Button class='button1'>Move</Button></td></tr>"+
             "</Table>"
             
         }
