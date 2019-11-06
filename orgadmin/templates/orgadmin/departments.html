@@ -9,6 +9,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
+
 {% endblock %}
 
 {% block body %}
@@ -642,22 +643,33 @@ function initialize() {
         nodes = TREE.getNodeList(tree);
         // var nodes = TREE
         // document.getElementById('nodes').innerHTML=nodes
-        var url = ["http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/"];
-        // var temp =[0][0]
+        // var url = ["http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/"];
+        // var temp = ''
         // // console.log(typeof(nodes[0]))
         // for (var i=0; i<nodes.length;i++){
-        //   for(var j=0; j<nodes[i].length;j++){
-        //     temp[i][nodes[i][j]]=nodes[i][j]
-        //   }
+            // x=nodes[i]
+            // temp=temp+''+String(nodes[i])
         // }
-        console.log(typeof(nodes))
-        // console.log(nodes)
-        var temp=[]
-        for (var i = nodes.length; i >0; i--){
-            temp[i] = nodes.pop();
-        }
-        console.log(temp)
-        // location.replace(url+nodes[0])
+        // console.log(typeof(nodes))
+        // console.log(String(x))
+        // console.log(temp)
+        // console.log(String(nodes)
+
+        var s = JSON.stringify(nodes[0]);
+
+        //
+        // $.ajax({
+        //         type: 'POST',
+        //         url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+        //         data: {'tasks': s},
+        //     });
+
+
+
+        //
+        // x=jQuery.param(nodes)
+        // console.log(x)
+        location.replace(url+s)
     }, false);
 
 

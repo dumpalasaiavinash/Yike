@@ -4,6 +4,9 @@ import copy
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import random
+from urllib import parse
+from django.http import HttpResponse
+import json
 
 
 # Create your views here.
@@ -194,9 +197,11 @@ def hierarchy(request):
 
 
 def departments_hierarchy_update(request,hierarchy):
-    print(type(hierarchy))
+    # print(type(hierarchy))
     print(hierarchy)
-
+    # nodes = request.POST['tasks']
+    # value = parse.parse_qs(request.POST.get('hierarchy'))
+    # print(json.loads(nodes))
     organization_id = 105
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
