@@ -1,12 +1,23 @@
 <html>
 <head>
  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
- <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>       
+ <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-datetime-picker/2.4.0/material-datetime-picker.css">       
  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <style>
+    .button1{
+        width:90%;
+        background-color:purple;
+        color:white;
+        height:50px;
+        margin:10px;
+    }
     .div1{
         width:60%;
-        background-color:red;
+        background-color:wheat;
         float:left;
         height:100%;
         }
@@ -19,7 +30,7 @@
         }
     .div3{
         width:20%;
-        background-color:green;
+        
         float:right; 
         height:100%;
         }
@@ -37,15 +48,66 @@
         width:80%;
         margin-left:10%;
         margin-top:16px;
-        margin-bottom:16px;
     }
     .comp_heading{
         margin-left:16px;
         margin-bottom:0px;
     }
+    .botton0{
+        text-align: center;
+    }
+    .ui-widget.ui-widget-content{
+        background-color:white;
+        width:23%;
+    }
+    .ui-datepicker .ui-datepicker-header {
+        position: relative;
+        padding: .4em 0;
+    }
+    .ui-widget-header {
+        border: 1px solid #aaaaaa;
+        background:#2222dd;
+        color:rgba(255,255,255);
+    }
+
+   
+    .ui-state-default, .ui-widget-content .ui-state-default{
+        border:0px;
+        color :black;
+        background:white;
+    }
+    .ui-state-active, .ui-widget-content .ui-state-active{
+      background:blue;
+      color:wheat;  
+    }
+     .ui-state-hover , .ui-widget-content .ui-state-hover{
+        background:blue;
+        color:white;
+    }
     
+    
+    .ui-datepicker td a {
+        display: block;
+        padding: .8em;
+        text-align: center;
+        text-decoration: none;
+    }
+    .radiodrop{
+        background-color:wheat;
+        width:100%;
+        overflow:hidden;
+        height:100px;
+    }
+    .helpertext{
+        width:80%;
+        padding-left:0px;
+        padding-right:0px;
+        margin-left:10%;
+    }
 </style>
 <script>
+ var yikedtp=0,yiketf=0,yiketa=0,yikerb=0,yikecb=0;
+
 function allowDrop(ev) {
   ev.preventDefault();
 }
@@ -53,16 +115,64 @@ function allowDrop(ev) {
 function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
+var rbs=0
 
+function drop2(ev){
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  var node = document.createElement("div");
+  if(data =="drag3"){
+       node.innerHTML = node.innerHTML + rb;
+       ev.target.appendChild(node);
+       rbs+=1
+  }
+  console.log(ev.target)
+   console.log(ev.target.style.height)
+  if( rbs == 1){
+      document.getElementById(ev.target.id).style.height = "100px";
+  }
+  else{
+      var h=(100+40*(rbs-1))+"px";
+      document.getElementById(ev.target.id).style.height = h;
+  }
+ 
+
+  
+  
+  console.log(ev.target.style.height)
+
+}
  
 function drop(ev) {
   ev.preventDefault();
-  console.log("called")
   var data = ev.dataTransfer.getData("text");
   var node = document.createElement("div");
-  node.innerHTML = node.innerHTML + tf ;
+  if(data=="drag1"){
+    node.innerHTML = node.innerHTML + genrate_new_textField() ;
+    yiketf+=1;
+  }
+  else if(data=="drag2")
+    node.innerHTML = node.innerHTML + ta;
+  else if(data=="drag4")
+    node.innerHTML = node.innerHTML + bt;
+  else if(data=="drag5"){
+    node.innerHTML = node.innerHTML + generate_new_datefield();
+    }
+  else if(data=="drag7")
+    node.innerHTML = node.innerHTML + cb;
+
+  else if(data=="drag10"){
+    node.innerHTML = node.innerHTML + generate_new_RadioGroup();
+    yikerb+=1;
+  }
   ev.target.appendChild(node);
   window.mdc.autoInit();
+  if(data=="drag5"){
+    
+    $('#datepicker'+yikedtp).datepicker({dateFormat: 'dd M yy'});
+    yikedtp+=1;
+    console.log(yikedtp)
+  }
 }
 
 </script>
@@ -102,10 +212,14 @@ function drop(ev) {
         <li id="drag9" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
             Location
         </li>
+
+        <li id="drag10" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+            Radio Group
+        </li>
        
         
     </div>
-    <div class="div3">
+    <div class="div3" id="div3">
         
     
     </div>
@@ -114,8 +228,95 @@ function drop(ev) {
 <script>
 
 
- var tf = "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input class=\"mdc-text-field__input\" id=\"text-field-hero-input\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
-   "<div class=\"mdc-notched-outline__notch\"><label for=\"text-field-hero-input\" class=\"mdc-floating-label\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div>";
- var ta = "<div class=\"mdc-text-field mdc-text-field--textarea\"><textarea id=\"textarea\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
+ var ta = "<div class=\"mdc-text-field mdc-text-field--textarea object_of_form\" data-mdc-auto-init=\"MDCTextField\"><textarea id=\"textarea\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
     "<div class=\"mdc-notched-outline__notch\"><label for=\"textarea\" class=\"mdc-floating-label\">Textarea Label</label></div><div class=\"mdc-notched-outline__trailing\"></div></div></div>";
+ var cb = "<div class=\"mdc-form-field object_of_form\"><div class=\"mdc-checkbox\"><input type=\"checkbox\"class=\"mdc-checkbox__native-control\"id=\"checkbox-1\"/><div class=\"mdc-checkbox__background\">"
+            +"<svg class=\"mdc-checkbox__checkmark\"viewBox=\"0 0 24 24\"><path class=\"mdc-checkbox__checkmark-path\"fill=\"none\"d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>"
+            +"</svg><div class=\"mdc-checkbox__mixedmark\"></div></div></div><label for=\"checkbox-1\">Checkbox 1</label></div>";
+ var bt = "<div class=\"object_of_form button0\"><button c=lass=\"mdc-button mdc-button--raised \">Button</button></div>";
+  function generate_new_datefield(){
+    return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input  class=\"mdc-text-field__input\" id=\"datepicker"+yikedtp+"\" value=\"dd M yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"text-field-hero-input\" class=\"mdc-floating-label\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div>";
+  }
+ var rb= "<div class=\"mdc-form-field\"><div class=\"mdc-radio\"><input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio-1\" name=\"radios\" checked><div class=\"mdc-radio__background\"><div class=\"mdc-radio__outer-circle\"></div><div class=\"mdc-radio__inner-circle\"></div></div></div><label for=\"radio-1\">Radio 1</label></div>";
+
+    function generate_new_RadioGroup(){
+        return "<div class =\"object_of_form\"><h4 class=\" demo-title mdc-typography--headline9\" >Label for Radio Group </h2>"+
+        "<div class=\"radiodrop\" id=\"radiogroup"+yikerb+"\"ondrop=\"drop2(event)\"  ondragover=\"allowDrop(event)\"></div></div>";
+    }
+
+    function genrate_new_textField(){
+        return   "<div onclick=\"editor('textfield"+yiketf+"')\" class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input class=\"mdc-text-field__input\" id=\"textfield"+yiketf+"\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
+   "<div class=\"mdc-notched-outline__notch\"><label for=\"textfield"+yiketf+"\" class=\"mdc-floating-label\" id=\"labeltextfield"+yiketf+"\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helpertextfield"+yiketf+"\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+
+    }
+
+   
+
+    var helpertext ="<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\" id=\"text-field-outlined-cc1-helper-text\">Helper Text</p>";
+    var count = "<div class=\"mdc-text-field-character-counter\">0 / 25</div>";
+    function editor(id){
+        var div4editor = document.getElementById('div3');
+        if(id.includes("textfield")){
+            
+            
+            var count = 
+            div4editor.innerHTML="";
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value="+document.getElementById('label'+id).innerHTML+
+            " type=\"text\" onfocusout=\"updatelabel('label"+id+"','label')\"> </td></tr>"+
+            "<tr><td>Character Count</td><td><input type='checkbox' id=\"countCheck\" onclick=\"addCount(helper"+id+")\"></td></tr>"+
+            "<tr><td>Number Characters</td><td><input type='Number' id=\"numtf\" disabled></td></tr>"+
+            "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" onclick=\"addHelper(helper"+id+")\"></td></tr>"+
+            "<tr> <td>Helper Text</td><td><input type='Text' disabled id=\"helpertf\"></td></tr>"+
+            "<tr><td colspan='2'><Button class='button1'>Delete</Button></td></tr>"+
+            "<tr><td colspan='2'><Button class='button1'>Move up</Button></td></tr>"+
+            "<tr><td colspan='2'><Button class='button1'>Move</Button></td></tr>"+
+            "</Table>"
+            
+        }
+    }
+
+    function updatelabel(id1,id2){
+        var b = document.getElementById(id2).value;
+        console.log(id1);
+        document.getElementById(id1).innerHTML=b;
+
+    }
+
+    function addHelper(id0){
+        if(document.getElementById('helpCheck').checked){
+            console.log(id0.id);
+            document.getElementById(id0.id).innerHTML=helpertext;
+            document.getElementById('helpertf').disabled = false;
+        }
+        else{
+            document.getElementById(id0.id).innerHTML="";
+            document.getElementById('helpertf').disabled = true;
+        }
+        if(document.getElementById('countCheck').checked){
+            document.getElementById(id0.id).innerHTML=document.getElementById(id0.id).innerHTML + count;
+        }
+
+    }
+
+    function addCount(id0){
+        
+        if(document.getElementById('countCheck').checked){
+            document.getElementById(id0.id).innerHTML= count;
+            document.getElementById('numtf').disabled = false;
+
+        }
+        else{
+            document.getElementById(id0.id).innerHTML="";
+            document.getElementById('helpertf').disabled = true;
+        }
+        if(document.getElementById('helpCheck').checked){
+            document.getElementById(id0.id).innerHTML=helpertext;
+            
+        }
+        var tfid=id0.id.replace('helper','')
+        document.getElementById(tfid).maxLength = 25;
+    }
+
+
 </script>
