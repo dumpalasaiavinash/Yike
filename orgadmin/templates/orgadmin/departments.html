@@ -4,22 +4,24 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/css/main2.css' %}"/>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
 {% endblock %}
 
 {% block body %}
 <body onload="initialize()">
-<div id="header">
-    Family Name
-</div>
+
 <div id="control_panel">
     <div class="section">
-        Control Panel
-    </div>
+Operations    </div>
     <button id="add_child">
-        Add Child
+        Add hierarchy
     </button>
     <button id="remove_node">
-        Remove Node
+        Del hierarchy
     </button>
     <button id="zoom_in">
         Zoom In
@@ -27,30 +29,25 @@
     <button id="zoom_out">
         Zoom Out
     </button>
-    <button id="back">
-        Back
-    </button>
     <button id="changename">
-        Change name
+      Change name
+    </button>
+    <button id="back">
+      Save
     </button>
     <div class="section">
-        Information Panel
-    </div>
+    Information
+</div>
+<div id="information_panel">
 
-    <div id="information_panel">
+</div>
 
-    </div>
 </div>
 <div id="divider">
 
 </div>
 <div id="main">
     <canvas id="canvas"></canvas>
-</div>
-
-
-<div>
-  <p id='nodes'>  </p>
 </div>
 
 <script>
@@ -565,9 +562,10 @@ var TREE = (function () {
 //comment
 var maintree;
 function initialize() {
+    var temp = "{{dep_name}}";
     var canvas = document.getElementById("canvas"),
         context = canvas.getContext("2d"),
-        tree = TREE.create("Maekar I"),
+        tree = TREE.create(temp),
         nodes = TREE.getNodeList(tree),
         currNode = tree,
         add_child_button = document.getElementById("add_child"),
@@ -642,8 +640,24 @@ function initialize() {
 
     back.addEventListener('click', function (event) {
         nodes = TREE.getNodeList(tree);
+        // var nodes = TREE
         // document.getElementById('nodes').innerHTML=nodes
-        console.log(nodes)
+        var url = ["http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/"];
+        // var temp =[0][0]
+        // // console.log(typeof(nodes[0]))
+        // for (var i=0; i<nodes.length;i++){
+        //   for(var j=0; j<nodes[i].length;j++){
+        //     temp[i][nodes[i][j]]=nodes[i][j]
+        //   }
+        // }
+        console.log(typeof(nodes))
+        // console.log(nodes)
+        var temp=[]
+        for (var i = nodes.length; i >0; i--){
+            temp[i] = nodes.pop();
+        }
+        console.log(temp)
+        // location.replace(url+nodes[0])
     }, false);
 
 
@@ -668,43 +682,11 @@ function initialize() {
 function updatePage(tree) {
     var info_panel = document.getElementById("information_panel");
     var header = document.getElementById("header");
-    header.innerHTML = "Targaryen Family";
     var info_panel_html = "<ul>";
     info_panel_html += "<li>First Name: " +tree.text +"</li>";
-    info_panel_html += "<li>Last Name: " +"Targaryen" +"</li>";
     info_panel_html += "</ul>";
     info_panel.innerHTML = info_panel_html;
 }
-
-// function populateDummyData(tree) {
-//     tree.selected(true);
-//     updatePage(tree);
-//     tree.addChild(TREE.create("Aerion"));
-//     tree.addChild(TREE.create("Daeron"));
-//     tree.addChild(TREE.create("Aemon"));
-//     tree.addChild(TREE.create("Aegon V"));
-//     tree.addChild(TREE.create("Rhae"));
-//     tree.addChild(TREE.create("Daella"));
-//     tree.getChildAt(0).addChild(TREE.create("Maegor"));
-//     tree.getChildAt(1).addChild(TREE.create("Vaella"));
-//     tree.getChildAt(3).addChild(TREE.create("Duncan"));
-//     tree.getChildAt(3).addChild(TREE.create("Jaehaerys II"));
-//     tree.getChildAt(3).addChild(TREE.create("Shaera"));
-//     tree.getChildAt(3).addChild(TREE.create("Daeron"));
-//     tree.getChildAt(3).addChild(TREE.create("Rhaelle"));
-//     tree.getDescendent(11).addChild(TREE.create("Aerys II"));
-//     tree.getDescendent(11).addChild(TREE.create("Rhaella"));
-//     tree.getDescendent(15).addChild(TREE.create("Rhaegar"));
-//     tree.getDescendent(15).addChild(TREE.create("Shaena"));
-//     tree.getDescendent(15).addChild(TREE.create("Daeron"));
-//     tree.getDescendent(15).addChild(TREE.create("Aegon"));
-//     tree.getDescendent(15).addChild(TREE.create("Jaehaerys"));
-//     tree.getDescendent(15).addChild(TREE.create("Viserys"));
-//     tree.getDescendent(15).addChild(TREE.create("Daenerys"));
-//     tree.getDescendent(17).addChild(TREE.create("Rhaenys"));
-//     tree.getDescendent(17).addChild(TREE.create("Aegon"));
-//     tree.getDescendent(23).addChild(TREE.create("Rhaego"));
-// }
 
 </script>
 

@@ -88,7 +88,7 @@
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 100; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
+        padding-top: 15%; /* Location of the box */
         left: 0;
         top: 0;
         width: 100%; /* Full width */
@@ -104,12 +104,14 @@
         margin: auto;
         padding: 0;
         border: 1px solid #888;
-        width: 80%;
+        width: 50%;
+        height: 70%;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
         -webkit-animation-name: animatetop;
         -webkit-animation-duration: 0.4s;
         animation-name: animatetop;
-        animation-duration: 0.4s
+        animation-duration: 0.4s;
+        overflow: scroll;
       }
 
       /* Add Animation */
@@ -125,7 +127,7 @@
 
       /* The Close Button */
       .close {
-        color: white;
+        color: black;
         float: right;
         font-size: 28px;
         font-weight: bold;
@@ -150,6 +152,12 @@
         padding: 2px 16px;
         background-color: #5cb85c;
         color: white;
+      }
+
+      .inner_div {
+        border-radius:10px;
+        padding:2%;
+        border: 1px solid rgb(200,200,200);
       }
 
     </style>
@@ -850,7 +858,7 @@
                             </div>
 
                             <div class="text-center d-block p-3 card-footer">
-                              <button class="button" style="vertical-align:middle"><span>Dashboard</span></button>
+                              <a href={% url 'employee:juniors' %}><button class="button" style="vertical-align:middle" href=""><span>Dashboard</span></button></a>
                             </div>
 
                         </div>
@@ -865,24 +873,43 @@
     </div>
 </div>
 
+<!-- #################################### Modal ############################################-->
+
 <div id="myModal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
-    <div class="modal-header">
-      <span class="close">&times;</span>
-      <h2>Modal Header</h2>
-    </div>
+
     <div class="modal-body">
-      <p>Some text in the Modal Body</p>
-      <p>Some other text...</p>
+      <span class="close">&times;</span>
+
+      <div style="padding:5%;">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Notifications</div>
+        <br><br>
+
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+
+
+      </div>
+
     </div>
-    <div class="modal-footer">
-      <h3>Modal Footer</h3>
-    </div>
+
   </div>
 
 </div>
+
+<!-- ######################################################################################-->
 
 <script>
 // Get the modal
