@@ -163,4 +163,53 @@ def createform(request):
 
 
 def departments(request):
-    return render(request,'orgadmin/departments.html')
+
+    organization_id = 105
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name,department_id",
+        FilterExpression=Attr('organization_id').eq(organization_id)
+    )
+    departments = []
+    dep_id=[]
+    for i in response['Items']:
+        departments.append(i['department_name'])
+        dep_id.append(i['department_id'])
+    print(departments)
+
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+
+
+
+def hierarchy(request):
+    res = request.POST.get('dep')
+    print(res)
+    data=res.split('_')
+    dep_id=data[0]
+    dep_name=data[1]
+    return render(request,'orgadmin/departments.html',{'dep_name':dep_name,'dep_id':dep_id})
+
+
+
+def departments_hierarchy_update(request,hierarchy):
+    print(type(hierarchy))
+    print(hierarchy)
+
+    organization_id = 105
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name,department_id",
+        FilterExpression=Attr('organization_id').eq(organization_id)
+    )
+    departments = []
+    dep_id=[]
+    for i in response['Items']:
+        departments.append(i['department_name'])
+        dep_id.append(i['department_id'])
+    print(departments)
+
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
