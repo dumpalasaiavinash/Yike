@@ -11,5 +11,5 @@ urlpatterns = [
     path('createform/',views.createform, name='createform'),
     path('departments/',views.departments, name='departments'),
     path('hierarchy/',views.hierarchy, name='hierarchy'),
-    path('departments_hierarchy_update/<hierarchy>',views.departments_hierarchy_update, name='departments_hierarchy_update'),
+    path('departments_hierarchy_update/',views.departments_hierarchy_update, name='departments_hierarchy_update'),
 ]

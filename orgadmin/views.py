@@ -7,6 +7,8 @@ import random
 from urllib import parse
 from django.http import HttpResponse
 import json
+from django.views.decorators.csrf import requires_csrf_token
+
 
 
 # Create your views here.
@@ -195,13 +197,13 @@ def hierarchy(request):
     return render(request,'orgadmin/departments.html',{'dep_name':dep_name,'dep_id':dep_id})
 
 
-
-def departments_hierarchy_update(request,hierarchy):
+# @requires_csrf_token
+def departments_hierarchy_update(request):
     # print(type(hierarchy))
-    print(hierarchy)
+    # print(hierarchy)
     # nodes = request.POST['tasks']
+    print(request.POST)
     # value = parse.parse_qs(request.POST.get('hierarchy'))
-    # print(json.loads(nodes))
     organization_id = 105
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')

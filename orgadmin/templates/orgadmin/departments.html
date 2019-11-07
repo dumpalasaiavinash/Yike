@@ -5,10 +5,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/css/main2.css' %}"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
 
 {% endblock %}
 
@@ -562,6 +567,29 @@ var TREE = (function () {
 
 //comment
 var maintree;
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 function initialize() {
     var temp = "{{dep_name}}";
     var canvas = document.getElementById("canvas"),
@@ -639,8 +667,43 @@ function initialize() {
         TREE.draw(context, tree);
     }, false);
 
+
+
+
+
     back.addEventListener('click', function (event) {
+        event.preventDefault();
         nodes = TREE.getNodeList(tree);
+        console.log(nodes);
+
+        // console.log('success')
+        // docClient.update(params, function(err, data) {
+        //     if (err) {
+        //         document.getElementById('textarea').innerHTML = "Unable to update item: " + "\n" + JSON.stringify(err, undefined, 2);
+        //     } else {
+        //         document.getElementById('textarea').innerHTML = "UpdateItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+        //     }
+        // });
+
+        // console.log(typeof(nodes[0]));
+        // console.log(String(nodes[0]));
+        // console.log(typeof(String(nodes[0])));
+
+
+        const updatednodes = nodes.map(node => ({
+          bgcolor: "white",
+          color: "black",
+          height: 50,
+          parentId: node.parentId,
+          text: node.text,
+          width: node.width,
+          xPos: node.xPos,
+          yPos: node.yPos,
+          
+
+        }))
+
+        // nodes=[0,1,2]
         // var nodes = TREE
         // document.getElementById('nodes').innerHTML=nodes
         // var url = ["http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/"];
@@ -655,22 +718,83 @@ function initialize() {
         // console.log(temp)
         // console.log(String(nodes)
 
-        var s = JSON.stringify(nodes[0]);
+        // var s = JSON.stringify(nodes[0]);
 
         //
-        // $.ajax({
-        //         type: 'POST',
-        //         url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
-        //         data: {'tasks': s},
-        //     });
+        // console.log(updatednodes);
+        // var csrftoken = getCookie('csrftoken');
+        // console.log(csrftoken)
+        // $.ajaxSetup({
+        //     beforeSend: function(xhr, settings) {
+        //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+        //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        //         }
+        //     }
+        // });
+        //
+        $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+                data: { 'tasks': updatednodes,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+               },
+                dataType: 'json',
+                success: function(data) {
+                  console.log(data);
+                }
+            });
+
+            // var obj = {"1":5,"2":7,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}
+            // var result = Object.keys(nodes).map(function(key) {
+            //   return [Number(key), nodes[key]];
+            // })
+
+
+            //
+            // var token = '{{csrf_token}}';
+            //
+            //
+            //
+            //      $.ajax({
+            //        type: 'POST',
+            //        headers: { "X-CSRFToken": token },
+            //        url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+            //        data: { 'tasks': updatednodes,
+            //                csrfmiddlewaretoken: getCookie("csrftoken"),
+            //
+            //       },
+            //        dataType: 'json',
+            //        success: function(data) {
+            //          console.log(data);
+            //       }
+            //    });
+            //
+
+
+               // fetch('orgadmin/departments_hierarchy_update/', {
+               //     method: "put",
+               //     credentials: "same-origin",
+               //     headers: {
+               //         "X-CSRFToken": getCookie("csrftoken"),
+               //         "Accept": "application/json",
+               //         "Content-Type": "application/json"
+               //     },
+               //     body: JSON.stringify(updatednodes)
+               // }).then(function(response) {
+               //     return response.json();
+               // }).then(function(data) {
+               //     console.log("Data is ok", data);
+               // }).catch(function(ex) {
+               //     console.log("parsing failed", ex);
+               // });
 
 
 
         //
         // x=jQuery.param(nodes)
         // console.log(x)
-        location.replace(url+s)
-    }, false);
+        // location.replace(url+s)
+    });
 
 
 
