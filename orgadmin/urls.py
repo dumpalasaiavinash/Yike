@@ -6,8 +6,9 @@ app_name = 'orgadmin'
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/<org_id>', views.dashboard, name='dashboard'),
     path('create/',views.create, name='create'),
+    path('created/',views.created, name='created'),
     path('createform/',views.createform, name='createform'),
     path('departments/',views.departments, name='departments'),
     path('hierarchy/',views.hierarchy, name='hierarchy'),

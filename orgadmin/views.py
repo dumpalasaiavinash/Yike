@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib import sessions
 import copy
 import boto3
@@ -12,9 +12,10 @@ from django.views.decorators.csrf import requires_csrf_token
 
 
 # Create your views here.
-def dashboard(request):
+def dashboard(request,org_id):
     # email=request.session['email']
-
+    org_id = org_id
+    print(org_id)
     if request.method=='POST':
         name=request.POST.get('emp_name')
         department=request.POST.get('department')
@@ -49,7 +50,6 @@ def dashboard(request):
     no_complaints=[]
 
     print(response2['Items'])
-
     for dic in response2['Items']:
         name.append(dic['emp_name'])
         department.append(dic['department'])
@@ -69,9 +69,10 @@ def form(request):
     return render(request,'dashboard/form.html')
 
 def create(request):
+    print('abc')
     print(request.session['email'])
-
-    email="yashukikkuri@gmail.com"
+    email=request.session['email']
+    
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('users')
 
@@ -84,8 +85,8 @@ def create(request):
     print('\n**\n')
 
     organizations_created=response['Items'][0]['organizations_created']
-    organizations_joined=response['Items'][0]['organizations_joined']
     total_org_ids=copy.deepcopy(organizations_created)
+    organizations_joined=response['Items'][0]['organizations_joined']
     for i in organizations_joined:
         total_org_ids.append(i)
         # topics=[]
@@ -100,6 +101,11 @@ def create(request):
         #     print(response['Item']['topic'])
         #     topics+=[response['Item']['topic']]
         # print(topics)
+    print(total_org_ids)
+    for i in range(0,len(response['Items'][0]['organizations_joined'])):
+        response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+    org_join_id=response['Items'][0]['organizations_joined']    
+
 
     org_names=[]
     dynamoTable=dynamoDB.Table('organization')
@@ -109,7 +115,9 @@ def create(request):
             ProjectionExpression="organization_name",
             FilterExpression=Attr('org_id').eq(int(i))
         )
+        print(response['Items'])
         org_names.append(response['Items'][0]['organization_name'])
+    
     organizations_created_names=[]
     organizations_joined_names=[]
     count=0
@@ -148,19 +156,157 @@ def create(request):
     for k in range(0,len(organizations_joined)):
         x=random.randint(0,7)
         joined_color.append(colors[x])
-        print(x)
+        #print(x)
 
     for l in range(0,len(organizations_created)):
         y=random.randint(0,7)
-        print(y)
+        #print(y)
         created_color.append(colors[x])
 
-    print(created_color,x,joined_color)
+    #print(created_color,x,joined_color)
 
     extra = (len(organizations_created)%4)-1
-    data = {'topics' : zip(organizations_created_names,organizations_created,created_color), 'topics_created' : zip(organizations_joined_names,organizations_joined,joined_color), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,'color_created':created_color,'color_joined':joined_color}
+    data = {'topics' : zip(organizations_created_names,organizations_created,created_color), 'topics_created' : zip(organizations_joined_names,org_join_id,joined_color), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,'color_created':created_color,'color_joined':joined_color}
+    
+
+
     return render(request, 'orgadmin/dummy.html', data)
 
+
+def created(request):
+    organization_name = request.POST.get('name')
+    code=request.POST.get('code')
+    #print("name:"+ organization_name + "code:" + code)
+    
+    if (organization_name!='' and code!='' ):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('organization')
+            response_sno=table.scan(
+                ProjectionExpression="org_id",
+             )
+            response = table.scan(
+                ProjectionExpression="organization_name,code",
+                FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code) 
+            )
+            print(response)
+            print(response_sno)
+            ID=len(response_sno['Items'])+101
+            if(len(response['Items'])==0):
+                response = table.put_item(
+                   Item={
+                    'org_id': len(response_sno['Items'])+101,   
+                    'organization_name': organization_name,
+                    'code':code,
+                    }
+            )
+            # dynamodb = boto3.resource('dynamodb')
+            # table = dynamodb.Table('users')
+
+
+            email=request.session['email']
+            org_created = request.session['org_created']
+            
+            print(ID)
+            print(org_created)
+            print(type(org_created))
+            org_created.append(ID)
+            # request.session['org_created'].append(ID)    
+            org_joined = request.session['org_joined']
+
+            dynamoDB=boto3.resource('dynamodb')
+            table=dynamoDB.Table('users')
+            print(org_created)
+            print(request.session['org_created'])
+            response = table.update_item(
+                Key={
+                    'email':email
+                },
+                UpdateExpression="set organizations_created = :r",
+                ExpressionAttributeValues={
+                    ':r': org_created,
+
+                },
+                ReturnValues="UPDATED_NEW"
+            ) 
+
+
+            response1 = table.scan(
+                ProjectionExpression="organizations_created,organizations_joined",
+                FilterExpression=Attr('email').eq(email)
+            )
+
+
+            print(response1)
+            print('\n**\n')
+
+            organizations_created=response1['Items'][0]['organizations_created']
+            organizations_joined=response1['Items'][0]['organizations_joined']
+            print(organizations_created)
+            print(organizations_joined)
+            total_org_ids=copy.deepcopy(organizations_created)
+            for i in organizations_joined:
+                total_org_ids.append(i)
+            for i in range(0,len(response1['Items'][0]['organizations_joined'])):
+                response1['Items'][0]['organizations_joined'][i] = int(response1['Items'][0]['organizations_joined'][i])
+                org_join_id=response1['Items'][0]['organizations_joined']   
+
+           
+            org_names=[]
+            dynamoTable=dynamoDB.Table('organization')
+            for i in total_org_ids:
+                print(type(int(i)))
+                response1 = dynamoTable.scan(
+                    ProjectionExpression="organization_name",
+                    FilterExpression=Attr('org_id').eq(int(i))
+                )
+                org_names.append(response1['Items'][0]['organization_name'])
+                print(org_names)
+                organizations_created_names=[]
+                organizations_joined_names=[]
+                count=0
+                for i in org_names:
+                    if(count>=len(organizations_created)):
+                        organizations_joined_names.append(i)
+                    else:
+                        organizations_created_names.append(i)
+                    count=count+1
+                print(organizations_joined_names)
+                print(organizations_created_names)
+
+
+                
+                colors=["linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1))","linear-gradient(red, yellow)","linear-gradient(to bottom right, red, yellow)","linear-gradient(red, yellow, green)","linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,219,255,1) 47%)","linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(188,0,255,0.9080766095500701) 46%)","linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,153,29,1) 48%, rgba(252,176,69,1) 100%)"]
+                colors1 = ["#ff4d4d", "#66ffff", "#1aff8c","#ff471a","#ffff33","#a3a375","#3333ff"]
+                joined_color=[]
+                created_color=[]
+
+                for k in range(0,len(organizations_joined)):
+                    x=random.randint(0,6)
+                    joined_color.append(colors[x])
+                    #print(x)
+
+                for l in range(0,len(organizations_created)):
+                    y=random.randint(0,6)
+                    #print(y)
+                    created_color.append(colors[x])
+
+                #print(created_color,x,joined_color)
+
+                extra = (len(organizations_created)%4)-1
+                data = {'topics' : zip(organizations_created_names,organizations_created,created_color), 'topics_created' : zip(organizations_joined_names,organizations_joined,joined_color), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,'color_created':created_color,'color_joined':joined_color}
+
+            return render(request, 'orgadmin/dummy.html', data)
+
+                
+
+    else:
+        return render(request, 'orgadmin/dummy.html', data)
+
+
+
+
+                
+    
 
 
 def createform(request):

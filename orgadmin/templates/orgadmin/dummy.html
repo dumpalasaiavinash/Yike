@@ -187,9 +187,9 @@ z-index: 0;
     </tr>
   </table> <br>
     {% if topics_created_size > 0 %}
-        {% for i, j,k in topics_created %}
+        {% for i,j,k in topics_created %}
         <div class="main" style="margin-left:2%;" >
-
+            <a href = "{% url 'orgadmin:dashboard' '{{j}}' %}">
             
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                 
@@ -208,6 +208,7 @@ z-index: 0;
                 <br><br>
               </div>
             </div>
+          </a>
           </div>
 
 
@@ -233,6 +234,7 @@ z-index: 0;
         {% if topics_size > 0 %}
             {% for i, j, k in topics %}
             <div class="main" style="margin-left:2%;" >
+                <a href = "{% url 'orgadmin:dashboard' '{{j}}' %}">
 
                 
                   <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
@@ -249,6 +251,7 @@ z-index: 0;
                         <br><br>
                       </div>
                       </div>
+                  </a>
             </div>
 
             {% endfor %}
@@ -260,11 +263,14 @@ z-index: 0;
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-    <form action="" class="form-container">
+    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" >
+        {% csrf_token %}
         <h1 style="font-family : Avenir Black;">Create Organization</h1>
   
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Organization Name" name="name" required>
+        <hr class="line">
+        <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code" name="code" required>
         <hr class="line">
         <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color:rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Create</button> <br><br><br><br><br>  
     </form>
