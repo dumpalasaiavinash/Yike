@@ -57,6 +57,7 @@ padding-bottom:6rem;
   border-color: powderblue;
   color: rgb(10, 10, 10);
   border-radius:13%;
+  background-color: transparent;;
   width:11.5%;
   font-family : Avenir Black;
   padding:0.3em 1.2em;
@@ -187,13 +188,13 @@ z-index: 0;
     </tr>
   </table> <br>
     {% if topics_created_size > 0 %}
-        {% for i,j,k in topics_created %}
+        {% for i,j in topics_created %}
         <div class="main" style="margin-left:2%;" >
             <a href = "{% url 'orgadmin:dashboard' '{{j}}' %}">
             
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                 
-              <div class="w3-container w3-blu" style="height:50%;background-image:{{k}}">
+              <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
                   
           <br>{{i}}<br><br>
               </div>
@@ -232,13 +233,13 @@ z-index: 0;
           </table> <br>
      
         {% if topics_size > 0 %}
-            {% for i, j, k in topics %}
+            {% for i, j in topics %}
             <div class="main" style="margin-left:2%;" >
                 <a href = "{% url 'orgadmin:dashboard' '{{j}}' %}">
 
                 
                   <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
-                    <div class="w3-container w3-blu" style="height:50%;background-image:{{k}}">
+                    <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
                 <br>{{i}}<br><br>
                     </div>
                 
@@ -281,11 +282,12 @@ z-index: 0;
 <div id="join_modal" class="modal">
     <div class="modal-content ">
         <span class="close">&times;</span>
-    <form action="" class="form-container">
+    <form class="form-container" action="{% url 'orgadmin:join' %}" method="post" >
+      {% csrf_token %}
         <h1 style="font-family : Avenir Black;">Join Organization</h1>
   
            <!-- <label ><b>Organization Name:</b></label> -->
-        <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code to Join" name="code" required>
+        <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
         <hr class="line">
         <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color: rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Join</button> <br><br><br><br><br>  
     </form>

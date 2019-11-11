@@ -9,6 +9,7 @@ urlpatterns = [
     path('dashboard/<org_id>', views.dashboard, name='dashboard'),
     path('create/',views.create, name='create'),
     path('created/',views.created, name='created'),
+    path('join/',views.join, name='join'),
     path('createform/',views.createform, name='createform'),
     path('departments/',views.departments, name='departments'),
     path('hierarchy/',views.hierarchy, name='hierarchy'),

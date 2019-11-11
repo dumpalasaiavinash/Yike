@@ -1,8 +1,7 @@
-
 {% load static %}
 {% block extrahead %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/css/main2.css' %}"/>
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/css/main2.css' %}"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -13,13 +12,14 @@
       crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> -->
 
 {% endblock %}
 
 {% block body %}
+<body>
+<!--
 <body onload="initialize()">
-
 <div id="control_panel">
     <div class="section">
 Operations    </div>
@@ -673,8 +673,17 @@ function initialize() {
 
     back.addEventListener('click', function (event) {
         event.preventDefault();
+        var temp={}
         nodes = TREE.getNodeList(tree);
         console.log(nodes);
+        var va={'data':"data",'number':10,'csrfmiddlewaretoken':'{{ csrf_token }}'}
+        var url = "{% url 'orgadmin:departments_hierarchy_update' %}";
+        temp['nodes']=nodes;
+        temp['csrfmiddlewaretoken']='{{ csrf_token }}';
+        console.log(temp);
+        console.log(va)
+        console.log('a');
+        $.post(url,temp);
 
         // console.log('success')
         // docClient.update(params, function(err, data) {
@@ -690,18 +699,18 @@ function initialize() {
         // console.log(typeof(String(nodes[0])));
 
 
-        const updatednodes = nodes.map(node => ({
-          bgcolor: "white",
-          color: "black",
-          height: 50,
-          parentId: node.parentId,
-          text: node.text,
-          width: node.width,
-          xPos: node.xPos,
-          yPos: node.yPos,
-          
-
-        }))
+        // const updatednodes = nodes.map(node => ({
+        //   bgcolor: "white",
+        //   color: "black",
+        //   height: 50,
+        //   parentId: node.parentId,
+        //   text: node.text,
+        //   width: node.width,
+        //   xPos: node.xPos,
+        //   yPos: node.yPos,
+        //
+        //
+        // }))
 
         // nodes=[0,1,2]
         // var nodes = TREE
@@ -732,17 +741,17 @@ function initialize() {
         //     }
         // });
         //
-        $.ajax({
-                type: 'POST',
-                url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
-                data: { 'tasks': updatednodes,
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-               },
-                dataType: 'json',
-                success: function(data) {
-                  console.log(data);
-                }
-            });
+        // $.ajax({
+        //         type: 'POST',
+        //         url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+        //         data: { 'tasks': updatednodes,
+        //                 csrfmiddlewaretoken: '{{ csrf_token }}'
+        //        },
+        //         dataType: 'json',
+        //         success: function(data) {
+        //           console.log(data);
+        //         }
+        //     });
 
             // var obj = {"1":5,"2":7,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}
             // var result = Object.keys(nodes).map(function(key) {
@@ -824,12 +833,116 @@ function updatePage(tree) {
     info_panel.innerHTML = info_panel_html;
 }
 
-</script>
+</script> -->
 
 
+<div class="pivot-livedemo-container">
+				<div class="diagram-demo-container">
+					<div class="diagram-demo-head">
+						<div class="diagram-demo-head-inside">
+							<div class="diagram-demo-btn js-diagram-demo-btn active" onclick="changeDiagramData('org')">
+								Org Chart
 
+								<div class="diagram-demo-line js-diagram-demo-line"></div>
+							</div>
+							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('activity')">Activity Diagram</div>
+							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('wide')">Flowchart</div>
+							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('verticalTree')">Vertical Decision Tree</div>
+							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('dataPlanning')">Block Diagram</div>
+						</div>
+					</div>
+
+					<div id="diagram_box"><div class="dhx_diagram dhx_widget"><div class="dhx_wrapper dhx_org_chart"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="690" viewBox="-40 -40 1080 690"><defs><filter x="0" y="0" width="1" height="1" id="dhx_text_background"><feFlood flood-color="white"></feFlood><feComposite in="SourceGraphic"></feComposite></filter></defs><g shape-rendering="crispedges"><g dhx_id="u1573192591640" class="dhx_diagram_connector "><path d="M 505,90L 505,90 L 505,110.5 L 105,110.5 L 105,130" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591641" class="dhx_diagram_connector "><path d="M 0,175L 0,175 L -19.5,175 L -19.5,305 L 20,305" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591642" class="dhx_diagram_connector "><path d="M 0,175L 0,175 L -19.5,175 L -19.5,435 L 20,435" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591643" class="dhx_diagram_connector "><path d="M 0,175L 0,175 L -19.5,175 L -19.5,565 L 20,565" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591644" class="dhx_diagram_connector "><path d="M 505,90L 505,90 L 505,110.5 L 505,110.5 L 505,130" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591645" class="dhx_diagram_connector "><path d="M 505,220L 505,220 L 505,240.5 L 375,240.5 L 375,260" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591646" class="dhx_diagram_connector "><path d="M 375,350L 375,350 L 375,370.5 L 375,370.5 L 375,390" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591652" class="dhx_diagram_connector "><path d="M 505,220L 505,220 L 505,240.5 L 625,240.5 L 625,260" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591653" class="dhx_diagram_connector "><path d="M 625,350L 625,350 L 625,370.5 L 625,370.5 L 625,390" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591654" class="dhx_diagram_connector "><path d="M 625,480L 625,480 L 625,500.5 L 625,500.5 L 625,520" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591648" class="dhx_diagram_connector "><path d="M 505,90L 505,90 L 505,110.5 L 875,110.5 L 875,130" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591649" class="dhx_diagram_connector "><path d="M 770,175L 770,175 L 750.5,175 L 750.5,305 L 790,305" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591650" class="dhx_diagram_connector "><path d="M 770,175L 770,175 L 750.5,175 L 750.5,435 L 790,435" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591651" class="dhx_diagram_connector "><path d="M 770,175L 770,175 L 750.5,175 L 750.5,565 L 790,565" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g transform="translate(400,0) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="1"><rect class="dhx_item_shape" id="1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-1.png&quot;); background-color: rgb(255, 152, 0);"></div><div class="dhx_content_title">Henry Bennett</div><div class="dhx_content_text ">Chairman &amp; CEO</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#FF9800" fill="#FF9800" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#607D8B"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(0,130) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2"><rect class="dhx_item_shape" id="2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-2.png&quot;); background-color: rgb(96, 125, 139);"></div><div class="dhx_content_title">Emma Lynch</div><div class="dhx_content_text ">QA Lead</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#607D8B" fill="#607D8B" stroke-width="1"></rect><g x="0" y="45" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="0" cy="45" fill="#00C7B5"></circle><line x1="-5" y1="45" x2="5" y2="45" stroke-width="2" stroke="white"></line></g></g><g transform="translate(20,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2.1"><rect class="dhx_item_shape" id="2.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-4.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Charles Little</div><div class="dhx_content_text ">QA</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(20,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2.2"><rect class="dhx_item_shape" id="2.2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-9.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Douglas Riley</div><div class="dhx_content_text ">QA</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(20,520) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2.3"><rect class="dhx_item_shape" id="2.3" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-12.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Eugene Foster</div><div class="dhx_content_text ">QA</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(400,130) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3"><rect class="dhx_item_shape" id="3" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-3.png&quot;); background-color: rgb(96, 125, 139);"></div><div class="dhx_content_title">Jerry Wagner</div><div class="dhx_content_text ">Technical Director</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#607D8B" fill="#607D8B" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#00C7B5"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(270,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.1"><rect class="dhx_item_shape" id="3.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-7.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Mark Nichols</div><div class="dhx_content_text ">Team Lead</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#03A9F4"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(270,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.1.1"><rect class="dhx_item_shape" id="3.1.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-10.png&quot;); background-color: rgb(3, 169, 244);"></div><div class="dhx_content_title">Sean Parker</div><div class="dhx_content_text ">Programmer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#03A9F4" fill="#03A9F4" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_expand_icon"><circle r="10" cx="105" cy="90" fill="#9575CD"></circle><polyline points="100,90
+		105,90
+		105,85
+		105,95
+		105,90
+		110,90" stroke-width="2" stroke="white" fill="none"></polyline></g></g><g transform="translate(520,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.2"><rect class="dhx_item_shape" id="3.2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-13.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Nicholas Cruz</div><div class="dhx_content_text ">Team Lead</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#03A9F4"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(520,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.2.1"><rect class="dhx_item_shape" id="3.2.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-11.png&quot;); background-color: rgb(3, 169, 244);"></div><div class="dhx_content_title">Michael Shaw</div><div class="dhx_content_text ">Programmer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#03A9F4" fill="#03A9F4" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#9575CD"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(520,520) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.2.1.1"><rect class="dhx_item_shape" id="3.2.1.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-15.png&quot;); background-color: rgb(149, 117, 205);"></div><div class="dhx_content_title">John Flores</div><div class="dhx_content_text ">Junior</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#9575CD" fill="#9575CD" stroke-width="1"></rect></g><g transform="translate(770,130) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4"><rect class="dhx_item_shape" id="4" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-5.png&quot;); background-color: rgb(96, 125, 139);"></div><div class="dhx_content_title">Jonathan Lane</div><div class="dhx_content_text ">Manager</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#607D8B" fill="#607D8B" stroke-width="1"></rect><g x="0" y="45" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="0" cy="45" fill="#00C7B5"></circle><line x1="-5" y1="45" x2="5" y2="45" stroke-width="2" stroke="white"></line></g></g><g transform="translate(790,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4.1"><rect class="dhx_item_shape" id="4.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-6.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Sandra Butler</div><div class="dhx_content_text ">Marketer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(790,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4.2"><rect class="dhx_item_shape" id="4.2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-16.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Julie Green</div><div class="dhx_content_text ">Designer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(790,520) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4.3"><rect class="dhx_item_shape" id="4.3" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-14.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Richard Hicks</div><div class="dhx_content_text ">Sales Manager</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g></g></svg></div></div></div>
+				</div>
+
+				<script src="demo/demo.js"></script>
+				<link rel="stylesheet" href="demo/demo.css">
+
+				<script type="text/javascript" src="demo/diagram.js"></script>
+				<link rel="stylesheet" href="demo/diagram.css">
+
+				<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+
+				<style type="text/css">
+					.diagram-demo-container{
+						margin: 0 10px 37px 10px;
+						box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.2);
+						background-color: #f7f7f7;
+					}
+
+					.diagram-demo-head{
+
+					}
+
+					#diagram_box {
+						height: 700px;
+					}
+
+					#diagram_box .dhx_diagram_wrapper {
+						margin-right: auto;
+						margin-left: auto;
+						padding-left: 80px;
+						padding-right: 80px;
+						box-sizing: content-box;
+					}
+
+					.dhx_diagram_item:hover .dhx_hide_icon,
+					.dhx_diagram_item:hover .dhx_expand_icon {
+						cursor: pointer;
+					}
+
+					.dhx_free_diagram .data_planning_process text{
+						fill:rgba(0,0,0,.7);
+					}
+				</style>
+				<script type="text/javascript">
+					var diagram = new dhx.Diagram("diagram_box", {
+						type: "org",
+						defaultShapeType: "img-card"
+					});
+
+					diagram.data.parse(org);
+					function changeDiagramData(type) {
+						var types = {
+							activity: { data: activity, scale: 0.6 },
+							verticalTree: { data: verticalTree, scale: 0.6 },
+							wide: { data: wide, scale: 0.6 },
+							dataPlanning: { data: dataPlanning, scale: 0.68 },
+							org: { data: org, scale: 1, type: "org", scale: 1 }
+						}
+						if (types[type].type && !diagram.config.type) {
+							document.querySelector("#diagram_box").innerHTML = "";
+							diagram = new dhx.Diagram("diagram_box", {
+								type: "org",
+								defaultShapeType: "img-card"
+							});
+						} else if (!types[type].type && diagram.config.type === "org") {
+							document.querySelector("#diagram_box").innerHTML = "";
+							diagram = new dhx.Diagram("diagram_box", {
+								scale: .6,
+								lineGap: 30
+							});
+						}
+						diagram.config.scale = types[type].scale;
+						diagram.data.parse(types[type].data);
+					}
+				</script>
+
+				<div class="livedemo-title livedemo-title--pivot">
+					<span class="livedemo-title__label">Live Demo</span>
+				</div>
+
+				<div class="top-50 center">
+					<a href="http://docs.dhtmlx.com/diagram/samples/" title="" class="btn-medium-blue-outline" onclick="ga('send', 'event', 'button', 'click', 'view-samples-diagram');" target="_blank">View more samples</a>
+				</div>
+			</div>
 
 
 </body>
 {% endblock %}
-</html>
+</html> -->
