@@ -1,23 +1,49 @@
 {% extends "home/base.html" %}
 {% load staticfiles %}
 
-
 {% block body %}
+
+<style>
+.dot1 {
+  height:5px;
+  width: 5px;
+  margin:1px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+}
+</style>
 <div class = "sheet">
         <link href='styles.css?version=1' rel='stylesheet'></link>
     <link rel="stylesheet" href="{% static 'Client/css/first.css' %}">
-    <div class='head'><a href="{% url 'secondpage' %}"><button type="button" class="btn btn-primary btn-lg">New Complaint</button></a><div class="badge"></div></button></div>
-    <div class='head1'><a href="{% url 'secondpage' %}"><button type="button" class="btn btn-primary btn-lg">Track</button></a><div class="badge"></div></button></div>    
-    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div></button></div>
+    <div class='head'><a href="{% url 'secondpage' %}"><button type="button" class="btn btn-primary btn-lg">New Complaint</button></a><div class="badge"></div></div>
+    <div class='head1'><a href="{% url 'track' %}"><button type="button" class="btn btn-primary btn-lg">Track</button></a><div class="badge"></div></div>
+    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div></div>
 </div>
- 
-<div class = "complaint">
-<h2 style="opacity:0.5;">Previous complaints</h2>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      </head>
+      <body>
+
+<div class="container" >
+
+    <div style="width:205;height:200px;margin: auto;width: 50%;padding: 10px;">
+        <h2>Previous complaints</h2>
+      <div style="background-color: brown;width:5px;height:200px;float:left;border-radius:5px ">
+    </div>
+    <div class="panel panel-default" style="float: left;height:200px;width:400px">
+        <div class="panel-body">
+            <h4><b>GS Road,Chickpet</b></h4><br>
+            <h10 style="opacity: 0.5">#14245 . August 19th,2019  .  5:00AM</h10>
+             <h5><b>Estimated completion:</b> 24th,2019</h5>
+             <h5>Status:  On Scheduled</h5>
+
+          </div>
+    </div>
+  </div>
+
 </div>
- 
- 
 {% endblock %}
-    
-     
-
-
