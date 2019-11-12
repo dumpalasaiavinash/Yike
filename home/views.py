@@ -23,14 +23,25 @@ def home_log(request):
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
         response = table.scan(
-        ProjectionExpression="email,password",
+        ProjectionExpression="email,password,organizations_created,organizations_joined",
         FilterExpression=Attr('email').eq(email)
         )
+        print('\n\n\n')
         print(response['Items'][0])
+        print(type(response['Items'][0]['organizations_created']))
+        for i in range(0,len(response['Items'][0]['organizations_created'])):
+            response['Items'][0]['organizations_created'][i] = int(response['Items'][0]['organizations_created'][i])
+        for i in range(0,len(response['Items'][0]['organizations_joined'])):
+            response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+
+        print('\n\n\n')
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
                 request.session['email']=response['Items'][0]['email']
-                return redirect('orgadmin:departments')
+                request.session['org_created']=response['Items'][0]['organizations_created']
+                request.session['org_joined']=response['Items'][0]['organizations_joined']
+                print('abc')
+                return redirect('orgadmin:create')
             else:
                 return redirect('home:login')
         else:
@@ -65,7 +76,7 @@ def home_reg(request):
 
                     }
                 )
-                return redirect('orgadmin:departments')
+                return redirect('orgadmin:create')
 
             else:
                 return redirect('home:signup')

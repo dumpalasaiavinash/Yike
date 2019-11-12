@@ -1,121 +1,915 @@
 <html>
+
 <head>
- <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
- <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>       
- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<style>
-    .div1{
-        width:60%;
-        background-color:red;
-        float:left;
-        height:100%;
-        }
-    .div2{
-        border:1px dotted grey; 
-        width:19.85% ;
-        background-color:white;
-        float:right;
-        height:100%;
-        }
-    .div3{
-        width:20%;
-        background-color:green;
-        float:right; 
-        height:100%;
-        }
-    #dropzone{
-        background-color : white;
-        width:50%;
-        height:90%;
-        margin-left:25%;
-        margin-top:20px;
-        padding: 20px 20px 20px 20px;
-        overflow-x:hidden;
-        overflow-x:auto;
-    }
-    .object_of_form{
-        width:80%;
-        margin-left:10%;
-        margin-top:16px;
-        margin-bottom:16px;
-    }
-    .comp_heading{
-        margin-left:16px;
-        margin-bottom:0px;
-    }
-    
-</style>
-<script>
-function allowDrop(ev) {
-  ev.preventDefault();
-}
 
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
 
- 
-function drop(ev) {
-  ev.preventDefault();
-  console.log("called")
-  var data = ev.dataTransfer.getData("text");
-  var node = document.createElement("div");
-  node.innerHTML = node.innerHTML + tf ;
-  ev.target.appendChild(node);
-  window.mdc.autoInit();
-}
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 
-</script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/material-datetime-picker/2.4.0/material-datetime-picker.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        .button1 {
+            width: 90%;
+            background-color: purple;
+            color: white;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .div1 {
+            width: 60%;
+            background-color: wheat;
+            float: left;
+            height: 100%;
+        }
+
+        .div2 {
+            border: 1px dotted grey;
+            width: 19.85%;
+            background-color: white;
+            float: right;
+            height: 100%;
+        }
+
+        .div3 {
+            width: 20%;
+            float: right;
+            height: 100%;
+        }
+
+        #dropzone {
+            background-color: white;
+            width: 50%;
+            height: 90%;
+            margin-left: 25%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 20px 20px 20px 20px;
+            overflow-x: hidden;
+            overflow-x: auto;
+        }
+
+        .object_of_form {
+            width: 80%;
+            margin-left: 10%;
+            margin-top: 16px;
+        }
+
+        .comp_heading {
+            margin-left: 16px;
+            margin-bottom: 0px;
+        }
+
+        .botton0 {
+            text-align: center;
+        }
+
+        .ui-widget.ui-widget-content {
+            background-color: white;
+            width: 23%;
+        }
+
+        .ui-datepicker .ui-datepicker-header {
+            position: relative;
+            padding: .4em 0;
+        }
+
+        .ui-widget-header {
+            border: 1px solid #aaaaaa;
+            background: #2222dd;
+            color: rgba(255, 255, 255);
+        }
+
+
+        .ui-state-default,
+        .ui-widget-content .ui-state-default {
+            border: 0px;
+            color: black;
+            background: white;
+        }
+
+        .ui-state-active,
+        .ui-widget-content .ui-state-active {
+            background: blue;
+            color: wheat;
+        }
+
+        .ui-state-hover,
+        .ui-widget-content .ui-state-hover {
+            background: blue;
+            color: white;
+        }
+
+
+        .ui-datepicker td a {
+            display: block;
+            padding: .8em;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .radiodrop {
+            background-color: wheat;
+            width: 100%;
+            overflow: hidden;
+            height: 100px;
+        }
+
+        .helpertext {
+            width: 80%;
+            padding-left: 0px;
+            padding-right: 0px;
+            margin-left: 10%;
+        }
+
+        .posteller {
+            display: none;
+        }
+
+        .previewButton {
+            margin: 10px;
+            float: left;
+        }
+
+        .container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: 98%;
+        }
+
+        .container .popup {
+            visibility: hidden;
+            width: 50%;
+            background-color: #FFF;
+            height: 90%;
+            top: 20px;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 0;
+            position: absolute;
+            z-index: 3;
+            left: 25%;
+        }
+
+        .container .popup .close {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .container .popup .form {
+            width: 60%;
+            height: 90%;
+            background-color: whitesmoke;
+            margin-left: 20%;
+            margin-top: 20px;
+            padding: 20px 20px 20px 20px;
+            overflow-x: hidden;
+            overflow-x: auto;
+        }
+
+        #contain {
+            background-color: wheat;
+        }
+
+        #shadder {
+            width: 100%;
+            height: 100%;
+            background-color: #000000d0;
+            margin: 0px;
+            left: 0px;
+            top: 0px;
+            z-index: 1;
+        }
+
+        .container .show {
+            visibility: visible;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s;
+        }
+
+        .object_of_form2 {
+            width: 80%;
+            margin-top: 16px;
+        }
+
+        .mobilinp {
+            width: 60%;
+        }
+
+        .mobilesel {
+            width: 18%;
+            margin-top: 4px;
+            margin-right: 1% ;
+
+        }
+        .labelmobile{
+            margin-left: 10%;
+            width: 40%;
+            margin-bottom: 8px;
+            margin-top:16px ;
+        }
+
+        .drop-down {
+            position: relative;
+            margin-top: 0;
+            width: 25%;
+            float: left;
+            font-family: verdana;
+        }
+
+        .drop-down select {
+            display: none;
+        }
+
+        .drop-down .select-list {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            margin-top: 40px;
+            padding: 0;
+            width: 100%;
+            overflow: hidden;
+            background-color:wheat;
+        }
+
+        .drop-down .select-list li {
+            display: none;
+        }
+
+        .drop-down .select-list li span {
+            display: inline-block;
+            min-height: 40px;
+            min-width: 280px;
+            width: 100%;
+            padding: 5px 15px 5px 35px;
+            background-color: wheat;
+            background-position: left 10px center;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            text-align: left;
+            color: #FFF;
+            opacity: 0.7;
+            box-sizing: border-box;
+        }
+
+        .drop-down .select-list li span:hover,
+        .drop-down .select-list li span:focus {
+            opacity: 1;
+        }
+        .selmobile{
+            display: none;
+            padding: 12px 16px 14px;
+            border: none;
+            background-color:transparent;
+            z-index: 1;
+        }
+        .button{
+            width: 100%;
+        }
+    </style>
+    <script>
+
+        var yikedtp = 0, yiketf = 0, yiketa = 0, yikerb = 0, yikecb = 0, yikef = 0, yikem = 0;
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+        var rbs = 0
+
+        function drop2(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var node = document.createElement("div");
+
+            if (data == "drag3") {
+                node.innerHTML = node.innerHTML + rb;
+                ev.target.appendChild(node);
+                rbs += 1
+            }
+            console.log(ev.target)
+            console.log(ev.target.style.height)
+            if (rbs == 1) {
+                document.getElementById(ev.target.id).style.height = "100px";
+            }
+            else {
+                var h = (100 + 40 * (rbs - 1)) + "px";
+                document.getElementById(ev.target.id).style.height = h;
+            }
+
+
+
+
+            console.log(ev.target.style.height)
+
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var node = document.createElement("div");
+
+            if (data == "drag1") {
+                node.setAttribute('id', "divtextfield" + yiketf);
+                node.setAttribute('onclick', 'editor(\'textfield' + yiketf + '\')');
+                node.innerHTML = node.innerHTML + genrate_new_textField();
+                form["yike" + yikef] = {
+                    "type": "textfield",
+                    "label": "label",
+                    "count_enabled": false,
+                    "count_char": 0,
+                    "helper_enabled": false,
+                    "helper_text": "",
+                    "is_req": true,
+                };
+                yiketf += 1;
+                yikef += 1;
+                form["nE"] = yikef;
+                ev.target.appendChild(node);
+
+
+            }
+            else if (data == "drag2") {
+
+                node.setAttribute('id', "divtextarea" + yiketa);
+                node.setAttribute('onclick', 'editor(\'textarea' + yiketa + '\')');
+                node.innerHTML = node.innerHTML + genrate_new_textArea();
+                yiketa += 1;
+                form["yike" + yikef] = {
+                    "type": "textarea",
+                    "label": "label",
+                    "count_enabled": false,
+                    "count_char": 0,
+                    "helper_enabled": false,
+                    "helper_text": "",
+                    "is_req": true,
+                };
+                ev.target.appendChild(node);
+                yikef += 1;
+                form["nE"] = yikef;
+            }
+            else if (data == "drag6") {
+                node.setAttribute('id', "divmobile" + yikem);
+                node.setAttribute('onclick', 'editor(\'mobile' + yikem + '\')');
+                node.innerHTML = node.innerHTML + generate_new_mobilefield();
+                yiketa += 1;
+                form["yike" + yikef] = {
+                    "type": "mobile",
+                    "label": "Mobile Number",
+                    "helper_enabled": false,
+                    "helper_text": "",
+                    "is_req": true,
+                };
+                ev.target.appendChild(node);
+                convert2li('dropdown'+yikem);
+                yikem+=1;
+                yikef += 1;
+                form["nE"] = yikef;
+            }
+
+
+            else if (data == "drag4") {
+                node.innerHTML = node.innerHTML + bt;
+                ev.target.appendChild(node);
+            }
+
+
+            else if (data == "drag5") {
+                node.innerHTML = node.innerHTML + generate_new_datefield();
+                node.setAttribute('id', "divdatepicker" + yikedtp);
+                node.setAttribute('onclick', 'editor(\'datepicker' + yikedtp + '\')');
+                form["yike" + yikef] = {
+                    "type": "datepicker",
+                    "label": "label",
+                    "format": "dd/mm/yy",
+                    "maxDate_enabled": false,
+                    "minDate_enabled": false,
+                };
+                yikef += 1;
+                ev.target.appendChild(node);
+            }
+            else if (data == "drag7")
+                node.innerHTML = node.innerHTML + cb;
+
+            else if (data == "drag10") {
+                node.innerHTML = node.innerHTML + generate_new_RadioGroup();
+                yikerb += 1;
+
+            }
+
+
+            window.mdc.autoInit();
+            addNode_at_pos(1)
+            if (data == "drag5") {
+
+                $('#datepicker' + yikedtp).datepicker({ dateFormat: 'dd/mm/yy' });
+                $('#datepicker' + yikedtp).datepicker({ Format: 'mm/mm/mm' });
+                yikedtp += 1;
+            }
+        }
+
+
+        function addNode_at_pos(pos) {
+            var parent = document.getElementById("dropzone");
+            var children = parent.childNodes;
+            console.log(children[1])
+        }
+        function getPos(id0) {
+            var parent = document.getElementById("dropzone");
+            var children = parent.childNodes;
+            for (var a = 0; a <= children.length; a += 1) {
+                if (children[a].id.includes(id0.id))
+                    return a;
+            }
+            return -1;
+        }
+        function moveUp(id0) {
+            var index = getPos(id0);
+            console.log(index)
+            var parent = document.getElementById("dropzone");
+            var children = parent.childNodes;
+            if (index > 0 && index < children.length) {
+                div1 = jQuery('#' + children[index].id);
+                div2 = jQuery('#' + children[index - 1].id);
+
+                tdiv1 = div1.clone();
+                tdiv2 = div2.clone();
+                if (!div2.is(':empty')) {
+                    div1.replaceWith(tdiv2);
+                    div2.replaceWith(tdiv1);
+                    window.mdc.autoInit();
+                }
+            }
+        }
+        function moveDown(id0) {
+            var index = getPos(id0);
+            console.log(index)
+            var parent = document.getElementById("dropzone");
+            var children = parent.childNodes;
+            if (index >= 0 && index < children.length - 1) {
+                div1 = jQuery('#' + children[index].id);
+                div2 = jQuery('#' + children[index + 1].id);
+
+                tdiv1 = div1.clone();
+                tdiv2 = div2.clone();
+                if (!div2.is(':empty')) {
+                    div1.replaceWith(tdiv2);
+                    div2.replaceWith(tdiv1);
+                    window.mdc.autoInit();
+                }
+            }
+        }
+
+        var form = { "nE": 0 };
+
+    </script>
 </head>
 
 <body>
-    <div class="div1">
-     <div id="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-    </div>
-    <div class="div2">
-        <h2 class="mdc-typography--subtitle1 comp_heading">Components</h3>
-        <ul class="mdc-list demo-list comp_ul">
-        <li id="drag1" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            TextField
-        </li>
-        <li id="drag2" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            TextArea
-        </li>
-        <li id="drag3" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            Radio
-        </li>
-        <li id="drag4" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            Button
-        </li>
-        <li id="drag5" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            DatePicker
-        </li>
-        <li id="drag6" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            Mobile Number
-        </li>
-        <li id="drag7" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            Checkbox
-        </li>
-        <li id="drag8" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            Image
-        </li>
-        <li id="drag9" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
-            Location
-        </li>
-       
-        
-    </div>
-    <div class="div3">
-        
-    
+    <div class="container">
+        <div class="popup" id="contain">
+            <div class="close"><button class="mdc-button" onclick="togglec()">X</button>
+            </div>
+            <div class="form" id="pre_form"></div>
+        </div>
+        <div class="popup" id="shadder"></div>
+        <div class="div1">
+            <button class="mdc-button mdc-button--raised previewButton" onclick="preview()"> <span
+                    class="mdc-button__ripple"></span>Preview</button>
+            <div id="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+        <div class="div2">
+            <h2 class="mdc-typography--subtitle1 comp_heading">Components</h3>
+                <ul class="mdc-list demo-list comp_ul">
+                    <li id="drag1" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        TextField
+                    </li>
+                    <li id="drag2" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        TextArea
+                    </li>
+                    <li id="drag3" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Radio
+                    </li>
+                    <li id="drag4" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Button
+                    </li>
+                    <li id="drag5" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        DatePicker
+                    </li>
+                    <li id="drag6" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Mobile Number
+                    </li>
+                    <li id="drag7" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Checkbox
+                    </li>
+                    <li id="drag8" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Image
+                    </li>
+                    <li id="drag9" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Location
+                    </li>
+
+                    <li id="drag10" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Radio Group
+                    </li>
+
+
+        </div>
+        <div class="div3" id="div3">
+
+
+        </div>
     </div>
 </body>
+
 </html>
 <script>
+    var cb = "<div class=\"mdc-form-field object_of_form\"><div class=\"mdc-checkbox\"><input type=\"checkbox\"class=\"mdc-checkbox__native-control\"id=\"checkbox-1\"/><div class=\"mdc-checkbox__background\">"
+        + "<svg class=\"mdc-checkbox__checkmark\"viewBox=\"0 0 24 24\"><path class=\"mdc-checkbox__checkmark-path\"fill=\"none\"d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>"
+        + "</svg><div class=\"mdc-checkbox__mixedmark\"></div></div></div><label for=\"checkbox-1\">Checkbox 1</label></div>";
+    var bt = "<div class=\"object_of_form button0\"><button c=lass=\"mdc-button mdc-button--raised \">Button</button></div>";
 
 
- var tf = "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><input class=\"mdc-text-field__input\" id=\"text-field-hero-input\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
-   "<div class=\"mdc-notched-outline__notch\"><label for=\"text-field-hero-input\" class=\"mdc-floating-label\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div>";
- var ta = "<div class=\"mdc-text-field mdc-text-field--textarea\"><textarea id=\"textarea\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>"+
-    "<div class=\"mdc-notched-outline__notch\"><label for=\"textarea\" class=\"mdc-floating-label\">Textarea Label</label></div><div class=\"mdc-notched-outline__trailing\"></div></div></div>";
+    function generate_new_datefield() {
+        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  onclick=\"editor('datepicker" + yikedtp + "')\"  data-mdc-auto-init=\"MDCTextField\"><input  disabled class=\"mdc-text-field__input\" id=\"datepicker" + yikedtp + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"datepicker" + yikedtp + "\" class=\"mdc-floating-label\" id=\"labeldatepicker" + yikedtp + "\">Label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helperdatepicker" + yikedtp + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    }
+
+    var rb = "<div class=\"mdc-form-field\"><div class=\"mdc-radio\"><input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio-1\" name=\"radios\" checked><div class=\"mdc-radio__background\"><div class=\"mdc-radio__outer-circle\"></div><div class=\"mdc-radio__inner-circle\"></div></div></div><label for=\"radio-1\">Radio 1</label></div>";
+
+    function generate_new_RadioGroup() {
+        return "<div class =\"object_of_form\"><h4 class=\" demo-title mdc-typography--headline9\" >Label for Radio Group </h2>" +
+            "<div class=\"radiodrop\" id=\"radiogroup" + yikerb + "\"ondrop=\"drop2(event)\"  ondragover=\"allowDrop(event)\"></div></div>";
+    }
+
+    function genrate_new_textField() {
+        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\" data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"postextfield" + yiketf + "\">" + yikef + "</span>" +
+            "<input disabled class=\"mdc-text-field__input\"   id=\"textfield" + yiketf + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"textfield" + yiketf + "\" class=\"mdc-floating-label\" id=\"labeltextfield" + yiketf + "\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helpertextfield" + yiketf + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    }
+
+    function genrate_new_textArea() {
+        return "<div pos=\"" + yikef + "\" class=\"mdc-text-field mdc-text-field--textarea object_of_form\" data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"postextarea" + yiketa + "\">" + yikef + "</span><textarea disabled id=\"textarea" + yiketa + "\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"textarea" + yiketa + "\" id=\"labeltextarea" + yiketa + "\" class=\"mdc-floating-label\">Textarea Label</label></div><div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"helpertextarea" + yiketa + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    }
+
+    function generate_new_HelperText(id0) {
+        console.log("genrate helper called")
+        return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+            "id=\"helperText" + id0 + "\">Helper Text</p>";
+    }
+
+    function generate_new_Count(id0) {
+        return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / 25</div>";
+    }
+
+
+    function editor(id) {
+        var div4editor = document.getElementById('div3');
+
+
+        if (id.includes("textfield") || id.includes("textarea")) {
+            div4editor.innerHTML = "";
+            var pos = document.getElementById('pos' + id).innerHTML;
+            var obj = form['yike' + pos];
+            var labelText = obj["label"]; //document.getElementById('label'+id).innerHTML;
+            var isCount = obj["count_enabled"];
+            var ishelper = obj["helper_enabled"];
+            var count = isCount ? obj["count_char"] : "";
+            var helper = ishelper ? obj["helper_text"] : "";
+            var cchecked = isCount ? 'checked' : '';
+            var cdisabled = isCount ? '' : 'disabled';
+            var hchecked = ishelper ? 'checked' : '';
+            var hdisabled = ishelper ? '' : 'disabled';
+
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+                "<tr><td>Character Count</td><td><input type='checkbox' id=\"countCheck\" " + cchecked + " onclick=\"addCount(helper" + id + "," + pos + ")\"></td></tr>" +
+                "<tr><td>Number Characters</td><td><input type='Number' id=\"numtf\" onfocusout=\"updateCount('counthelper" + id + "','numtf'," + pos + ")\" " + cdisabled + " value=" + count + "  ></td></tr>" +
+                "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper(helper" + id + "," + pos + ")\"></td></tr>" +
+                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\" >Move up</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
+                "</Table>"
+
+        }
+        else if (id.includes('datepicker')) {
+            div4editor.innerHTML = "";
+
+            var labelText = document.getElementById('label' + id).innerHTML;
+            var ishelper = document.getElementById('helperTexthelper' + id) != null ? true : false;
+            var helper = ishelper ? document.getElementById('helperTexthelper' + id).innerHTML : "";
+            var hchecked = ishelper ? 'checked' : '';
+            var hdisabled = ishelper ? '' : 'disabled';
+            var options = "<option value=\"dd mm y\">dd mm yy</option>" +
+                "<option value=\"dd mm yy\">dd mm yyyy</option>" +
+                "<option value=\"mm dd y\">mm dd yy</option>" +
+                "<option value=\"dd mm yy\">mm dd yyyy</option>";
+
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label')\"> </td></tr>" +
+                "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + ")\"></td></tr>" +
+                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatelabel('helperTexthelper" + id + "','helpertf')\"></td></tr>" +
+                "<tr><td>Format</td><td><select id=\"format\" onchange=\"changeFormat(" + id + ",this,this.selectedIndex)\">" + options + "</select></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
+                "</Table>"
+
+
+        }
+    }
+
+    function updatelabel(id1, id2, pos) {
+
+        var b = document.getElementById(id2).value;
+        document.getElementById(id1).innerHTML = b;
+        form['yike' + pos]['label'] = b;
+    }
+
+    function updatehelper(id1, id2, pos) {
+        var b = document.getElementById(id2).value;
+        document.getElementById(id1).innerHTML = b;
+        form['yike' + pos]['helper_text'] = b;
+    }
+
+
+    function changeFormat(id0, sel, index) {
+        id0.value = sel[index].innerHTML;
+        $(id0.id).datepicker({ dateFormat: sel[index].value });
+    }
+
+    function updateCount(id1, id2, pos) {
+        var b = document.getElementById(id2).value;
+        document.getElementById(id1).innerHTML = '0 / ' + b;
+        form['yike' + pos]['count_char'] = b;
+
+    }
+
+    function addHelper(id0, pos) {
+
+        var count = "";
+        console.log("helpertext")
+        if (document.getElementById('countCheck').checked) {
+            count = document.getElementById('count' + id0.id);
+        }
+
+        if (document.getElementById('helpCheck').checked) {
+            document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
+            console.log(document.getElementById(id0.id).innerHTML)
+            document.getElementById('helpertf').disabled = false;
+            document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
+            form['yike' + pos]['helper_enabled'] = true;
+
+        }
+        else {
+            console.log(id0.id + "else");
+            document.getElementById(id0.id).innerHTML = "";
+            document.getElementById('helpertf').disabled = true;
+            document.getElementById('helpertf').value = "";
+            form['yike' + pos]['helper_enabled'] = false;
+        }
+        if (count != "")
+            document.getElementById(id0.id).appendChild(count);
+
+    }
+
+    function addHelper2(id0) {
+        if (document.getElementById('helpCheck').checked) {
+            console.log(id0.id);
+            document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
+            document.getElementById('helpertf').disabled = false;
+            document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
+
+        }
+        else {
+            document.getElementById(id0.id).innerHTML = "";
+            document.getElementById('helpertf').disabled = true;
+            document.getElementById('helpertf').value = "";
+        }
+
+    }
+
+
+    function addCount(id0, pos) {
+
+
+        if (document.getElementById('helpCheck').checked) {
+            htext = document.getElementById('helperText' + id0.id);
+            document.getElementById(id0.id).innerHTML = "";
+            document.getElementById(id0.id).appendChild(htext);
+        }
+        else {
+            document.getElementById(id0.id).innerHTML = "";
+        }
+        if (document.getElementById('countCheck').checked) {
+            form['yike' + pos]['count_enabled'] = true;
+            document.getElementById(id0.id).innerHTML += generate_new_Count(id0.id);
+            document.getElementById('numtf').disabled = false;
+            document.getElementById('numtf').value = document.getElementById('count' + id0.id).innerHTML.replace('0 / ', '');
+
+        }
+        else {
+            document.getElementById(id0.id).innerHTML += "";
+            document.getElementById('numtf').disabled = true;
+            document.getElementById('numtf').value = "";
+            form['yike' + pos]['count_enabled'] = false;
+
+        }
+
+        var tfid = id0.id.replace('helper', '')
+        document.getElementById(tfid).maxLength = 25;
+    }
+
+    function DeleteItem(id0, pos) {
+        console.log('div' + id0.id)
+        var parent = document.getElementById("dropzone");
+        var element = document.getElementById('div' + id0.id);
+        parent.removeChild(element);
+    }
+
+    function preview() {
+        togglec();
+        var preForm = document.getElementById('pre_form');
+        preForm.innerHTML = "";
+        for (var i = 0; i < form["nE"]; i++) {
+            var widget0 = form['yike' + i];
+            var widget_type = widget0["type"]
+            if (widget_type == "textfield") {
+                var node = document.createElement("div");
+                node.innerHTML = genrate_new_textField2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+            else if (widget_type == "textarea") {
+                var node = document.createElement("div");
+                node.innerHTML = genrate_new_textArea2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+
+            else if(widget_type == "mobile"){
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_mobilefield2(i);
+                preForm.appendChild(node);
+                window.mdc.autoInit();
+                convert2li('predropdown'+i)
+            }
+            else if(widget_type=="datepicker"){
+                var node = document.createElement("div");
+                node.innerHTML=generate_new_datefield2(widget0,i);
+                preForm.appendChild(node);
+                $('#predatepicker' + i).datepicker({ dateFormat: 'dd/mm/yy' });
+                window.mdc.autoInit();
+
+
+            }
+
+        }
+    }
+
+    function updateCountNum(id0) {
+        console.log(id0);
+    }
+
+    function genrate_new_textField2(widget0, formyike) {
+        var label = widget0["label"];
+        var isCountEnabled = widget0["count_enabled"]
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextfield' + formyike, widget0["helper_text"]) : "";
+        var count = isCountEnabled ? generate_new_Count2('prehelpertextfield' + formyike, widget0["count_char"]) : "";
+        var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
+        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  data-mdc-auto-init=\"MDCTextField\">" +
+            "<input  class=\"mdc-text-field__input\" " + ml + " id=\"pretextfield" + formyike + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextfield" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeltextfield" + formyike + "\">" + label + "</label></div>" +
+            "<div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelpertextfield" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
+    }
+
+    function genrate_new_textArea2(widget0, formyike) {
+        var label = widget0["label"];
+        var isCountEnabled = widget0["count_enabled"]
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextarea' + formyike, widget0["helper_text"]) : "";
+        var count = isCountEnabled ? generate_new_Count2('prehelpertextarea' + formyike, widget0["count_char"]) : "";
+        var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
+        return "<div  class=\"mdc-text-field mdc-text-field--textarea object_of_form2\" data-mdc-auto-init=\"MDCTextField\">" +
+            "<textarea  id=\"pretextarea" + formyike + "\" " + ml + " class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\">" +
+            "<div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextarea" + formyike + "\" id=\"prelabeltextarea" + formyike + "\" class=\"mdc-floating-label\">" + label + "</label></div>" +
+            "<div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"prehelpertextarea" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
+
+    }
+
+    function generate_new_HelperText2(id0, val) {
+        return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+            "id=\"helperText" + id0 + "\">" + val + "</p>";
+    }
+
+    function generate_new_Count2(id0, val) {
+        return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / " + val + "</div>";
+    }
+
+    function generate_new_datefield2(widget0,formyike) {
+        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  onclick=\"editor('predatepicker" + formyike + "')\"  data-mdc-auto-init=\"MDCTextField\"><input  class=\"mdc-text-field__input\" id=\"predatepicker" + formyike + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"predatepicker" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeldatepicker" + formyike + "\">Label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelperdatepicker" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    }
+
+    function togglec() {
+        var popup = document.getElementById("contain");
+        var f = document.getElementById("shadder");
+        popup.classList.toggle("show");
+        f.classList.toggle("show");
+    }
+
+    
+
+    function generate_new_mobilefield() {
+        return "<div style=\"color:rgba(0,0,0,0.37)\" class=\" labelmobile\" id=\"labelmobile"+yikem+"\">Mobile Number</div><div bis_skin_checked=\"1\">" +
+            "<div bis_skin_checked=\"1\" id=\"dropdown"+yikem+"\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel mdc-text-field--disabled object_of_form \">" +
+            "<select disabled id=\"codemobile" + yikem + "\"  name=\"options\" class=\" selmobile\">" +
+            "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
+            "</select>" +
+            "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
+            "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
+            "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
+            "</div>" +
+            "</div>" +
+            "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form mdc-text-field--disabled\"" +
+            " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
+            "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + yikem + "\">" + yikef + "</span>" +
+            "<input disabled=\"\" id=\"mobile" + yikem + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
+            "</div><div id=\"helpermobile" + yikem + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
+    }
+
+    function generate_new_mobilefield2(yikeform) {
+        return "<div style=\"color:rgba(0,0,0,0.37);margin-left:2px\" class=\" labelmobile\" id=\"prelabelmobile"+yikeform+"\">Mobile Number</div><div bis_skin_checked=\"1\">" +
+            "<div bis_skin_checked=\"1\" id=\"predropdown"+yikeform+"\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel  object_of_form \">" +
+            "<select id=\"precodemobile" + yikeform + "\"  name=\"options\" class=\" selmobile\">" +
+            "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
+            "</select>" +
+            "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
+            "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
+            "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
+            "</div>" +
+            "</div>" +
+            "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form \"" +
+            " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
+            "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + yikem + "\">" + yikef + "</span>" +
+            "<input maxlength='10' type=\"tel\" id=\"mobile" + yikem + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
+            "</div><div id=\"helpermobile" + yikem + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
+    }
+
+    function convert2li(id0){
+          jQuery('#'+id0).append('<div class="button"></div>');
+            jQuery('#'+id0).append('<ul class="select-list"></ul>');
+            jQuery('#'+id0+' select option').each(function () {
+                var bg = jQuery(this).css('background-image');
+                jQuery('.select-list').append('<li class="clsAnchor"><table><tr><td value="' + jQuery(this).val() + '" class="' + jQuery(this).attr('class') + '" style=width:31px;height:32px;background-image:' + bg + '></td><td>' + jQuery(this).text() + '</td></li></td></tr></table>');
+            });
+            jQuery('#'+id0+' .button').html('<table style=\'height:100%;width:100%;vertical-align:middle\'><tr><td><img src='+jQuery('#'+id0+' select').find(':selected').css('background-image').replace('url(','').replace(')','')+'></td>'+'<td style=\"color:rgba(0,0,0,0.37)\"' + '>' + jQuery('#'+id0+' select').find(':selected').text() + '</td>' + '<td><a href="javascript:void(0);" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+            jQuery('#'+id0+' ul li').each(function () {
+                if (jQuery(this).find('span').text() == jQuery('#'+id0+' select').find(':selected').text()) {
+                    jQuery(this).addClass('active');
+                }
+            });
+            jQuery('#'+id0+' .select-list span').on('click', function () {
+                var dd_text = jQuery(this).text();
+                var dd_img = jQuery(this).css('background-image').replace('url(','').replace(')','');
+                var dd_val = jQuery(this).attr('value');
+                console.log(dd_img)
+                jQuery('#'+id0+' .button').html('<table><tr><td><img src='+dd_img+'></td><td style="color:rgba(0,0,0,0.37)">'+ dd_text + '</td>' + '<td><a href="javascript:void(0);" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+                jQuery('#'+id0+' .select-list span').parent().removeClass('active');
+                jQuery(this).parent().addClass('active');
+                $('#'+id0+' select[name=options]').val(dd_val);
+                $('#'+id0+' .select-list li').slideUp();
+            });
+            jQuery('#'+id0+' .button').on('click', 'a.select-list-link', function () {
+                jQuery('#'+id0+' ul li').slideToggle();
+                
+            });
+       }
+
 </script>

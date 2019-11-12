@@ -1,39 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib import sessions
 import copy
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import random
+from urllib import parse
+from django.http import HttpResponse
+import json
+from django.views.decorators.csrf import requires_csrf_token
+
+#For sending activation function
+from django.http import HttpResponse
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
+import datetime
+
+#For generating password
+import random
+import string 
+
 
 
 # Create your views here.
 def dashboard(request):
     # email=request.session['email']
-
-    if request.method=='POST':
-        name=request.POST.get('emp_name')
-        department=request.POST.get('department')
-        hierarchy=request.POST.get('hierarchy')
-        no_comp=request.POST.get('no_complaints')
-
-        dynamodb=boto3.resource('dynamodb')
-        table=dynamodb.Table('employees')
-
-        response=table.scan
-        response = table.scan(
-                    ProjectionExpression="emp_id",
-                )
-
-        table.put_item(
-            Item={
-                'emp_id':len(response['Items'])+1,
-                'emp_name':name,
-                'department':department,
-                'hierarchy':hierarchy,
-                'no_complaints':no_comp,
-            }
-        )
-
+    # org_id = org_id
+    # print(org_id)
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     response2=table.scan()
@@ -43,30 +41,147 @@ def dashboard(request):
     hierarchy=[]
     no_complaints=[]
 
-    print(response2['Items'])
-
+    # print(response2['Items'])
     for dic in response2['Items']:
-        name.append(dic['emp_name'])
-        department.append(dic['department'])
-        hierarchy.append(dic['hierarchy'])
-        no_complaints.append(dic['no_complaints'])
+        if dic['active']==True:
+            name.append(dic['emp_name'])
+            department.append(dic['department'])
+            hierarchy.append(dic['hierarchy'])
+            no_complaints.append(dic['no_complaints'])
 
     info_list=zip(name,department,hierarchy,no_complaints)
 
     context={
         "info_list":info_list,
     }
+    
+    if request.method=='POST':
+        name=request.POST.get('emp_name')
+        department=request.POST.get('department')
+        hierarchy=request.POST.get('hierarchy')
+        no_comp=request.POST.get('no_complaints')
+        email=request.POST.get('emp_email')
 
+        dynamodb=boto3.resource('dynamodb')
+        table=dynamodb.Table('employees')
+
+        response=table.scan
+        response = table.scan(
+                    ProjectionExpression="emp_id",
+                )
+
+        emp_id=len(response['Items'])+1
+        
+        letters=string.ascii_letters
+        password_gen=''.join(random.choice(letters) for i in range(8))
+        token=''.join(random.choice(letters) for i in range(10))
+
+        table.put_item(
+            Item={
+                'emp_id':len(response['Items'])+1,
+                'emp_name':name,
+                'user_email':email,
+                'department':department,
+                'hierarchy':hierarchy,
+                'no_complaints':no_comp,
+                'active':False,
+                'token':token
+            }
+        )
+
+        
+        
+        current_site = get_current_site(request)
+        mail_subject = 'Click the link to join the organisation.'
+        message = render_to_string('dashboard/acc_active_email.html', {
+            'user': name,
+            'user_id':emp_id,
+            'user_email':email,
+            'password':password_gen,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(emp_id)),
+            'token':token
+        })
+        to_email = email
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        email.send()
+
+        return render(request, 'dashboard/index.html',context)   
 
     return render(request, 'dashboard/index.html',context)
+
+
 
 def form(request):
     return render(request,'dashboard/form.html')
 
-def create(request):
-    print(request.session['email'])
 
-    email="yashukikkuri@gmail.com"
+
+
+
+def activate(request, uidb64, token, user_id, password):
+    dynamodb=boto3.resource('dynamodb')
+    table=dynamodb.Table('employees')
+    users_table=dynamodb.Table('users')
+
+    response=table.scan()
+
+    for dic in response['Items']:
+        if (dic['emp_id']==int(user_id)) and (dic['token']==str(token)):
+           
+            table.update_item(
+                Key={
+                    'emp_id':dic['emp_id']
+                },
+                UpdateExpression="set active = :r",
+                ExpressionAttributeValues={
+                    ':r':True
+                }
+            )
+            
+            users_table.put_item(
+            Item={
+                'username':dic['emp_name'],
+                'email':dic['user_email'],
+                'password':password,
+                'organizations_created':[101],
+                'organizations_joined':[102]
+                }
+            )
+
+
+    response2=table.scan()
+
+    name=[]
+    department=[]
+    hierarchy=[]
+    no_complaints=[]
+
+    for dic in response2['Items']:
+        if dic['active']==True:
+            name.append(dic['emp_name'])
+            department.append(dic['department'])
+            hierarchy.append(dic['hierarchy'])
+            no_complaints.append(dic['no_complaints'])
+
+    info_list=zip(name,department,hierarchy,no_complaints)
+
+    context={
+        "info_list":info_list,
+    }        
+
+    return render(request, 'dashboard/index.html',context) 
+
+
+
+
+def create(request):
+    #print('abc')
+    #print(request.session['email'])
+    email=request.session['email']
+
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('users')
 
@@ -75,12 +190,12 @@ def create(request):
         FilterExpression=Attr('email').eq(email)
     )
 
-    print(response)
-    print('\n**\n')
+    # print(response)
+    # print('\n**\n')
 
     organizations_created=response['Items'][0]['organizations_created']
-    organizations_joined=response['Items'][0]['organizations_joined']
     total_org_ids=copy.deepcopy(organizations_created)
+    organizations_joined=response['Items'][0]['organizations_joined']
     for i in organizations_joined:
         total_org_ids.append(i)
         # topics=[]
@@ -95,16 +210,24 @@ def create(request):
         #     print(response['Item']['topic'])
         #     topics+=[response['Item']['topic']]
         # print(topics)
+    # print(total_org_ids)
+    for i in range(0,len(response['Items'][0]['organizations_joined'])):
+        response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+    org_join_id=response['Items'][0]['organizations_joined']
+
 
     org_names=[]
     dynamoTable=dynamoDB.Table('organization')
     for i in total_org_ids:
-        print(type(int(i)))
+        # print(type(int(i)))
         response = dynamoTable.scan(
             ProjectionExpression="organization_name",
             FilterExpression=Attr('org_id').eq(int(i))
         )
+        # print(response['Items'])
         org_names.append(response['Items'][0]['organization_name'])
+    print(email)
+    print(org_names)
     organizations_created_names=[]
     organizations_joined_names=[]
     count=0
@@ -114,8 +237,8 @@ def create(request):
         else:
             organizations_created_names.append(i)
         count=count+1
-    print(organizations_joined_names)
-    print(organizations_created_names)
+    # print(organizations_joined_names)
+    # print(organizations_created_names)
 
 
     # dynamoDB=boto3.resource('dynamodb')
@@ -135,26 +258,254 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
-    colors=["linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1))","radial-gradient(circle, red, yellow, green)","linear-gradient(red, yellow)","linear-gradient(to bottom right, red, yellow)","linear-gradient(red, yellow, green)","linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,219,255,1) 47%)","linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(188,0,255,0.9080766095500701) 46%)","linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,153,29,1) 48%, rgba(252,176,69,1) 100%)"]
-    colors1 = ["#ff4d4d", "#66ffff", "#1aff8c","#ff471a","#ffff33","#a3a375","#3333ff"]
-    joined_color=[]
-    created_color=[]
-
-    for k in range(0,len(organizations_joined)):
-        x=random.randint(0,7)
-        joined_color.append(colors[x])
-        print(x)
-
-    for l in range(0,len(organizations_created)):
-        y=random.randint(0,7)
-        print(y)
-        created_color.append(colors[x])
-
-    print(created_color,x,joined_color)
 
     extra = (len(organizations_created)%4)-1
-    data = {'topics' : zip(organizations_created_names,organizations_created,created_color), 'topics_created' : zip(organizations_joined_names,organizations_joined,joined_color), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,'color_created':created_color,'color_joined':joined_color}
+    data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+
+
+
     return render(request, 'orgadmin/dummy.html', data)
+
+
+def created(request):
+    organization_name = request.POST.get('name')
+    code=request.POST.get('code')
+    #print("name:"+ organization_name + "code:" + code)
+
+    if (organization_name!='' and code!='' ):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('organization')
+            response_sno=table.scan(
+                ProjectionExpression="org_id",
+             )
+            response = table.scan(
+                ProjectionExpression="organization_name,code",
+                FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
+            )
+            #print(response)
+            #print(response_sno)
+
+            if(len(response['Items'])==0):
+                ID=len(response_sno['Items'])+101
+                response = table.put_item(
+                   Item={
+                    'org_id': len(response_sno['Items'])+101,
+                    'organization_name': organization_name,
+                    'code':code,
+                    }
+                )
+                email=request.session['email']
+
+
+
+
+                request.session['org_created']=request.session['org_created']+[ID]
+                org_created = request.session['org_created']
+                # print(org_created)
+                # print(ID)
+                # print(request.session['org_created'])
+                # print('\n\n\n')
+                # # request.session['org_created'].append(ID)
+                org_joined = request.session['org_joined']
+
+                dynamoDB=boto3.resource('dynamodb')
+                table=dynamoDB.Table('users')
+                # print("\n\n\n")
+                # print(org_created)
+                # print("\n\n\n")
+                # print(request.session['org_created'])
+                response = table.update_item(
+                    Key={
+                        'email':email
+                    },
+                    UpdateExpression="set organizations_created = :r",
+                    ExpressionAttributeValues={
+                        ':r': org_created,
+
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+
+
+                response1 = table.scan(
+                    ProjectionExpression="organizations_created,organizations_joined",
+                    FilterExpression=Attr('email').eq(email)
+                )
+
+
+                #print(response1)
+                #print('\n**\n')
+
+                organizations_created=response1['Items'][0]['organizations_created']
+                organizations_joined=response1['Items'][0]['organizations_joined']
+                # print(organizations_created)
+                # print(organizations_joined)
+                total_org_ids=copy.deepcopy(organizations_created)
+                for i in organizations_joined:
+                    total_org_ids.append(i)
+                for i in range(0,len(response1['Items'][0]['organizations_joined'])):
+                    response1['Items'][0]['organizations_joined'][i] = int(response1['Items'][0]['organizations_joined'][i])
+                    org_join_id=response1['Items'][0]['organizations_joined']
+
+
+                org_names=[]
+                dynamoTable=dynamoDB.Table('organization')
+                for i in total_org_ids:
+                    #print(type(int(i)))
+                    response1 = dynamoTable.scan(
+                        ProjectionExpression="organization_name",
+                        FilterExpression=Attr('org_id').eq(int(i))
+                    )
+                    org_names.append(response1['Items'][0]['organization_name'])
+                    #print(org_names)
+                    organizations_created_names=[]
+                    organizations_joined_names=[]
+                    count=0
+                    for i in org_names:
+                        if(count>=len(organizations_created)):
+                            organizations_joined_names.append(i)
+                        else:
+                            organizations_created_names.append(i)
+                        count=count+1
+                # print('a')
+                # print(organizations_joined_names)
+                # print('b')
+                # print(organizations_created_names)
+                # print('c')
+                # print(organizations_created)
+                # print('d')
+                # print(organizations_joined)
+
+
+
+                extra = (len(organizations_created)%4)-1
+                data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,organizations_joined), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+                # print(request.session['org_created'])
+                return render(request, 'orgadmin/dummy.html', data)
+
+
+
+            else:
+                # print(request.session['org_created'])
+                #print('abc')
+                #print(request.session['email'])
+                email=request.session['email']
+
+                dynamoDB=boto3.resource('dynamodb')
+                dynamoTable=dynamoDB.Table('users')
+
+                response = dynamoTable.scan(
+                    ProjectionExpression="organizations_created,organizations_joined",
+                    FilterExpression=Attr('email').eq(email)
+                )
+
+                # print(response)
+                # print('\n**\n')
+
+                organizations_created=response['Items'][0]['organizations_created']
+                total_org_ids=copy.deepcopy(organizations_created)
+                organizations_joined=response['Items'][0]['organizations_joined']
+                for i in organizations_joined:
+                    total_org_ids.append(i)
+
+                # print(total_org_ids)
+                for i in range(0,len(response['Items'][0]['organizations_joined'])):
+                    response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+                org_join_id=response['Items'][0]['organizations_joined']
+
+
+                org_names=[]
+                dynamoTable=dynamoDB.Table('organization')
+                for i in total_org_ids:
+                    print(type(int(i)))
+                    response = dynamoTable.scan(
+                        ProjectionExpression="organization_name",
+                        FilterExpression=Attr('org_id').eq(int(i))
+                    )
+                    print(response['Items'])
+                    org_names.append(response['Items'][0]['organization_name'])
+
+                organizations_created_names=[]
+                organizations_joined_names=[]
+                count=0
+                for i in org_names:
+                    if(count>=len(organizations_created)):
+                        organizations_joined_names.append(i)
+                    else:
+                        organizations_created_names.append(i)
+                    count=count+1
+                #print(organizations_joined_names)
+                #print(organizations_created_names)
+
+                extra = (len(organizations_created)%4)-1
+                data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+                # print('a')
+                # print(organizations_joined_names)
+                # print('b')
+                # print(organizations_created_names)
+                # print('c')
+                # print(organizations_created)
+                # print('d')
+                # print(organizations_joined)
+
+
+
+
+                return render(request, 'orgadmin/dummy.html', data)
+
+
+def join(request):
+    code=request.POST.get('join_code')
+    #print("code:" + code)
+
+    if (code!='' ):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('organization')
+
+            response_join = table.scan(
+                ProjectionExpression="code,org_id",
+                FilterExpression=Attr('code').eq(code)
+            )
+            print("********************")
+            print(response_join)
+            print("#####################")
+
+            #request.session['org_created']=request.session['org_created']+[ID]
+            org_joined = request.session['org_joined']
+            print(org_joined)
+            print(response_join['Items'][0]['org_id'])
+            org_joined.append(int(response_join['Items'][0]['org_id']))
+            email=request.session['email']
+            print(org_joined)
+            print(email)
+
+            dynamoDB=boto3.resource('dynamodb')
+            table=dynamoDB.Table('users')
+            response = table.update_item(
+                Key={
+                    'email':email
+                },
+                UpdateExpression="set organizations_joined = :r",
+                ExpressionAttributeValues={
+                    ':r': org_joined,
+
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+            return redirect('../create')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,7 +531,7 @@ def departments(request):
     print(departments)
 
     return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-
+    # return render(request,'orgadmin/org_departments.html')
 
 
 def hierarchy(request):
@@ -192,24 +543,80 @@ def hierarchy(request):
     return render(request,'orgadmin/departments.html',{'dep_name':dep_name,'dep_id':dep_id})
 
 
+# @requires_csrf_token
+def departments_hierarchy_update(request):
+    # print(type(hierarchy))
+    # print(hierarchy)
+    # nodes = request.POST['tasks']
+    print(request.POST)
+    # print(request.POST['nodes'])
+    # value = parse.parse_qs(request.POST.get('hierarchy'))
+    # organization_id = 105
+    # dynamoDB=boto3.resource('dynamodb')
+    # dynamoTable=dynamoDB.Table('departments')
+    #
+    # response = dynamoTable.scan(
+    #     ProjectionExpression="department_name,department_id",
+    #     FilterExpression=Attr('organization_id').eq(organization_id)
+    # )
+    # departments = []
+    # dep_id=[]
+    # for i in response['Items']:
+    #     departments.append(i['department_name'])
+    #     dep_id.append(i['department_id'])
+    # print(departments)
 
-def departments_hierarchy_update(request,hierarchy):
-    print(type(hierarchy))
-    print(hierarchy)
-
-    organization_id = 105
-    dynamoDB=boto3.resource('dynamodb')
-    dynamoTable=dynamoDB.Table('departments')
-
-    response = dynamoTable.scan(
-        ProjectionExpression="department_name,department_id",
-        FilterExpression=Attr('organization_id').eq(organization_id)
-    )
-    departments = []
-    dep_id=[]
-    for i in response['Items']:
-        departments.append(i['department_name'])
-        dep_id.append(i['department_id'])
-    print(departments)
 
     return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+
+
+def orgadmin_page(request):
+    email=request.session['email']
+
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('users')
+
+    response = dynamoTable.scan(
+        ProjectionExpression="organizations_created,organizations_joined",
+        FilterExpression=Attr('email').eq(email)
+    )
+
+
+
+    organizations_created=response['Items'][0]['organizations_created']
+    total_org_ids=copy.deepcopy(organizations_created)
+    organizations_joined=response['Items'][0]['organizations_joined']
+    for i in organizations_joined:
+        total_org_ids.append(i)
+
+    for i in range(0,len(response['Items'][0]['organizations_joined'])):
+        response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+    org_join_id=response['Items'][0]['organizations_joined']
+
+
+    org_names=[]
+    dynamoTable=dynamoDB.Table('organization')
+    for i in total_org_ids:
+        # print(type(int(i)))
+        response = dynamoTable.scan(
+            ProjectionExpression="organization_name",
+            FilterExpression=Attr('org_id').eq(int(i))
+        )
+        # print(response['Items'])
+        org_names.append(response['Items'][0]['organization_name'])
+
+    organizations_created_names=[]
+    organizations_joined_names=[]
+    count=0
+    for i in org_names:
+        if(count>=len(organizations_created)):
+            organizations_joined_names.append(i)
+        else:
+            organizations_created_names.append(i)
+        count=count+1
+    extra = (len(organizations_created)%4)-1
+    data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+
+
+
+    return render(request, 'orgadmin/dummy.html', data)
