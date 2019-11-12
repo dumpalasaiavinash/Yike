@@ -562,14 +562,14 @@ z-index: 0;
 
                             <div id="myModal" class="modal">
                                 <div class="modal-content">
-                                    <span class="close">&times;</span>
+                                    <div style="float:right;"><span class="close">&times;</span></div>
                                 <form class="form-container" action="{% url 'orgadmin:dashboard' org_id %}" method="post" >
                                     {% csrf_token %}
-                                    <input type="text" name="emp_name" placeholder="Enter Name" required>
-                                    <input type="email" name="emp_email" placeholder="Enter Email ID" required>
-                                    <input type="text" name="department" placeholder="Enter Department" required>
-                                    <input type="text" name="hierarchy" placeholder="Enter Hierarchy" required>
-                                    <input type="text" name="no_complaints" placeholder="No_of_complaints_handling" required>
+                                    <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
+                                    <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
+                                    <input class="input" type="text" name="department" placeholder="Enter Department" required><br>
+                                    <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
+                                    <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
                                     <input type="submit">  
                                 </form>
                                 </div>
