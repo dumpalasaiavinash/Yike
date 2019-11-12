@@ -1,0 +1,23 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+
+{% block body %}
+<div class = "sheet">
+        <link href='styles.css?version=1' rel='stylesheet'></link>
+    <link rel="stylesheet" href="{% static 'Client/css/first.css' %}">
+    <div class='head'><a href="{% url 'secondpage' %}"><button type="button" class="btn btn-primary btn-lg">New Complaint</button></a><div class="badge"></div></button></div>
+    <div class='head1'><a href="{% url 'secondpage' %}"><button type="button" class="btn btn-primary btn-lg">Track</button></a><div class="badge"></div></button></div>    
+    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div></button></div>
+</div>
+ 
+<div class = "complaint">
+<h2 style="opacity:0.5;">Previous complaints</h2>
+</div>
+ 
+ 
+{% endblock %}
+    
+     
+
+

@@ -1,0 +1,25 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+
+{% block body %}
+<div class = "sheet">
+    <link rel="stylesheet" href="{% static "Client/css/first.css" %}">
+    <span class='head'><button type="button" class="btn btn-primary btn-lg">New Complaint<span class="badge"></span></button></span>
+    <span class="head1"><button type="button" class="btn btn-primary btn-lg">Track<span class="badge"></span></button></span>    
+    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div></button></div>
+</div>
+ 
+<div>
+<textarea placeholder="Enter your complaint" class = "newcomplaint" cols="30" rows="10"></textarea>
+
+<br>
+<button type="submit" class="btn btn-primary btn-lg" style="float: right;margin-right: 10%">Submit</button>
+</div>
+
+
+{% endblock %}
+    
+     
+
+

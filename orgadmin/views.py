@@ -9,37 +9,29 @@ from django.http import HttpResponse
 import json
 from django.views.decorators.csrf import requires_csrf_token
 
+#For sending activation function
+from django.http import HttpResponse
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
+import datetime
+
+#For generating password
+import random
+import string 
+
 
 
 # Create your views here.
-def dashboard(request,org_id):
+def dashboard(request):
     # email=request.session['email']
-    org_id = org_id
+    # org_id = org_id
     # print(org_id)
-    if request.method=='POST':
-        name=request.POST.get('emp_name')
-        department=request.POST.get('department')
-        hierarchy=request.POST.get('hierarchy')
-        no_comp=request.POST.get('no_complaints')
-
-        dynamodb=boto3.resource('dynamodb')
-        table=dynamodb.Table('employees')
-
-        response=table.scan
-        response = table.scan(
-                    ProjectionExpression="emp_id",
-                )
-
-        table.put_item(
-            Item={
-                'emp_id':len(response['Items'])+1,
-                'emp_name':name,
-                'department':department,
-                'hierarchy':hierarchy,
-                'no_complaints':no_comp,
-            }
-        )
-
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     response2=table.scan()
@@ -51,22 +43,139 @@ def dashboard(request,org_id):
 
     # print(response2['Items'])
     for dic in response2['Items']:
-        name.append(dic['emp_name'])
-        department.append(dic['department'])
-        hierarchy.append(dic['hierarchy'])
-        no_complaints.append(dic['no_complaints'])
+        if dic['active']==True:
+            name.append(dic['emp_name'])
+            department.append(dic['department'])
+            hierarchy.append(dic['hierarchy'])
+            no_complaints.append(dic['no_complaints'])
 
     info_list=zip(name,department,hierarchy,no_complaints)
 
     context={
         "info_list":info_list,
     }
+    
+    if request.method=='POST':
+        name=request.POST.get('emp_name')
+        department=request.POST.get('department')
+        hierarchy=request.POST.get('hierarchy')
+        no_comp=request.POST.get('no_complaints')
+        email=request.POST.get('emp_email')
 
+        dynamodb=boto3.resource('dynamodb')
+        table=dynamodb.Table('employees')
+
+        response=table.scan
+        response = table.scan(
+                    ProjectionExpression="emp_id",
+                )
+
+        emp_id=len(response['Items'])+1
+        
+        letters=string.ascii_letters
+        password_gen=''.join(random.choice(letters) for i in range(8))
+        token=''.join(random.choice(letters) for i in range(10))
+
+        table.put_item(
+            Item={
+                'emp_id':len(response['Items'])+1,
+                'emp_name':name,
+                'user_email':email,
+                'department':department,
+                'hierarchy':hierarchy,
+                'no_complaints':no_comp,
+                'active':False,
+                'token':token
+            }
+        )
+
+        
+        
+        current_site = get_current_site(request)
+        mail_subject = 'Click the link to join the organisation.'
+        message = render_to_string('dashboard/acc_active_email.html', {
+            'user': name,
+            'user_id':emp_id,
+            'user_email':email,
+            'password':password_gen,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(emp_id)),
+            'token':token
+        })
+        to_email = email
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        email.send()
+
+        return render(request, 'dashboard/index.html',context)   
 
     return render(request, 'dashboard/index.html',context)
 
+
+
 def form(request):
     return render(request,'dashboard/form.html')
+
+
+
+
+
+def activate(request, uidb64, token, user_id, password):
+    dynamodb=boto3.resource('dynamodb')
+    table=dynamodb.Table('employees')
+    users_table=dynamodb.Table('users')
+
+    response=table.scan()
+
+    for dic in response['Items']:
+        if (dic['emp_id']==int(user_id)) and (dic['token']==str(token)):
+           
+            table.update_item(
+                Key={
+                    'emp_id':dic['emp_id']
+                },
+                UpdateExpression="set active = :r",
+                ExpressionAttributeValues={
+                    ':r':True
+                }
+            )
+            
+            users_table.put_item(
+            Item={
+                'username':dic['emp_name'],
+                'email':dic['user_email'],
+                'password':password,
+                'organizations_created':[101],
+                'organizations_joined':[102]
+                }
+            )
+
+
+    response2=table.scan()
+
+    name=[]
+    department=[]
+    hierarchy=[]
+    no_complaints=[]
+
+    for dic in response2['Items']:
+        if dic['active']==True:
+            name.append(dic['emp_name'])
+            department.append(dic['department'])
+            hierarchy.append(dic['hierarchy'])
+            no_complaints.append(dic['no_complaints'])
+
+    info_list=zip(name,department,hierarchy,no_complaints)
+
+    context={
+        "info_list":info_list,
+    }        
+
+    return render(request, 'dashboard/index.html',context) 
+
+
+
 
 def create(request):
     #print('abc')
