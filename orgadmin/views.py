@@ -258,6 +258,8 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
+    print(organizations_created)
+    print("######################")
 
     extra = (len(organizations_created)%4)-1
     data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
