@@ -190,7 +190,6 @@ z-index: 0;
     {% if topics_created_size > 0 %}
         {% for i,j in topics_created %}
         <div class="main" style="margin-left:2%;" >
-            <!-- <a href = "{% url 'orgadmin:dashboard' %}"> -->
             
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                 
@@ -236,6 +235,7 @@ z-index: 0;
             {% for i, j in topics %}
             <div class="main" style="margin-left:2%;" >
                 <a href = "{% url 'orgadmin:dashboard' j %}">
+                  
 
                 
                   <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >

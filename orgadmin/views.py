@@ -254,9 +254,24 @@ def create(request):
     # print(codes_created)
     print(organizations_created)
     print("######################")
-
+    ids=str(organizations_created)
+    print(ids)
+    list1=[]
+    list1.append(ids.split("'"))
+    print(list1[0][3])
+    list2=[]
+    print(len(list1[0]))
+    for i in range(0,len(list1[0])):
+        if i%2 != 0:
+            list2.append(int(list1[0][i]))
+    print(type(list2[0]))
+    print(org_join_id)
+    print("****************")
+    #print(ids.split("'"))
+    # for i in range ids.split("'"):
+    #     list1.append
     extra = (len(organizations_created)%4)-1
-    data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+    data = {'topics' : zip(organizations_created_names,list2), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
 
 
 
@@ -289,11 +304,11 @@ def created(request):
                     }
                 )
                 email=request.session['email']
-                print(response_sno)
-                print("####################")
+                # print(response_sno)
+                # print("####################")
                 
-                sno=response_sno['Items'][:]['org_id']
-                print(sno)
+                # sno=response_sno['Items'][0]['org_id']
+                # print(sno)
                 request.session['org_created']=request.session['org_created']+[ID]
                 org_created = request.session['org_created']
                 # print(org_created)
