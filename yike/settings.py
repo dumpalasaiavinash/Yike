@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'employee.apps.EmployeeConfig',
     'orgadmin.apps.OrgadminConfig',
     'rest_framework',
-    'chatbox'
+    'chatbox',
+    
 
 ]
 

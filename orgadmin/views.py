@@ -258,7 +258,7 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
-    
+
     extra = (len(organizations_created)%4)-1
     data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
 
@@ -284,7 +284,7 @@ def created(request):
             )
             #print(response)
             #print(response_sno)
-            
+
             if(len(response['Items'])==0):
                 ID=len(response_sno['Items'])+101
                 response = table.put_item(
@@ -297,7 +297,7 @@ def created(request):
                 email=request.session['email']
 
 
-                
+
 
                 request.session['org_created']=request.session['org_created']+[ID]
                 org_created = request.session['org_created']
@@ -367,9 +367,9 @@ def created(request):
                         else:
                             organizations_created_names.append(i)
                         count=count+1
-                # print('a')    
+                # print('a')
                 # print(organizations_joined_names)
-                # print('b')    
+                # print('b')
                 # print(organizations_created_names)
                 # print('c')
                 # print(organizations_created)
@@ -377,7 +377,7 @@ def created(request):
                 # print(organizations_joined)
 
 
-                    
+
                 extra = (len(organizations_created)%4)-1
                 data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,organizations_joined), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
                 # print(request.session['org_created'])
@@ -407,7 +407,7 @@ def created(request):
                 organizations_joined=response['Items'][0]['organizations_joined']
                 for i in organizations_joined:
                     total_org_ids.append(i)
-                    
+
                 # print(total_org_ids)
                 for i in range(0,len(response['Items'][0]['organizations_joined'])):
                     response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
@@ -439,9 +439,9 @@ def created(request):
 
                 extra = (len(organizations_created)%4)-1
                 data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
-                # print('a')    
+                # print('a')
                 # print(organizations_joined_names)
-                # print('b')    
+                # print('b')
                 # print(organizations_created_names)
                 # print('c')
                 # print(organizations_created)
@@ -453,7 +453,7 @@ def created(request):
 
                 return render(request, 'orgadmin/dummy.html', data)
 
-                
+
 def join(request):
     code=request.POST.get('join_code')
     #print("code:" + code)
@@ -461,7 +461,7 @@ def join(request):
     if (code!='' ):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('organization')
-            
+
             response_join = table.scan(
                 ProjectionExpression="code,org_id",
                 FilterExpression=Attr('code').eq(code)
@@ -478,7 +478,7 @@ def join(request):
             email=request.session['email']
             print(org_joined)
             print(email)
-            
+
             dynamoDB=boto3.resource('dynamodb')
             table=dynamoDB.Table('users')
             response = table.update_item(
@@ -493,14 +493,14 @@ def join(request):
                 ReturnValues="UPDATED_NEW"
             )
             return redirect('../create')
-           
 
 
-         
-    
 
-                
-                
+
+
+
+
+
 
 
 
@@ -531,7 +531,7 @@ def departments(request):
     print(departments)
 
     return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-
+    # return render(request,'orgadmin/org_departments.html')
 
 
 def hierarchy(request):
@@ -549,7 +549,7 @@ def departments_hierarchy_update(request):
     # print(hierarchy)
     # nodes = request.POST['tasks']
     print(request.POST)
-    print(request.POST['nodes'])
+    # print(request.POST['nodes'])
     # value = parse.parse_qs(request.POST.get('hierarchy'))
     # organization_id = 105
     # dynamoDB=boto3.resource('dynamodb')
@@ -588,7 +588,7 @@ def orgadmin_page(request):
     organizations_joined=response['Items'][0]['organizations_joined']
     for i in organizations_joined:
         total_org_ids.append(i)
-       
+
     for i in range(0,len(response['Items'][0]['organizations_joined'])):
         response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
     org_join_id=response['Items'][0]['organizations_joined']
