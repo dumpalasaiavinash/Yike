@@ -140,7 +140,7 @@ def activate(request, uidb64, token, user_id, password):
                     ':r':True
                 }
             )
-            
+
             users_table.put_item(
             Item={
                 'username':dic['emp_name'],
