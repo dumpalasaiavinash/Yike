@@ -282,9 +282,7 @@ def created(request):
                 ProjectionExpression="organization_name,code",
                 FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
             )
-            #print(response)
-            #print(response_sno)
-
+            
             if(len(response['Items'])==0):
                 ID=len(response_sno['Items'])+101
                 response = table.put_item(
@@ -295,10 +293,11 @@ def created(request):
                     }
                 )
                 email=request.session['email']
-
-
-
-
+                print(response_sno)
+                print("####################")
+                
+                sno=response_sno['Items'][:]['org_id']
+                print(sno)
                 request.session['org_created']=request.session['org_created']+[ID]
                 org_created = request.session['org_created']
                 # print(org_created)
@@ -394,6 +393,7 @@ def created(request):
                 dynamoDB=boto3.resource('dynamodb')
                 dynamoTable=dynamoDB.Table('users')
 
+
                 response = dynamoTable.scan(
                     ProjectionExpression="organizations_created,organizations_joined",
                     FilterExpression=Attr('email').eq(email)
@@ -462,6 +462,7 @@ def join(request):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('organization')
 
+
             response_join = table.scan(
                 ProjectionExpression="code,org_id",
                 FilterExpression=Attr('code').eq(code)
@@ -474,14 +475,17 @@ def join(request):
             org_joined = request.session['org_joined']
             print(org_joined)
             print(response_join['Items'][0]['org_id'])
-            org_joined.append(int(response_join['Items'][0]['org_id']))
+            if (response_join['Items'][0]['org_id'] not in org_joined):    
+                org_joined.append(int(response_join['Items'][0]['org_id']))
+                print(org_joined)
+                print("@@@@")
             email=request.session['email']
             print(org_joined)
             print(email)
 
             dynamoDB=boto3.resource('dynamodb')
             table=dynamoDB.Table('users')
-            response = table.update_item(
+            response_joined = table.update_item(
                 Key={
                     'email':email
                 },
@@ -530,8 +534,8 @@ def departments(request):
         dep_id.append(i['department_id'])
     print(departments)
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-    # return render(request,'orgadmin/org_departments.html')
+    # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+    return render(request,'orgadmin/depart.html')
 
 
 def hierarchy(request):

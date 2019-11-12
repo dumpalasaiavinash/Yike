@@ -1,27 +1,132 @@
 {% load static %}
 {% block extrahead %}
 
+<style>
+ #tree {
+  overflow: scroll;
+}
+
+#box{
+background-color: lightgrey;
+width: 300px;
+padding: 50px;
+}
+
+
+</style>
+
 {% endblock %}
 
 {% block body %}
+
+<div style="width:20%;height:100%;float:left">
+
+</div>
+
+<div id="box" style="width:75%;height:100%;float:left;border:1px solid rgb(0,0,0)">
+  <button onclick="myFunction()">Click me</button>
+
+
+</div>
+
 <script>
-class TreeNode {
-  constructor(value) {
-    this.value = value;
-    this.descendents = [];
+
+
+  class Tree {
+    constructor(root) {
+      this._root = root || null;
+    }
+
+     _traverse(callback) {
+      const self = this;
+      function goThrough(node) {
+        callback(node);
+        node.children.forEach((child) => {
+          goThrough(child);
+        });
+      }
+      goThrough(this._root, dash);
+    }
+
+
+    _addNode(value, parentValue) {
+      const newNode = {
+        value,
+        children: []
+      };
+
+      if (this._root === null) {
+        this._root = newNode;
+        return;
+      }
+
+      this._traverse((node) => {
+        if (node.value === parentValue) {
+          node.children.push(newNode);
+        }
+      });
+    }
+
+    _removeNode(value) {
+      this._traverse((node) => {
+        node.children.forEach((childNode, index) => {
+          if (childNode.value === value) {
+            node.children.splice(index, 1);
+          }
+        });
+      })
+    }
+
+    _search(value) {
+      let returnNode = 'Not Found';
+      this._traverse((node) => {
+        if (node.value === value) {
+          returnNode = node;
+        }
+      });
+      return returnNode;
+    }
+
+    _displayLeafs(parentValue) {
+      const parentNode = typeof parentValue === 'string' ? this._search(parentValue) : parentValue ;
+      let leafsRet = [];
+      if (parentValue.children && !parentValue.children.length) {
+        return parentValue;
+      }
+
+      parentNode.children.forEach((child) => {
+        leafsRet.push(this._displayLeafs(child));
+      });
+
+      return leafsRet.flat();
+    }
+
   }
-}
 
-const abe = new TreeNode('Abe');
-const homer = new TreeNode('Homer');
-const bart = new TreeNode('Bart');
-const lisa = new TreeNode('Lisa');
-const maggie = new TreeNode('Maggie');
-
-// associate root with is descendents
-abe.descendents.push(homer);
-homer.descendents.push(bart, lisa, maggie);
+  class Node {
+    constructor(value, children) {
+      this.value = value;
+      this.children = children;
+    }
+  }
 
 
 </script>
+
+<script type="text/javascript">
+  const tree = new Tree();
+
+  function myFunction() {
+    tree._traverse((node)=> {
+    	console.log(node);
+    });
+  }
+
+
+
+
+</script>
+
+
+
 {% endblock %}
