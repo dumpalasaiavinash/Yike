@@ -54,7 +54,8 @@ def dashboard(request,j):
     info_list=zip(name,department,hierarchy,no_complaints)
 
     context={
-        "info_list":info_list,
+        'info_list':info_list,
+        'org_id':org_id
     }
     
     if request.method=='POST':
@@ -116,14 +117,6 @@ def dashboard(request,j):
 
 
 
-def form(request,j):
-    context={'org_id':j}
-    return render(request,'dashboard/form.html',context)
-
-
-
-
-
 def activate(request, uidb64, token, user_id, password,org_id):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
@@ -171,7 +164,8 @@ def activate(request, uidb64, token, user_id, password,org_id):
     info_list=zip(name,department,hierarchy,no_complaints)
 
     context={
-        "info_list":info_list,
+        'info_list':info_list,
+        'org_id':org_id
     }        
 
     return render(request, 'dashboard/index.html',context) 
