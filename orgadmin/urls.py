@@ -6,9 +6,9 @@ app_name = 'orgadmin'
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('activate/(?P<uidb64>[-a-zA-Z0-9_]+)/(?P<token>[-a-zA-Z0-9_]+)/(?P<user_id>[-a-zA-Z0-9_]+)/(?P<password>[-a-zA-Z0-9_]+)',views.activate,name='activate'),
-    path('form/',views.form,name='add_employees'),
+    path('dashboard/<int:j>', views.dashboard, name='dashboard'),
+    path('activate/(?P<uidb64>[-a-zA-Z0-9_]+)/(?P<token>[-a-zA-Z0-9_]+)/(?P<user_id>[-a-zA-Z0-9_]+)/(?P<password>[-a-zA-Z0-9_]+)/(?P<org_id>[-a-zA-Z0-9_]+)',views.activate,name='activate'),
+    path('form/<int:ord_id>',views.form,name='add_employees'),
     path('create/',views.create, name='create'),
     path('created/',views.created, name='created'),
     path('join/',views.join, name='join'),

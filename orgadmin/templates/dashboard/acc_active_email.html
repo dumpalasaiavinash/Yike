@@ -6,5 +6,5 @@
     Your Password:{{ password }}(Can be changed after you log in)
 </p>
 Please click on the link to join the organisation,
-http://{{ domain }}{% url 'orgadmin:activate' uidb64=uid token=token user_id=user_id password=password %}
+http://{{ domain }}{% url 'orgadmin:activate' uidb64=uid token=token user_id=user_id password=password org_id=org_id %}
 {% endautoescape %}

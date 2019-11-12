@@ -28,10 +28,12 @@ import string
 
 
 # Create your views here.
-def dashboard(request):
+def dashboard(request,j):
     # email=request.session['email']
     # org_id = org_id
     # print(org_id)
+    
+    org_id=j
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     response2=table.scan()
@@ -43,7 +45,7 @@ def dashboard(request):
 
     # print(response2['Items'])
     for dic in response2['Items']:
-        if dic['active']==True:
+        if dic['active']==True and dic['org_id']==int(org_id):
             name.append(dic['emp_name'])
             department.append(dic['department'])
             hierarchy.append(dic['hierarchy'])
@@ -78,6 +80,7 @@ def dashboard(request):
 
         table.put_item(
             Item={
+                'org_id':org_id,
                 'emp_id':len(response['Items'])+1,
                 'emp_name':name,
                 'user_email':email,
@@ -87,9 +90,7 @@ def dashboard(request):
                 'active':False,
                 'token':token
             }
-        )
-
-        
+        )  
         
         current_site = get_current_site(request)
         mail_subject = 'Click the link to join the organisation.'
@@ -100,7 +101,8 @@ def dashboard(request):
             'password':password_gen,
             'domain': current_site.domain,
             'uid':urlsafe_base64_encode(force_bytes(emp_id)),
-            'token':token
+            'token':token,
+            'org_id':org_id
         })
         to_email = email
         email = EmailMessage(
@@ -114,14 +116,15 @@ def dashboard(request):
 
 
 
-def form(request):
-    return render(request,'dashboard/form.html')
+def form(request,j):
+    context={'org_id':j}
+    return render(request,'dashboard/form.html',context)
 
 
 
 
 
-def activate(request, uidb64, token, user_id, password):
+def activate(request, uidb64, token, user_id, password,org_id):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     users_table=dynamodb.Table('users')
@@ -129,8 +132,7 @@ def activate(request, uidb64, token, user_id, password):
     response=table.scan()
 
     for dic in response['Items']:
-        if (dic['emp_id']==int(user_id)) and (dic['token']==str(token)):
-           
+        if (dic['emp_id']==int(user_id)) and (dic['token']==str(token)) and (dic['org_id']==int(org_id)):
             table.update_item(
                 Key={
                     'emp_id':dic['emp_id']
@@ -160,7 +162,7 @@ def activate(request, uidb64, token, user_id, password):
     no_complaints=[]
 
     for dic in response2['Items']:
-        if dic['active']==True:
+        if dic['active']==True and dic['org_id']==int(org_id):
             name.append(dic['emp_name'])
             department.append(dic['department'])
             hierarchy.append(dic['hierarchy'])
@@ -173,8 +175,6 @@ def activate(request, uidb64, token, user_id, password):
     }        
 
     return render(request, 'dashboard/index.html',context) 
-
-
 
 
 def create(request):
