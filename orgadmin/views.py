@@ -5,7 +5,7 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import random
 from urllib import parse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 from django.views.decorators.csrf import requires_csrf_token
 
@@ -19,11 +19,13 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+
+
 import datetime
 
 #For generating password
 import random
-import string 
+import string
 
 
 
@@ -32,7 +34,7 @@ def dashboard(request,j):
     # email=request.session['email']
     # org_id = org_id
     # print(org_id)
-    
+
     org_id=j
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
@@ -57,7 +59,7 @@ def dashboard(request,j):
         'info_list':info_list,
         'org_id':org_id
     }
-    
+
     if request.method=='POST':
         name=request.POST.get('emp_name')
         department=request.POST.get('department')
@@ -74,7 +76,7 @@ def dashboard(request,j):
                 )
 
         emp_id=len(response['Items'])+1
-        
+
         letters=string.ascii_letters
         password_gen=''.join(random.choice(letters) for i in range(8))
         token=''.join(random.choice(letters) for i in range(10))
@@ -91,8 +93,8 @@ def dashboard(request,j):
                 'active':False,
                 'token':token
             }
-        )  
-        
+        )
+
         current_site = get_current_site(request)
         mail_subject = 'Click the link to join the organisation.'
         message = render_to_string('dashboard/acc_active_email.html', {
@@ -111,7 +113,7 @@ def dashboard(request,j):
         )
         email.send()
 
-        return render(request, 'dashboard/index.html',context)   
+        return render(request, 'dashboard/index.html',context)
 
     return render(request, 'dashboard/index.html',context)
 
@@ -166,9 +168,9 @@ def activate(request, uidb64, token, user_id, password,org_id):
     context={
         'info_list':info_list,
         'org_id':org_id
-    }        
+    }
 
-    return render(request, 'dashboard/index.html',context) 
+    return render(request, 'dashboard/index.html',context)
 
 
 def create(request):
@@ -293,7 +295,7 @@ def created(request):
                 ProjectionExpression="organization_name,code",
                 FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
             )
-            
+
             if(len(response['Items'])==0):
                 ID=len(response_sno['Items'])+101
                 response = table.put_item(
@@ -306,7 +308,7 @@ def created(request):
                 email=request.session['email']
                 # print(response_sno)
                 # print("####################")
-                
+
                 # sno=response_sno['Items'][0]['org_id']
                 # print(sno)
                 request.session['org_created']=request.session['org_created']+[ID]
@@ -486,7 +488,7 @@ def join(request):
             org_joined = request.session['org_joined']
             print(org_joined)
             print(response_join['Items'][0]['org_id'])
-            if (response_join['Items'][0]['org_id'] not in org_joined):    
+            if (response_join['Items'][0]['org_id'] not in org_joined):
                 org_joined.append(int(response_join['Items'][0]['org_id']))
                 print(org_joined)
                 print("@@@@")
@@ -545,8 +547,7 @@ def departments(request):
         dep_id.append(i['department_id'])
     print(departments)
 
-    # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-    return render(request,'orgadmin/depart.html')
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
 
 
 def hierarchy(request):
@@ -555,7 +556,21 @@ def hierarchy(request):
     data=res.split('_')
     dep_id=data[0]
     dep_name=data[1]
-    return render(request,'orgadmin/departments.html',{'dep_name':dep_name,'dep_id':dep_id})
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('hierarchy')
+    response = table.scan(
+        ProjectionExpression="hierarchy",
+        FilterExpression=Attr('dep_id').eq(int(dep_id))
+    )
+
+    if(len(response['Items'])==0):
+        node=[{"id":1,"hierarchy":dep_name}]
+
+    else:
+        node = response['Items'][0]['hierarchy']
+    # node='[{"id":1,"hierarchy":"a"},{"id":2,"pid":1,"hierarchy":"b"},{"id":3,"pid":1,"hierarchy":"c"},{"id":4,"pid":3,"hierarchy":"d"}]'
+    # print(type(node))
+    return render(request,'orgadmin/depart.html',{'node':node,'dep_name':dep_name,'dep_id':dep_id})
 
 
 # @requires_csrf_token
@@ -564,6 +579,43 @@ def departments_hierarchy_update(request):
     # print(hierarchy)
     # nodes = request.POST['tasks']
     print(request.POST)
+    data = request.POST
+    print('\n')
+    print(data)
+    print('\n')
+    print(data['tasks'])
+    print('\n')
+    print(data['dep_id'])
+    id=int(data['dep_id'])
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('hierarchy')
+    response = table.scan(
+        ProjectionExpression="dep_id",
+        FilterExpression=Attr('dep_id').eq(id)
+    )
+
+    if(len(response['Items'])==0):
+        response = table.put_item(
+           Item={
+            'dep_id': int(data['dep_id']),
+            'hierarchy': data['tasks']
+            }
+        )
+    else:
+        response = table.update_item(
+            Key={
+                'dep_id':id
+            },
+            UpdateExpression="set hierarchy = :r",
+            ExpressionAttributeValues={
+                ':r': data['tasks'],
+
+            },
+            ReturnValues="UPDATED_NEW"
+        )
+
+
+
     # print(request.POST['nodes'])
     # value = parse.parse_qs(request.POST.get('hierarchy'))
     # organization_id = 105
@@ -582,7 +634,9 @@ def departments_hierarchy_update(request):
     # print(departments)
 
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+    # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+    return JsonResponse(data)
+
 
 
 def orgadmin_page(request):
