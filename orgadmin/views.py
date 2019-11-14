@@ -157,6 +157,23 @@ def create(request):
     return render(request, 'orgadmin/dummy.html', data)
 
 
+def complaint_rest(request):
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table('complaint')
+        response_complaint = table.scan(
+        ProjectionExpression="complaint",
+        
+        )
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(response_complaint)
+
+        # if request.method=='GET':
+        #     try:
+        #         complaint=
+
+        return render(request, 'orgadmin/createform.html')
+
+
 
 def createform(request):
     return render(request,'orgadmin/createform.html')

@@ -11,4 +11,5 @@ urlpatterns = [
     path('createform/',views.createform, name='createform'),
     path('form/',views.form,name='form'),
     path('departments/',views.departments, name='departments'),
+    path('rest/',views.complaint_rest,name='complaint_rest'),
 ]
