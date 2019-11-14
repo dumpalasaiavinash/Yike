@@ -1,1216 +1,239 @@
 {% load static %}
 {% block extrahead %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/css/main2.css' %}"/>
+<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link  href="https://www.geeksforgeeks.org/javascript-importing-and-exporting-modules/">
+<!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
+<style>
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-      crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
+  .button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:80%;
+  }
+
+  .button2 {background-color: #008CBA;} /* Blue */
+  .button3 {background-color: #f44336;} /* Red */
+  .button5 {background-color: #555555;} /* Black */
+
+
+html, body{
+width: 100%;
+height: 100%;
+padding: 0;
+margin:0;
+/* overflow: hidden; */
+font-family: Helvetica;
+}
+#tree{
+width:100%;
+height:100%;
+padding: 1px;
+
+}
+</style>
+
 
 {% endblock %}
 
 {% block body %}
-<!-- <body> -->
 
-<body onload="initialize()">
-<div id="control_panel">
-    <div class="section">
-Operations    </div>
-    <button id="add_child">
-        Add hierarchy
-    </button>
-    <button id="remove_node">
-        Del hierarchy
-    </button>
-    <button id="zoom_in">
-        Zoom In
-    </button>
-    <button id="zoom_out">
-        Zoom Out
-    </button>
-    <button id="changename">
-      Change name
-    </button>
-    <button id="back">
-      Save
-			<p id="demo"></p>
+<body>
 
-    </button>
-    <div class="section">
-    Information
+<div style="float:left; width:86%;border-style: groove;">
+  <div id="tree">
+
+  </div>
 </div>
-<div id="information_panel">
+
+
+<div style="float:left; width:13%; background-color:rgb(255,255,255);height:100%;margin:left:40px;border-style: groove;">
+
+  <br>  <br> <br>  <br>
+
+  <button id="btn" class="button">Add Node</button>
+<br><br>
+
+  <button onclick="change_name()" class="button button2">Change name</button>
+  <br>
+  <br>
+  <button onclick="remove()" class="button button3">Remove Node</button>
+  <br>
+  <br>
+  <!-- <button class="button button4">Gray</button> -->
+  <button onclick="save()" class="button button5">Save</button>
+  <br>
+
 
 </div>
 
-</div>
-<div id="divider">
-
-</div>
-<div id="main">
-    <canvas id="canvas"></canvas>
-</div>
 
 <script>
+// var node=[
+//                     { id: 1, hierarchy: "a"},
+//                     { id: 2, pid: 1, hierarchy: "b" },
+//                     { id: 3, pid: 1, hierarchy: "c" }
+//                 ];
 
-//TREE.js is a library for creating and drawing properly displayed family trees on the HTML canvas element.
-//This is a work in progress.
-//Authors: Andy MacDonald
-//16 June 2015
-//--------------------------------------------------------------------------------------------------------
-var TREE = (function () {
-    "use strict";
-    var uID = 0,
-        config = {
-            width: 100,
-            height: 50,
-            color: "black",
-            bgcolor: "white"
-        },
-        Tree = function (text, parentId, width, height, color, bgcolor, treeData) {
-            this.uid = uID += 1;
-            this.parentId = parentId || -1;
-            this.text = text;
-            this.width = width || config.width;
-            this.height = height || config.height;
-            this.color = color || config.color;
-            this.bgcolor = bgcolor || config.bgcolor;
-            this.treeData = treeData || {};
-            this.xPos = 0;
-            this.yPos = 0;
-            this.prelim = 0;
-            this.modifier = 0;
-            //this.leftNeighbor = null;
-            //this.rightNeighbor = null;
-            this.parentTree = null;
-            this.children = [];
-        };
+console.log('here')
+var node = {{node|safe}}
+var dep_name = '{{dep_name}}'
+var dep_id = '{{dep_id}}'
+console.log(node)
+var chart = new OrgChart(document.getElementById("tree"), {
 
-    /**
-     * Gets the vertical level of the tree.
-     * @returns {*} A number representing the vertical level of the tree.
-     */
-    Tree.prototype.getLevel = function () {
-        return this.parentId === -1 ? 0 : this.parentTree.getLevel() + 1;
-    };
+                nodeBinding: {
+                    field_0: "hierarchy",
+                },
+                nodes: node
+            });
+            // console.log(typeof(chart))
+          // console.log(chart)
+          // console.log(node)
 
-    /**
-     * Sets the text color of the tree node.
-     * @param color The color to change it to.
-     */
-    Tree.prototype.setColor = function (color) {
-        this.color = color;
-    };
+            // var newNodes = [
+            //     { id: 4, pid: 2, name: "Elliot Patel", title: "Sales" },
+            //     { id: 5, pid: 2, name: "Lynn Hussain", title: "Sales" },
+            //     { id: 6, pid: 3, name: "Tanner May", title: "Developer" },
+            //     { id: 7, pid: 3, name: "Fran Parsons", title: "Developer" }
+            // ];
 
-    /**
-     * Sets the background color of the tree node.
-     * @param color The color to change it to.
-     */
-    Tree.prototype.setbgColor = function (color) {
-        this.bgcolor = color;
-    };
-
-    /**
-     * Visually changes the style of the node if it is 'selected'.
-     * @param bool A true or false value representing if node is selected or not.
-     */
-    Tree.prototype.selected = function (bool) {
-        if (bool) {
-            this.setColor("white");
-            this.setbgColor("blue");
-        } else {
-            this.setColor("black");
-            this.setbgColor("white");
-        }
-    };
-
-    /**
-     * Returns the number of children of this tree.
-     * @returns {Number} The number of children.
-     */
-    Tree.prototype.numChildren = function () {
-        return this.children.length;
-    };
-
-    /**
-     * Returns the left sibling of this tree.
-     * @returns {*} The left sibling or null.
-     */
-    Tree.prototype.getLeftSibling = function () {
-        return this.leftNeighbor && this.leftNeighbor.parentTree === this.parentTree ? this.leftNeighbor : null;
-    };
-
-    /**
-     * Returns the right sibling of this tree.
-     * @returns {*} The right sibling tree or null.
-     */
-    Tree.prototype.getRightSibling = function () {
-        return this.rightNeighbor && this.rightNeighbor.parentTree === this.parentTree ? this.rightNeighbor : null;
-    };
-
-    /**
-     * Returns the child at a specified index.
-     * @param index The specified index.
-     * @returns {*} The child if found or null.
-     */
-    Tree.prototype.getChildAt = function (index) {
-        return this.children[index];
-    };
-
-    /**
-     * Searches children and returns a tree by UID.
-     * @param id The UID to search for.
-     * @returns {*} The child if found or null.
-     */
-    Tree.prototype.getChild = function (id) {
-        var i;
-        for (i = 0; i < this.children.length; i++) {
-            if (this.children[i].uid === id) {
-                return this.children[i];
-            }
-        }
-    };
-
-    /**
-     * Returns an X value representing the center location of all this tree's children.
-     * @returns {*} The center X value.
-     */
-    Tree.prototype.getChildrenCenter = function () {
-        var firstChild = this.getFirstChild(),
-            lastChild = this.getLastChild();
-        return firstChild.prelim + (lastChild.prelim - firstChild.prelim + lastChild.width) / 2;
-    };
-
-    /**
-     * Return the first child of this tree.
-     * @returns {Object} The child node.
-     */
-    Tree.prototype.getFirstChild = function () {
-        return this.getChildAt(0);
-    };
-
-    /**
-     * Gets the last child of this tree.
-     * @returns {Object} The child node.
-     */
-    Tree.prototype.getLastChild = function () {
-        return this.getChildAt(this.numChildren() - 1);
-    };
-
-    /**
-     * Adds a tree node to the children to this tree.
-     * @param tree The tree to be added.
-     */
-    Tree.prototype.addChild = function (tree) {
-        //tree.parentTree = this;
-        tree.parentId = this.uid;
-        this.children.push(tree);
-    };
-
-    /**
-     * Find and return a descendant by the UID.
-     * @param id The UID to search for.
-     * @returns {*} The found tree node or null if not found.
-     */
-    Tree.prototype.getDescendent = function (id) {
-        var children = this.children;
-        var found;
-        if (this.getChild(id)) {
-            return this.getChild(id);
-        }
-        else {
-            for (var i = 0; i < children.length; i++) {
-                found = children[i].getDescendent(id);
-                if (found) {
-                    return found;
+            document.getElementById("btn").addEventListener("click", function () {
+                // var n = newNodes.splice(0, 1)[0];
+                var nx = prompt("Please enter the hierarchy to which this node has to be added:");
+                var i;
+                var hid=0;
+                var tpid;
+                console.log(node)
+                var nodes = node
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id']
+                  }
+                  if(nodes[i]['id']>hid){
+                    hid=nodes[i]['id']
+                  }
                 }
-            }
-        }
-    };
-
-    return {
-
-        config : config,
-        /**
-         * Create and return a new tree.
-         * @constructor
-         * @param text The textual representation of the tree.
-         * @returns {Tree} The newly created tree.
-         */
-        create: function (text) {
-            return new Tree(text);
-        },
-
-        /**
-         * Removes a tree from it's parents list of children. This effectively removes the tree and all of its
-         * descendants from an existing tree.
-         * @param tree The tree to be removed.
-         */
-        destroy: function (tree) {
-            if (!tree.parentTree) {
-                alert("Removing root node not supported at this time");
-                return;
-            }
-            var children = tree.parentTree.children;
-            for (var i = 0; i < children.length; i++) {
-                if (children[i].uid === tree.uid) {
-                    children.splice(i, 1);
-                    break;
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
                 }
-            }
-        },
+                else{
+                  console.log('a')
+                  var n = prompt("Please enter the new hierarchy:");
+                  p={ id: hid+1, pid: tpid, hierarchy: n}
+                  console.log(p)
+                  console.log('b')
+                  chart.addNode(p);
+                  console.log(typeof(p))
+                  console.log(typeof(node))
+                  console.log(node)
+                  console.log(node.length)
+                  len = node.length
+                  // node[len] = p
+                  console.log(node)
+                }
+            });
 
-        /**
-         * Get an array of all nodes in a tree.
-         * @param tree The tree.
-         * @returns {Array} An array of tree nodes.
-         */
-        getNodeList: function (tree) {
-            var nodeList = [];
-            nodeList.push(tree);
-            for (var i = 0; i < tree.numChildren(); i++) {
-                nodeList = nodeList.concat(this.getNodeList(tree.getChildAt(i)));
-            }
-            return nodeList;
-        },
 
-        /**
-         * Clears the canvas.
-         * @param context The 2-d context of an html canvas element.
-         */
-        clear: function (context) {
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        },
+          function remove() {
+            var nx = prompt("Please enter the hierarchy that is to be deleted:");
+                var nodes = node;
+                var tpid;
+                var id;
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id'];
+                    id = i;
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else if(tpid==0){
+                  alert(" Cant remove root ")
+                }
+                else{
 
-        /**
-         * Draws a well-formed tree on a canvas.
-         * @param context The 2-d context of a canvas html element.
-         * @param tree The tree that will be drawn.
-         */
-        draw: function (context, tree) {
-            var config = {
-                    maxDepth: 100,
-                    levelSeparation: 40,
-                    siblingSeparation: 20,
-                    subtreeSeparation: 20,
-                    topXAdjustment: 0,
-                    topYAdjustment: 20
-                },
-                maxLevelHeight = [],
-                maxLevelWidth = [],
-                previousLevelTree = [],
-                rootXOffset = 0,
-                rootYOffset = 0,
+                chart.removeNode(tpid);
+                console.log(id)
+                console.log(node)
+                console.log(tpid)
+              }
+          }
 
-                /**
-                 * Saves the height of a tree at a specified level.
-                 * @param tree The tree.
-                 * @param level The current vertical level of the tree.
-                 */
-                setLevelHeight = function (tree, level) {
-                    maxLevelHeight[level] = tree.height;
-                },
 
-                /**
-                 * Saves the width of a tree at a specified level.
-                 * @param tree The tree.
-                 * @param level The current vertical level of the tree.
-                 */
-                setLevelWidth = function (tree, level) {
-                    maxLevelWidth[level] = tree.width;
-                },
+          function change_name(){
+            var nx = prompt("Please enter the hierarchy, the name that has to be changed:");
+                var i;
+                var hid=0;
+                var tpid;
+                var id;
+                console.log(node)
+                var nodes = node
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id'];
+                    id=i;
+                  }
+                  if(nodes[i]['id']>hid){
+                    hid=nodes[i]['id']
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else{
+                  console.log('a')
+                  var n = prompt("Please enter the new hierarchy:");
+                  node[id]['hierarchy']=n;
+                  console.log(node)
+                  chart.draw()
+                }
 
-                /**
-                 * Sets the neighbors of the tree.
-                 * @param tree The specified tree
-                 * @param level The vertical level of the tree.
-                 */
-                setNeighbors = function (tree, level) {
-                    tree.leftNeighbor = previousLevelTree[level];
-                    if (tree.leftNeighbor)
-                        tree.leftNeighbor.rightNeighbor = tree;
-                    previousLevelTree[level] = tree;
-                },
 
-                /**
-                 * Returns the leftmost descendant of the tree.
-                 * @param tree The specified tree.
-                 * @param level The vertical level of the tree.
-                 * @param maxlevel The maximum level in which to stop searching.
-                 * @returns {*} The leftmost descendant if found, or null.
-                 */
-                getLeftMost = function (tree, level, maxlevel) {
-                    if (level >= maxlevel) return tree;
-                    if (tree.numChildren() === 0) return null;
-                    var n = tree.numChildren();
-                    for (var i = 0; i < n; i++) {
-                        var iChild = tree.getChildAt(i);
-                        var leftmostDescendant = getLeftMost(iChild, level + 1, maxlevel);
-                        if (leftmostDescendant !== null)
-                            return leftmostDescendant;
-                    }
-                    return null;
-                },
+          }
 
-                /**
-                 * Gets the width of the tree.
-                 * @param tree The specified tree.
-                 * @returns {number} The width of the tree.
-                 */
-                getNodeSize = function (tree) {
-                    return tree.width;
-                },
 
-                /**
-                 * Part of the first traversal of the tree for positioning. Smaller subtrees that could float between
-                 * two adjacent larger subtrees are evenly spaced out.
-                 * @param tree
-                 * @param level
-                 */
-                apportion = function (tree, level) {
-                    var firstChild = tree.getFirstChild(),
-                        firstChildLeftNeighbor = firstChild.leftNeighbor,
-                        j = 1;
-                    for (var k = config.maxDepth - level; firstChild != null && firstChildLeftNeighbor != null && j <= k;) {
-                        var modifierSumRight = 0;
-                        var modifierSumLeft = 0;
-                        var rightAncestor = firstChild;
-                        var leftAncestor = firstChildLeftNeighbor;
-                        for (var l = 0; l < j; l++) {
-                            rightAncestor = rightAncestor.parentTree;
-                            leftAncestor = leftAncestor.parentTree;
-                            modifierSumRight += rightAncestor.modifier;
-                            modifierSumLeft += leftAncestor.modifier;
-                        }
-                        var totalGap = (firstChildLeftNeighbor.prelim + modifierSumLeft + getNodeSize(firstChildLeftNeighbor) + config.subtreeSeparation) - (firstChild.prelim + modifierSumRight);
-                        if (totalGap > 0) {
-                            var subtreeAux = tree;
-                            var numSubtrees = 0;
-                            for (; subtreeAux != null && subtreeAux != leftAncestor; subtreeAux = subtreeAux.getLeftSibling()) {
-                                numSubtrees++;
-                            }
-                            if (subtreeAux != null) {
-                                var subtreeMoveAux = tree;
-                                var singleGap = totalGap / numSubtrees;
-                                for (; subtreeMoveAux != leftAncestor; subtreeMoveAux = subtreeMoveAux.getLeftSibling()) {
-                                    subtreeMoveAux.prelim += totalGap;
-                                    subtreeMoveAux.modifier += totalGap;
-                                    totalGap -= singleGap;
-                                }
-                            }
-                        }
-                        j++;
-                        if (firstChild.numChildren() == 0) {
-                            firstChild = getLeftMost(tree, 0, j);
-                        } else {
-                            firstChild = firstChild.getFirstChild();
-                        }
-                        if (firstChild != null) {
-                            firstChildLeftNeighbor = firstChild.leftNeighbor;
-                        }
-                    }
-                },
+      function save(){
+        console.log(JSON.stringify(node))
+        no = JSON.stringify(node)
+        $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+                data: { 'tasks': no,
+                        'dep_id': dep_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+               },
+                dataType: 'json',
+                success: function(data) {
+                  console.log(data);
+                }
+            });
 
-                /**
-                 * A postorder traversal of the tree. Each subtree is manipulated recursively from the bottom to top
-                 * and left to right, positioning the rigid units that form each subtree until none are touching each
-                 * other. Smaller subtrees are combined, forming larger subtrees until the root has been reached.
-                 * @param tree
-                 * @param level
-                 */
-                firstWalk = function (tree, level) {
-                    var leftSibling = null;
-                    tree.xPos = 0;
-                    tree.yPos = 0;
-                    tree.prelim = 0;
-                    tree.modifier = 0;
-                    tree.leftNeighbor = null;
-                    tree.rightNeighbor = null;
-                    setLevelHeight(tree, level);
-                    setLevelWidth(tree, level);
-                    setNeighbors(tree, level);
-                    if (tree.numChildren() === 0 || level == config.maxDepth) {
-                        leftSibling = tree.getLeftSibling();
-                        if (leftSibling !== null)
-                            tree.prelim = leftSibling.prelim + getNodeSize(leftSibling) + config.siblingSeparation;
-                        else
-                            tree.prelim = 0;
-                    }
-                    else {
-                        var n = tree.numChildren();
-                        for (var i = 0; i < n; i++) {
-                            firstWalk(tree.getChildAt(i), level + 1);
-                        }
-                        var midPoint = tree.getChildrenCenter();
-                        midPoint -= getNodeSize(tree) / 2;
-                        leftSibling = tree.getLeftSibling();
-                        if (leftSibling) {
-                            tree.prelim = leftSibling.prelim + getNodeSize(leftSibling) + config.siblingSeparation;
-                            tree.modifier = tree.prelim - midPoint;
-                            apportion(tree, level);
-                        }
-                        else {
-                            tree.prelim = midPoint;
-                        }
-                    }
-                },
 
-                /**
-                 * A preorder traversal. Each node is given it's final X,Y coordinates by summing the preliminary
-                 * coordinate and the modifiers of all of its ancestor trees.
-                 * @param tree The tree that will be traversed.
-                 * @param level The vertical level of the tree.
-                 * @param X The X value of the tree.
-                 * @param Y The Y value of the tree.
-                 */
-                secondWalk = function (tree, level, X, Y) {
-                    tree.xPos = rootXOffset + tree.prelim + X;
-                    tree.yPos = rootYOffset + Y;
-                    if (tree.numChildren())
-                        secondWalk(tree.getFirstChild(), level + 1, X + tree.modifier, Y + maxLevelHeight[level] + config.levelSeparation);
-                    var rightSibling = tree.getRightSibling();
-                    if (rightSibling)
-                        secondWalk(rightSibling, level, X, Y);
-                },
-
-                /**
-                 * Assign X,Y position values to the tree and it's descendants.
-                 * @param tree The tree to be positioned.
-                 */
-                positionTree = function (tree) {
-                    maxLevelHeight = [];
-                    maxLevelWidth = [];
-                    previousLevelTree = [];
-                    firstWalk(tree, 0);
-                    rootXOffset = config.topXAdjustment + tree.xPos;
-                    rootYOffset = config.topYAdjustment + tree.yPos;
-                    secondWalk(tree, 0, 0, 0);
-                    rootXOffset = Math.abs(getMinX(tree)); //Align to left
-                    secondWalk(tree, 0, 0, 0);
-                },
-
-                getMinX = function (tree) {
-                    var nodes = TREE.getNodeList(tree);
-                    var min = 0;
-                    for (var i = 0; i < nodes.length; i++){
-                        if (nodes[i].xPos < min)
-                            min = nodes[i].xPos;
-                    }
-                    return min;
-                },
-
-                /**
-                 * Draw the tree and it's descendants on the canvass.
-                 * @param tree The tree that will be drawn.
-                 */
-                drawNode = function (tree) {
-                    var x = tree.xPos,
-                        y = tree.yPos,
-                        width = tree.width,
-                        height = tree.height,
-                        text = tree.text,
-                        textWidth = context.measureText(text).width;
-                    context.beginPath();
-                    context.moveTo(x, y);
-                    context.lineTo(x, y + height);
-                    context.lineTo(x + width, y + height);
-                    context.lineTo(x + width, y);
-                    context.lineTo(x, y);
-                    context.lineWidth = 1;
-                    context.fillStyle = tree.bgcolor;
-                    context.fill();
-                    context.stroke();
-                    context.strokeStyle = tree.color;
-                    context.textBaseline = 'middle';
-                    context.strokeText(text, (x + width / 2) - textWidth / 2, y + height / 2, width);
-                    context.strokeStyle = "black";
-                    if (tree.children.length > 0) {
-                        context.beginPath();
-                        context.moveTo(x + width / 2, y + height);
-                        context.lineTo(x + width / 2, y + height + config.levelSeparation / 2);
-                        context.moveTo(tree.getFirstChild().xPos + tree.getFirstChild().width / 2, y + height + config.levelSeparation / 2);
-                        context.lineTo(tree.getLastChild().xPos + tree.getLastChild().width / 2, y + height + config.levelSeparation / 2);
-                        context.stroke();
-                    }
-                    if (tree.parentId != -1) {
-                        context.beginPath();
-                        context.moveTo(x + width / 2, y);
-                        context.lineTo(x + width / 2, y - config.levelSeparation / 2);
-                        context.stroke();
-                    }
-                    for (var i = 0; tree.numChildren() > 0 && i < tree.numChildren(); i++) {
-                        drawNode(tree.getChildAt(i));
-                    }
-                };
-
-            positionTree(tree);
-            this.clear(context);
-            drawNode(tree);
-        }
-    };
-}());
+      }
 
 </script>
 
 
 
-
-
-
-<script>
-
-
-//comment
-var maintree;
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
-function initialize() {
-    var temp = "{{dep_name}}";
-    var canvas = document.getElementById("canvas"),
-        context = canvas.getContext("2d"),
-        tree = TREE.create(temp),
-        nodes = TREE.getNodeList(tree),
-        currNode = tree,
-        add_child_button = document.getElementById("add_child"),
-        remove_node = document.getElementById("remove_node"),
-        zoom_in = document.getElementById("zoom_in"),
-        zoom_out = document.getElementById("zoom_out");
-        back = document.getElementById("back");
-        changename = document.getElementById('changename')
-
-
-    canvas.addEventListener("click", function (event) {
-        var x = event.pageX - canvas.offsetLeft,
-            y = event.pageY - canvas.offsetTop;
-        for (var i = 0; i < nodes.length; i++) {
-            if (x > nodes[i].xPos && y > nodes[i].yPos && x < nodes[i].xPos + nodes[i].width && y < nodes[i].yPos + nodes[i].height) {
-                currNode.selected(false);
-                nodes[i].selected(true);
-                currNode = nodes[i];
-                TREE.clear(context);
-                TREE.draw(context, tree);
-                updatePage(currNode);
-                break;
-            }
-        }
-    }, false);
-
-    canvas.addEventListener("mousemove", function (event) {
-        var x = event.pageX - canvas.offsetLeft,
-            y = event.pageY - canvas.offsetTop;
-        for (var i = 0; i < nodes.length; i++) {
-            if (x > nodes[i].xPos && y > nodes[i].yPos && x < nodes[i].xPos + nodes[i].width && y < nodes[i].yPos + nodes[i].height) {
-                canvas.style.cursor = "pointer";
-                break;
-            }
-            else {
-                canvas.style.cursor = "auto";
-            }
-        }
-    }, false);
-    add_child_button.addEventListener('click', function (event) {
-        currNode.addChild(TREE.create("junior of " + currNode.text));
-        TREE.clear(context);
-        nodes = TREE.getNodeList(tree);
-        TREE.draw(context, tree);
-    }, false);
-    remove_node.addEventListener('click', function (event) {
-        TREE.destroy(currNode);
-        TREE.clear(context);
-        nodes = TREE.getNodeList(tree);
-        TREE.draw(context, tree);
-    }, false);
-    zoom_in.addEventListener('click', function (event) {
-        for (var i = 0; i < nodes.length; i++){
-            nodes[i].width *= 1.05;
-            nodes[i].height *= 1.05;
-        }
-        TREE.config.width *= 1.05;
-        TREE.config.height *= 1.05;
-        TREE.clear(context);
-        TREE.draw(context, tree);
-    }, false);
-    zoom_out.addEventListener('click', function (event) {
-        for (var i = 0; i < nodes.length; i++){
-            nodes[i].width = nodes[i].width * 0.95;
-            nodes[i].height = nodes[i].height * 0.95;
-        }
-        TREE.config.width *= 0.95;
-        TREE.config.height *= 0.95;
-        TREE.clear(context);
-        TREE.draw(context, tree);
-    }, false);
-
-
-
-
-
-    back.addEventListener('click', function (event) {
-        event.preventDefault();
-        // var temp={}
-        nodes = TREE.getNodeList(tree);
-				console.log(nodes);
-				var x;
-				//var myJSON = JSON.stringify(nodes);
-				//document.getElementById("demo").innerHTML = myJSON;
-				for (x in nodes) {
-
-					//nodes[x]["leftNeighbor"]="NULL";
-					//nodes[x]["rightNeighbor"]="NULL"
-					console.log(nodes);
-					ab=nodes[x]["rightNeighbor"]
-					cd=nodes[x]["leftNeighbor"]
-					console.log(typeof(ab),ab)
-					if (ab!=null && x!=0){
-						console.log("NULL")
-						nodes[x]["rightNeighbor"]["leftNeighbor"]="Null"
-						//console.log(typeof(ab))
-					}
-
-					if (cd!=null && x!=0){
-						nodes[x]["leftNeighbor"]["rightNeighbor"]="Null"
-						//console.log(typeof(ab))
-					}
-
-					//var myJSON = JSON.stringify(nodes[x]);
-					//console.log(myJSON)
-					//document.getElementById("demo").innerHTML +=myJSON ;
-				}
-
-
-				for (x in nodes) {
-
-
-					var myJSON = JSON.stringify(nodes[x]);
-					console.log(myJSON)
-					document.getElementById("demo").innerHTML +=myJSON ;
-				}
-
-
-
-				// var http = require('http');
-				// var fs = require('fs');
-				// http.createServer(function (req, res) {
-				//   //Open a file on the server and return its content:
-				//   fs.readFile('demofile1.html', function(err, data) {
-				//     // res.writeHead(200, {'Content-Type': 'text/html'});
-				//     res.write(data);
-				//     return res.end();
-				//   });
-				// }).listen(8080);
-
-
-				// const fs = require('fs')
-				// file_name="{{dep_id}}"
-				// // Write data in 'Output.txt' .
-				//
-				// file = new FileReader// opens the file for writing
-				// fwrite(file, nodes);// str is the content that is to be written into the file.
-
-				// fs.writeFile('../text/'+file_name, nodes, (err) => {
-				//
-				//     // In case of a error throw err.
-				//     if (err) throw console.log('SAD');
-				// })
-
-        // console.log(nodes);
-        // var va={'data':"data",'number':10,'csrfmiddlewaretoken':'{{ csrf_token }}'}
-        // var url = "{% url 'orgadmin:departments_hierarchy_update' %}";
-				// var data = {
-				// 	"id": 1,
-				// 	"name": "Animals",
-				// 	"type": "Root",
-				// 	"description": "A living organism that feeds on organic matter",
-				// 	"children": [
-				// 		{
-				// 			"id": 2,
-				// 			"name": "Carnivores",
-				// 			"type": "Type",
-				// 			"description": "Diet consists solely of animal materials",
-				// 			"children": [
-				// 				{
-				// 					"id": 3,
-				// 					"name": "Felidae",
-				// 					"type": "Family",
-				// 					"description": "Also known as cats",
-				// 					"children": [
-				// 						{
-				// 							"id": 4,
-				// 							"name": "Siamese Cat",
-				// 							"type": "Organism",
-				// 							"description": "A breed of Asian cat. it has white fur",
-				// 							"children": []
-				// 						},
-				// 						{
-				// 							"id": 5,
-				// 							"name": "Javanese Cat",
-				// 							"type": "Organism",
-				// 							"description": "Domestic breed of cats, of oriental origin",
-				// 							"children": []
-				// 						}
-				// 					]
-				// 				},
-				// 				{
-				// 					"id": 6,
-				// 					"name": "Ursidae",
-				// 					"type": "Family",
-				// 					"description": "Also known as bears",
-				// 					"children": [
-				// 						{
-				// 							"id": 7,
-				// 							"name": "Polar Bear",
-				// 							"type": "Organism",
-				// 							"description": "White bear native to the Arctic Circle",
-				// 							"children": []
-				// 						},
-				// 						{
-				// 							"id": 8,
-				// 							"name": "Panda Bear",
-				// 							"type": "Organism",
-				// 							"description": "Spotted bear native to South Central China",
-				// 							"children": []
-				// 						}
-				// 					]
-				// 				},
-				// 				{
-				// 					"id": 9,
-				// 					"name": "Canidae",
-				// 					"type": "Family",
-				// 					"description": "Also known as dogs",
-				// 					"children": [
-				// 						{
-				// 							"id": 10,
-				// 							"name": "Labradore Retriever",
-				// 							"type": "Organism",
-				// 							"description": "One of the most popular dog breeds in Canada, UK and USA",
-				// 							"children": []
-				// 						},
-				// 						{
-				// 							"id": 11,
-				// 							"name": "Golden Retriever",
-				// 							"type": "Organism",
-				// 							"description": "Generally friendly, loyal and intelligent breed of dogs",
-				// 							"children": []
-				// 						}
-				// 					]
-				// 				}
-				// 			]
-				// 		},
-				// 		{
-				// 			"id": 12,
-				// 			"name": "Herbivores",
-				// 			"type": "Type",
-				// 			"description": "Diet consists solely of plant matter",
-				// 			"children": [
-				// 				{
-				// 					"id": 13,
-				// 					"name": "Bovidae",
-				// 					"type": "Family",
-				// 					"description": "Also known as cattle or cows",
-				// 					"children": [
-				// 						{
-				// 							"id": 14,
-				// 							"name": "Angus Cattle",
-				// 							"type": "Organism",
-				// 							"description": "Scottish breed of black cattle",
-				// 							"children": []
-				// 						},
-				// 						{
-				// 							"id": 15,
-				// 							"name": "Holstein Friesian Cattle",
-				// 							"type": "Organism",
-				// 							"description": "Known as the highest-production dairy animals",
-				// 							"children": []
-				// 						}
-				// 					]
-				// 				},
-				// 				{
-				// 					"id": 16,
-				// 					"name": "Equidae",
-				// 					"type": "Family",
-				// 					"description": "Also known as horses",
-				// 					"children": [
-				// 						{
-				// 							"id": 17,
-				// 							"name": "Barb Horse",
-				// 							"type": "Organism",
-				// 							"description": "A breed of Northern African horses with high stamina and hardiness. Their generally hot temperament makes it harder to tame.",
-				// 							"children": []
-				// 						},
-				// 						{
-				// 							"id": 18,
-				// 							"name": "Holsteiner Horse",
-				// 							"type": "Organism",
-				// 							"description": "One of the oldest of warmblood breeds, tracing back to the 13th century. Originates from Germany",
-				// 							"children": []
-				// 						}
-				// 					]
-				// 				},
-				// 				{
-				// 					"id": 19,
-				// 					"name": "Leporidae",
-				// 					"type": "Family",
-				// 					"description": "Also known as rabbits",
-				// 					"children": [
-				// 						{
-				// 							"id": 20,
-				// 							"name": "Lionhead rabbit",
-				// 							"type": "Organism",
-				// 							"description": "Unusual rabbit with a wool mane circling it's head, similar to a lion, hence it's name.",
-				// 							"children": []
-				// 						},
-				// 						{
-				// 							"id": 21,
-				// 							"name": "Silver Fox Rabbit",
-				// 							"type": "Organism",
-				// 							"description": "Bred for their meat and unique fur.",
-				// 							"children": []
-				// 						}
-				// 					]
-				// 				}
-				// 			]
-				// 		}
-				// 	]
-				// };
-				//
-        // temp['nodes']=data;
-        // temp['csrfmiddlewaretoken']='{{ csrf_token }}';
-        // console.log(temp);
-        // console.log(va)
-        // console.log('a');
-        // $.post(url,temp);
-
-				//
-				// var AWS = require('aws-sdk');
-				// // Set the region
-				// AWS.config.update({region: 'ap-south-1'});
-				//
-				// // Create S3 service object
-				// s3 = new AWS.S3();
-				//
-				//
-				// s3.listBuckets(function(err, data) {
-				//   if (err) {
-				//     console.log("Error", err);
-				//   } else {
-				//     console.log("Success", data.Buckets);
-				//   }
-				// });
-
-				//
-				// // call S3 to retrieve upload file to specified bucket
-				// var uploadParams = {Bucket: 'yike', };
-				// var file = process.argv[3];
-				//
-				// // Configure the file stream and obtain the upload parameters
-				// var fs = require('fs');
-				// var fileStream = fs.createReadStream(file);
-				// fileStream.on('error', function(err) {
-				//   console.log('File Error', err);
-				// });
-				// uploadParams.Body = fileStream;
-				// var path = require('path');
-				// uploadParams.Key = path.basename(file);
-				//
-				// // call S3 to retrieve upload file to specified bucket
-				// s3.upload (uploadParams, function (err, data) {
-				//   if (err) {
-				//     console.log("Error", err);
-				//   } if (data) {
-				//     console.log("Upload Success", data.Location);
-				//   }
-				// });
-
-
-
-
-        // console.log('success')
-        // docClient.update(params, function(err, data) {
-        //     if (err) {
-        //         document.getElementById('textarea').innerHTML = "Unable to update item: " + "\n" + JSON.stringify(err, undefined, 2);
-        //     } else {
-        //         document.getElementById('textarea').innerHTML = "UpdateItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
-        //     }
-        // });
-
-        // console.log(typeof(nodes[0]));
-        // console.log(String(nodes[0]));
-        // console.log(typeof(String(nodes[0])));
-
-
-        // const updatednodes = nodes.map(node => ({
-        //   bgcolor: "white",
-        //   color: "black",
-        //   height: 50,
-        //   parentId: node.parentId,
-        //   text: node.text,
-        //   width: node.width,
-        //   xPos: node.xPos,
-        //   yPos: node.yPos,
-        //
-        //
-        // }))
-
-        // nodes=[0,1,2]
-        // var nodes = TREE
-        // document.getElementById('nodes').innerHTML=nodes
-        // var url = ["http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/"];
-        // var temp = ''
-        // // console.log(typeof(nodes[0]))
-        // for (var i=0; i<nodes.length;i++){
-            // x=nodes[i]
-            // temp=temp+''+String(nodes[i])
-        // }
-        // console.log(typeof(nodes))
-        // console.log(String(x))
-        // console.log(temp)
-        // console.log(String(nodes)
-
-        // var s = JSON.stringify(nodes[0]);
-
-        //
-        // console.log(updatednodes);
-        // var csrftoken = getCookie('csrftoken');
-        // console.log(csrftoken)
-        // $.ajaxSetup({
-        //     beforeSend: function(xhr, settings) {
-        //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-        //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        //         }
-        //     }
-        // });
-        //
-        // $.ajax({
-        //         type: 'POST',
-        //         url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
-        //         data: { 'tasks': updatednodes,
-        //                 csrfmiddlewaretoken: '{{ csrf_token }}'
-        //        },
-        //         dataType: 'json',
-        //         success: function(data) {
-        //           console.log(data);
-        //         }
-        //     });
-
-            // var obj = {"1":5,"2":7,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}
-            // var result = Object.keys(nodes).map(function(key) {
-            //   return [Number(key), nodes[key]];
-            // })
-
-
-            //
-            // var token = '{{csrf_token}}';
-            //
-            //
-            //
-            //      $.ajax({
-            //        type: 'POST',
-            //        headers: { "X-CSRFToken": token },
-            //        url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
-            //        data: { 'tasks': updatednodes,
-            //                csrfmiddlewaretoken: getCookie("csrftoken"),
-            //
-            //       },
-            //        dataType: 'json',
-            //        success: function(data) {
-            //          console.log(data);
-            //       }
-            //    });
-            //
-
-
-               // fetch('orgadmin/departments_hierarchy_update/', {
-               //     method: "put",
-               //     credentials: "same-origin",
-               //     headers: {
-               //         "X-CSRFToken": getCookie("csrftoken"),
-               //         "Accept": "application/json",
-               //         "Content-Type": "application/json"
-               //     },
-               //     body: JSON.stringify(updatednodes)
-               // }).then(function(response) {
-               //     return response.json();
-               // }).then(function(data) {
-               //     console.log("Data is ok", data);
-               // }).catch(function(ex) {
-               //     console.log("parsing failed", ex);
-               // });
-
-
-
-        //
-        // x=jQuery.param(nodes)
-        // console.log(x)
-        // location.replace(url+s)
-    });
-
-
-
-    changename.addEventListener('click', function (event) {
-      var name = prompt("Please enter the name");
-      currNode.text=name
-      TREE.clear(context);
-      nodes = TREE.getNodeList(tree);
-      TREE.draw(context, tree);
-  }, false);
-
-
-
-    context.canvas.width = document.getElementById("main").offsetWidth;
-    context.canvas.height = document.getElementById("main").offsetHeight;
-    nodes = TREE.getNodeList(tree);
-    TREE.draw(context, tree);
-    maintree = tree;
-}
-
-function updatePage(tree) {
-    var info_panel = document.getElementById("information_panel");
-    var header = document.getElementById("header");
-    var info_panel_html = "<ul>";
-    info_panel_html += "<li>First Name: " +tree.text +"</li>";
-    info_panel_html += "</ul>";
-    info_panel.innerHTML = info_panel_html;
-}
-
-</script>
-
-<!--
-<div class="pivot-livedemo-container">
-				<div class="diagram-demo-container">
-					<div class="diagram-demo-head">
-						<div class="diagram-demo-head-inside">
-							<div class="diagram-demo-btn js-diagram-demo-btn active" onclick="changeDiagramData('org')">
-								Org Chart
-
-								<div class="diagram-demo-line js-diagram-demo-line"></div>
-							</div>
-							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('activity')">Activity Diagram</div>
-							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('wide')">Flowchart</div>
-							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('verticalTree')">Vertical Decision Tree</div>
-							<div class="diagram-demo-btn js-diagram-demo-btn" onclick="changeDiagramData('dataPlanning')">Block Diagram</div>
-						</div>
-					</div>
-
-					<div id="diagram_box"><div class="dhx_diagram dhx_widget"><div class="dhx_wrapper dhx_org_chart"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="690" viewBox="-40 -40 1080 690"><defs><filter x="0" y="0" width="1" height="1" id="dhx_text_background"><feFlood flood-color="white"></feFlood><feComposite in="SourceGraphic"></feComposite></filter></defs><g shape-rendering="crispedges"><g dhx_id="u1573192591640" class="dhx_diagram_connector "><path d="M 505,90L 505,90 L 505,110.5 L 105,110.5 L 105,130" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591641" class="dhx_diagram_connector "><path d="M 0,175L 0,175 L -19.5,175 L -19.5,305 L 20,305" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591642" class="dhx_diagram_connector "><path d="M 0,175L 0,175 L -19.5,175 L -19.5,435 L 20,435" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591643" class="dhx_diagram_connector "><path d="M 0,175L 0,175 L -19.5,175 L -19.5,565 L 20,565" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591644" class="dhx_diagram_connector "><path d="M 505,90L 505,90 L 505,110.5 L 505,110.5 L 505,130" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591645" class="dhx_diagram_connector "><path d="M 505,220L 505,220 L 505,240.5 L 375,240.5 L 375,260" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591646" class="dhx_diagram_connector "><path d="M 375,350L 375,350 L 375,370.5 L 375,370.5 L 375,390" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591652" class="dhx_diagram_connector "><path d="M 505,220L 505,220 L 505,240.5 L 625,240.5 L 625,260" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591653" class="dhx_diagram_connector "><path d="M 625,350L 625,350 L 625,370.5 L 625,370.5 L 625,390" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591654" class="dhx_diagram_connector "><path d="M 625,480L 625,480 L 625,500.5 L 625,500.5 L 625,520" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591648" class="dhx_diagram_connector "><path d="M 505,90L 505,90 L 505,110.5 L 875,110.5 L 875,130" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591649" class="dhx_diagram_connector "><path d="M 770,175L 770,175 L 750.5,175 L 750.5,305 L 790,305" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591650" class="dhx_diagram_connector "><path d="M 770,175L 770,175 L 750.5,175 L 750.5,435 L 790,435" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g dhx_id="u1573192591651" class="dhx_diagram_connector "><path d="M 770,175L 770,175 L 750.5,175 L 750.5,565 L 790,565" fill="none" class="dhx_diagram_line " stroke-dasharray="" stroke-linejoin="round" stroke="#CCC" stroke-width="2"></path></g><g transform="translate(400,0) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="1"><rect class="dhx_item_shape" id="1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-1.png&quot;); background-color: rgb(255, 152, 0);"></div><div class="dhx_content_title">Henry Bennett</div><div class="dhx_content_text ">Chairman &amp; CEO</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#FF9800" fill="#FF9800" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#607D8B"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(0,130) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2"><rect class="dhx_item_shape" id="2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-2.png&quot;); background-color: rgb(96, 125, 139);"></div><div class="dhx_content_title">Emma Lynch</div><div class="dhx_content_text ">QA Lead</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#607D8B" fill="#607D8B" stroke-width="1"></rect><g x="0" y="45" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="0" cy="45" fill="#00C7B5"></circle><line x1="-5" y1="45" x2="5" y2="45" stroke-width="2" stroke="white"></line></g></g><g transform="translate(20,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2.1"><rect class="dhx_item_shape" id="2.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-4.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Charles Little</div><div class="dhx_content_text ">QA</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(20,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2.2"><rect class="dhx_item_shape" id="2.2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-9.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Douglas Riley</div><div class="dhx_content_text ">QA</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(20,520) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="2.3"><rect class="dhx_item_shape" id="2.3" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-12.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Eugene Foster</div><div class="dhx_content_text ">QA</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(400,130) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3"><rect class="dhx_item_shape" id="3" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-3.png&quot;); background-color: rgb(96, 125, 139);"></div><div class="dhx_content_title">Jerry Wagner</div><div class="dhx_content_text ">Technical Director</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#607D8B" fill="#607D8B" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#00C7B5"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(270,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.1"><rect class="dhx_item_shape" id="3.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-7.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Mark Nichols</div><div class="dhx_content_text ">Team Lead</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#03A9F4"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(270,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.1.1"><rect class="dhx_item_shape" id="3.1.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-10.png&quot;); background-color: rgb(3, 169, 244);"></div><div class="dhx_content_title">Sean Parker</div><div class="dhx_content_text ">Programmer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#03A9F4" fill="#03A9F4" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_expand_icon"><circle r="10" cx="105" cy="90" fill="#9575CD"></circle><polyline points="100,90
-		105,90
-		105,85
-		105,95
-		105,90
-		110,90" stroke-width="2" stroke="white" fill="none"></polyline></g></g><g transform="translate(520,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.2"><rect class="dhx_item_shape" id="3.2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-13.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Nicholas Cruz</div><div class="dhx_content_text ">Team Lead</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#03A9F4"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(520,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.2.1"><rect class="dhx_item_shape" id="3.2.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-11.png&quot;); background-color: rgb(3, 169, 244);"></div><div class="dhx_content_title">Michael Shaw</div><div class="dhx_content_text ">Programmer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#03A9F4" fill="#03A9F4" stroke-width="1"></rect><g x="105" y="90" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="105" cy="90" fill="#9575CD"></circle><line x1="100" y1="90" x2="110" y2="90" stroke-width="2" stroke="white"></line></g></g><g transform="translate(520,520) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="3.2.1.1"><rect class="dhx_item_shape" id="3.2.1.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-15.png&quot;); background-color: rgb(149, 117, 205);"></div><div class="dhx_content_title">John Flores</div><div class="dhx_content_text ">Junior</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#9575CD" fill="#9575CD" stroke-width="1"></rect></g><g transform="translate(770,130) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4"><rect class="dhx_item_shape" id="4" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-5.png&quot;); background-color: rgb(96, 125, 139);"></div><div class="dhx_content_title">Jonathan Lane</div><div class="dhx_content_text ">Manager</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#607D8B" fill="#607D8B" stroke-width="1"></rect><g x="0" y="45" dhx_diagram="hide" class="dhx_hide_icon"><circle r="10" cx="0" cy="45" fill="#00C7B5"></circle><line x1="-5" y1="45" x2="5" y2="45" stroke-width="2" stroke="white"></line></g></g><g transform="translate(790,260) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4.1"><rect class="dhx_item_shape" id="4.1" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-6.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Sandra Butler</div><div class="dhx_content_text ">Marketer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(790,390) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4.2"><rect class="dhx_item_shape" id="4.2" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-16.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Julie Green</div><div class="dhx_content_text ">Designer</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g><g transform="translate(790,520) rotate(0,105,45)" class="dhx_diagram_image dhx_diagram_item " dhx_id="4.3"><rect class="dhx_item_shape" id="4.3" height="90" width="210" rx="1" ry="1" stroke="#E4E4E4" stroke-width="1"></rect><foreignObject width="210" overflow="hidden" height="90" transform="translate(0 0)"><div class="shape_content" style="width: 210px; height: 90px;"><div class="dhx_content_img" style="background-image: url(&quot;images/demo/avatar-14.png&quot;); background-color: rgb(0, 199, 181);"></div><div class="dhx_content_title">Richard Hicks</div><div class="dhx_content_text ">Sales Manager</div></div></foreignObject><rect height="3.5" width="210" class="dhx_item_header" stroke="#00C7B5" fill="#00C7B5" stroke-width="1"></rect></g></g></svg></div></div></div>
-				</div>
-
-				<script src="demo/demo.js"></script>
-				<link rel="stylesheet" href="demo/demo.css">
-
-				<script type="text/javascript" src="demo/diagram.js"></script>
-				<link rel="stylesheet" href="demo/diagram.css">
-
-				<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
-
-				<style type="text/css">
-					.diagram-demo-container{
-						margin: 0 10px 37px 10px;
-						box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.2);
-						background-color: #f7f7f7;
-					}
-
-					.diagram-demo-head{
-
-					}
-
-					#diagram_box {
-						height: 700px;
-					}
-
-					#diagram_box .dhx_diagram_wrapper {
-						margin-right: auto;
-						margin-left: auto;
-						padding-left: 80px;
-						padding-right: 80px;
-						box-sizing: content-box;
-					}
-
-					.dhx_diagram_item:hover .dhx_hide_icon,
-					.dhx_diagram_item:hover .dhx_expand_icon {
-						cursor: pointer;
-					}
-
-					.dhx_free_diagram .data_planning_process text{
-						fill:rgba(0,0,0,.7);
-					}
-				</style>
-				<script type="text/javascript">
-					var diagram = new dhx.Diagram("diagram_box", {
-						type: "org",
-						defaultShapeType: "img-card"
-					});
-
-					diagram.data.parse(org);
-					function changeDiagramData(type) {
-						var types = {
-							activity: { data: activity, scale: 0.6 },
-							verticalTree: { data: verticalTree, scale: 0.6 },
-							wide: { data: wide, scale: 0.6 },
-							dataPlanning: { data: dataPlanning, scale: 0.68 },
-							org: { data: org, scale: 1, type: "org", scale: 1 }
-						}
-						if (types[type].type && !diagram.config.type) {
-							document.querySelector("#diagram_box").innerHTML = "";
-							diagram = new dhx.Diagram("diagram_box", {
-								type: "org",
-								defaultShapeType: "img-card"
-							});
-						} else if (!types[type].type && diagram.config.type === "org") {
-							document.querySelector("#diagram_box").innerHTML = "";
-							diagram = new dhx.Diagram("diagram_box", {
-								scale: .6,
-								lineGap: 30
-							});
-						}
-						diagram.config.scale = types[type].scale;
-						diagram.data.parse(types[type].data);
-					}
-				</script>
-
-				<div class="livedemo-title livedemo-title--pivot">
-					<span class="livedemo-title__label">Live Demo</span>
-				</div>
-
-				<div class="top-50 center">
-					<a href="http://docs.dhtmlx.com/diagram/samples/" title="" class="btn-medium-blue-outline" onclick="ga('send', 'event', 'button', 'click', 'view-samples-diagram');" target="_blank">View more samples</a>
-				</div>
-			</div> -->
 
 
 </body>
+
 {% endblock %}
-</html> -->

@@ -3,9 +3,28 @@
 
 <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
 <style>
+
+  .button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:80%;
+  }
+
+  .button2 {background-color: #008CBA;} /* Blue */
+  .button3 {background-color: #f44336;} /* Red */
+  .button5 {background-color: #555555;} /* Black */
+
 
 html, body{
 width: 100%;
@@ -18,6 +37,8 @@ font-family: Helvetica;
 #tree{
 width:100%;
 height:100%;
+padding: 1px;
+
 }
 </style>
 
@@ -28,24 +49,43 @@ height:100%;
 
 <body>
 
-  <button id="btn">addNode</button>
-  <br>
-
-  <button onclick="remove()">rmnode</button>
-
-  <button onclick="change_name()">change name</button>
-
-  <button onclick="save()">Save</button>
-
-
-
-
+<div style="float:left; width:86%;border-style: groove;">
   <div id="tree">
 
   </div>
+</div>
 
 
+<div style="float:left; width:13%; background-color:rgb(255,255,255);height:100%;margin:left:40px;border-style: groove;">
 
+  <br>  <br> <br>  <br>
+
+  <button id="btn" class="button">Add Node</button>
+<br><br>
+
+  <button onclick="change_name()" class="button button2">Change name</button>
+  <br>
+  <br>
+  <button onclick="remove()" class="button button3">Remove Node</button>
+  <br>
+  <br>
+  <!-- <button class="button button4">Gray</button> -->
+  <button onclick="save()" class="button button5">Save</button>
+  <br>
+
+
+</div>
+
+
+<div id="id01" class="w3-modal">
+  <div class="w3-modal-content">
+    <div class="w3-container">
+      <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+      <p>Some text. Some text. Some text.</p>
+      <p>Some text. Some text. Some text.</p>
+    </div>
+  </div>
+</div>
 
 <script>
 // var node=[
@@ -76,9 +116,12 @@ var chart = new OrgChart(document.getElementById("tree"), {
             //     { id: 6, pid: 3, name: "Tanner May", title: "Developer" },
             //     { id: 7, pid: 3, name: "Fran Parsons", title: "Developer" }
             // ];
+var modal = document.getElementById('id01');
 
             document.getElementById("btn").addEventListener("click", function () {
                 // var n = newNodes.splice(0, 1)[0];
+                modal.style.visibility="visible";
+
                 var nx = prompt("Please enter the hierarchy to which this node has to be added:");
                 var i;
                 var hid=0;
