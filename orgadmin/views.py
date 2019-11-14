@@ -542,12 +542,16 @@ def departments(request):
     )
     departments = []
     dep_id=[]
-    for i in response['Items']:
-        departments.append(i['department_name'])
-        dep_id.append(i['department_id'])
-    print(departments)
+    if(len(response['Items'])==0):
+        departments=[]
+        dep_id=[]
+    else:
+        for i in response['Items']:
+            departments.append(i['department_name'])
+            dep_id.append(i['department_id'])
+        print(departments)
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments)})
 
 
 def hierarchy(request):

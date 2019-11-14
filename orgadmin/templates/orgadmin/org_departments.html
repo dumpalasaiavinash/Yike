@@ -22,6 +22,7 @@
   <p style="font-family: Josefin Sans;font-size:45px">Departments in your organizations</p>
 </div>
     <br>
+    {% if topics_size > 0 %}
     <div class="card-body row no-gutters align-items-center">
       <form action="{% url 'orgadmin:hierarchy' %}" method="post" >
         {% csrf_token %}
@@ -38,6 +39,7 @@
       </div>
     </form>
     </div>
+   {% endif %}  
     <br><br><br>
     <br><br><br><br><br><br><br><br>
 
