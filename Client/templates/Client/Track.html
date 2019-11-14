@@ -1,0 +1,141 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+
+{% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<div class = "sheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "Client/css/first.css" %}">
+<style>
+.dot1 {
+  height: 10px;
+  width: 10px;
+  margin:1px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot2 {
+  height:5px;
+  width: 5px;
+  margin:1px;
+  margin-left: 30%;
+  background-color:green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.card{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 40%;
+  margin-left:auto;margin-right:auto;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+
+table, td, th {
+  border: 0px solid black;
+  text-align: left;
+}
+
+
+</style>
+</head>
+ <body>
+  <div class = "card">
+    <h3 style ="text-align: left;margin-left: 20px">Project timeline</h3>
+ <div class="container">
+
+    <table>
+        <tr>
+            <td><span class="dot1"></span></td>
+            <td style="padding-left:30px"><b>Complaint recieved</b></td>
+        </tr>
+        <tr>
+          <td><span class="dot2"></span></td>
+          <td style="padding-left:30px">10th August,2019</td>
+        </tr>
+              <tr><td><span class="dot2"></span></td></tr>
+        <tr>
+                <td><span class="dot1"></span></td>
+                <td style="padding-left:30px"><b>Contractor assigned</b></td>
+            </tr>
+            <tr>
+              <td><span class="dot2"></span></td>
+              <td style="padding-left:30px">11th August,2019</td>
+            </tr>
+
+            <tr><td><span class="dot2"></span></td></tr>
+            <tr>
+                    <td><span class="dot1"></span></td>
+                    <td style="padding-left:30px"><b>Repairs started</b></td>
+
+                </tr>
+                <tr>
+                  <td><span class="dot2"></span></td>
+                  <td style="padding-left:30px">12th August,2019</td>
+                </tr>
+
+                <tr><td><span class="dot2"></span></td></tr>
+
+                <tr>
+                        <td><span class="dot1"></span></td>
+                        <td style="padding-left:30px"><b>Estimated completion</b></td>
+                </tr>
+
+                <tr>
+                    <td><span class="dot2"></span></td>
+                    <td style="padding-left:30px">13th August,2019</td>
+                  </tr>
+
+    </table>
+</div>
+  </div>
+
+
+
+  <div class = "card">
+      <h3 style ="text-align: left;margin-left: 10px">Assigned contractor</h3>
+    <div class="container">
+       <table>
+           <tr>
+               <td><b>Name:</b><span>Mr. Sanath kumar</span></td>
+           </tr>
+
+               <tr>
+                       <td><b>Rating:</b><span style="color: blue;">4&#9734;</span></td>
+                   </tr>
+
+                   <tr>
+                      <td><b>Contact:</b><span style="color: blue;">9090909009</span></td>
+                  </tr>
+                   <tr>
+                       <td><b>Designation:</b><span>Highlevel</span></td>
+                  </tr>
+       </table>
+   </div>
+     </div>
+
+     <div class = "card">
+        <h3 style ="text-align: left;margin-left: 10px">Complaint Details</h3>
+      <div class="container">
+      <h5 style="opacity: 0.5;text-align: left;margin-left: 10px">View complaint details</h5>
+      <button type="button" name="button" style="border-radius:10px;color:blue;background-color:white"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>
+
+
+
+    </div>
+       </div>
+
+
+
+
+
+       {% endblock %}

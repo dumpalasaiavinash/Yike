@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi{{ user }}
+
+Your Email: {{user_email}}
+Your Password: {{ password }}  (Can be changed after you log in)
+
+Please click on the link to join the organisation,
+http://{{ domain }}{% url 'orgadmin:activate' uidb64=uid token=token user_id=user_id password=password org_id=org_id %}
+{% endautoescape %}

@@ -1,0 +1,41 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+
+{% block body %}
+<div class = "sheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "Client/css/first.css" %}">
+    <span class='head'><button type="button" class="btn btn-primary btn-lg">New Complaint<span class="badge"></span></button></span>
+    <span class="head1"><button type="button" class="btn btn-primary btn-lg">Track<span class="badge"></span></button></span>
+    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div>
+  </div>
+</div>
+
+<div>
+<form method="POST" action="{% url 'secondpage' %}">
+{% csrf_token %}
+
+  <div  style="margin-left:150px"class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Departments
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        {% for dep in departments %}
+        <li><a href="#">{{dep}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+<textarea placeholder="Enter your complaint" class = "newcomplaint" cols="30" rows="10" name="complaint"></textarea>
+<br>
+<button type="submit" class="btn btn-primary btn-lg" style="float: right;margin-right: 7.9%">Submit</button>
+<button class="btn btn-primary" style="font-size:24px;float:right;margin-right:66%">Add photo<i class="material-icons">add_a_photo</i></button>
+</form>
+
+</div>
+
+<br><br><br><br>
+
+
+
+{% endblock %}

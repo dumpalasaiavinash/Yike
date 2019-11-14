@@ -3,9 +3,10 @@
 <head>
 </head>
 <body>
-    <form action="{% url 'orgadmin:dashboard' %}" method='post'>
+    <form action="{% url 'orgadmin:dashboard' org_id %}" method='post'>
         {% csrf_token %}
         <input type="text" name="emp_name" placeholder="Enter Name" required>
+        <input type="email" name="emp_email" placeholder="Enter Email ID" required>
         <input type="text" name="department" placeholder="Enter Department" required>
         <input type="text" name="hierarchy" placeholder="Enter Hierarchy" required>
         <input type="text" name="no_complaints" placeholder="No_of_complaints_handling" required>
