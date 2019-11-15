@@ -1,0 +1,123 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block body %}
+
+                <style>
+                body {font-family: Arial, Helvetica, sans-serif;}
+                * {box-sizing: border-box}
+
+                /* Full-width input fields */
+                input[type=text], input[type=password] {
+                  width: 100%;
+                  padding: 15px;
+                  margin: 5px 0 22px 0;
+                  display: inline-block;
+                  border: none;
+                  background: #f1f1f1;
+                }
+
+                input[type=text]:focus, input[type=text]:focus {
+                  background-color: #ddd;
+                  outline: none;
+                }
+
+                hr {
+                  border: 1px solid #f1f1f1;
+                  margin-bottom: 25px;
+                }
+
+                /* Set a style for all buttons */
+                button {
+                  background-color: #4CAF50;
+                  color: white;
+                  padding: 14px 20px;
+                  margin: 8px 0;
+                  border: none;
+                  cursor: pointer;
+                  width: 100%;
+                  opacity: 0.9;
+                }
+
+                button:hover {
+                  opacity:1;
+                }
+
+                /* Extra styles for the cancel button */
+                .cancelbtn {
+                  padding: 14px 20px;
+                  background-color: #f44336;
+                }
+
+                /* Float cancel and signup buttons and add an equal width */
+                .cancelbtn, .signupbtn {
+                  float: left;
+                  width: 50%;
+                }
+
+                /* Add padding to container elements */
+                .container {
+                  padding: 16px;
+                }
+
+                /* Clear floats */
+                .clearfix::after {
+                  content: "";
+                  clear: both;
+                  display: table;
+                }
+
+                /* Change styles for cancel button and signup button on extra small screens */
+                @media screen and (max-width: 300px) {
+                  .cancelbtn, .signupbtn {
+                     width: 100%;
+                  }
+                }
+                </style>
+                <body>
+                                <form method="POST" action="{% url 'client_signin' %}">
+                                        {% csrf_token %}
+                  <div class="container">
+
+                    <hr>
+                    <label for="Username"><b>Username</b></label>
+                    <input type="text" id = "userid" title = "no special characters" placeholder="Username" name="Username" pattern = "^(?=.*[a-z])|(?=.*[A-Z])|(?=.*[0-9]).{4,16}$" required>
+                    <p id ="usertext"></p>
+                    <label for="email"><b>Email</b></label>
+                    <input type="text" placeholder="Enter Email" name="email" required>
+
+                    <label for="psw"><b>Password</b></label>
+                    <input id = "myInput" type="password" title="at least 1 lowercase and 1 uppercase and one numeric and special character atleast length is 8 " placeholder="Enter Password" pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$" name="psw"  required>
+                    <label for="psw-repeat"><b>Repeat Password</b></label>
+
+                    <input id = "myInput1" type="password" placeholder="Repeat Password" minlength="8" maxlength="16" name="psw-repeat" required>
+                    <input type="checkbox" onclick="myFunction()">Show Password
+                    <div class="clearfix">
+                      <button type="button" class="cancelbtn">Cancel</button>
+                      <button type="submit" class="signupbtn">Sign Up</button>
+                    </div>
+                  </div>
+                </form>
+
+                <script>
+                function myFunction() {
+                var x = document.getElementById("myInput");
+                var y = document.getElementById("myInput1");
+                if (x.type === "password") {
+                  x.type = "text";
+                } else {
+                  x.type = "password";
+                }
+
+                if (y.type == "password") {
+                  y.type = "text";
+                } else {
+                  y.type = "password";
+                }
+              }
+
+                </script>
+
+                 </body>
+                </html>
+
+             {% endblock %}   

@@ -118,3 +118,7 @@ class user_logged_in(APIView):
         }
         data.append(var)
         return Response(data)
+
+   
+
+    
