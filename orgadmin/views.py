@@ -38,10 +38,12 @@ import hashlib
 
 # Create your views here.
 def dashboard(request,j):
+    print("-------------HI-------------\n")
 
     present=0 #User already present in organisation
 
     org_id=j
+    request.session['org_id']=org_id
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     departments_table=dynamodb.Table('departments')
@@ -301,10 +303,11 @@ def delete_employee(request,org_id,emp_id):
 
 
 def about(request,org_id):
-    dynamodb=boto3.resource('dynamodb')
-    orga_table=dynamodb.Table('eorganization')
+    context={
+        'org_id':org_id
+    }
 
-    return render(request,'dashboard/about.html')            
+    return render(request,'dashboard/about.html',context)            
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
@@ -667,8 +670,8 @@ def createform(request):
 
 def departments(request):
 
-    organization_id = 105
-    request.session['org_id'] = organization_id
+    organization_id = request.session['org_id']
+    # request.session['org_id'] = organization_id
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
 
@@ -687,7 +690,7 @@ def departments(request):
             dep_id.append(i['department_id'])
         print(departments)
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username']})
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username'],'org_id':organization_id})
 
 
 def hierarchy(request):
@@ -710,7 +713,7 @@ def hierarchy(request):
         node = response['Items'][0]['hierarchy']
     # node='[{"id":1,"hierarchy":"a"},{"id":2,"pid":1,"hierarchy":"b"},{"id":3,"pid":1,"hierarchy":"c"},{"id":4,"pid":3,"hierarchy":"d"}]'
     # print(type(node))
-    return render(request,'orgadmin/depart.html',{'node':node,'dep_name':dep_name,'dep_id':dep_id})
+    return render(request,'orgadmin/depart.html',{'node':node,'dep_name':dep_name,'dep_id':dep_id,'org_id':request.session['org_id']})
 
 
 # @requires_csrf_token

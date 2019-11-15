@@ -282,12 +282,12 @@ z-index: 0;
                                 Menu
                             </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
+                                <a href="{% url 'orgadmin:dashboard' org_id%}">
                                     Dashboard
                                 </a>
                             </li>                                                 
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
+                                <a href="{% url 'orgadmin:departments'%}">
                                     Departments
                                 </a>
                             </li>
@@ -411,7 +411,7 @@ z-index: 0;
                                     <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
                                     <select class="input"><br>
                                         {% for dep in dep %}
-                                        <option value=dep>{{dep}}</option>
+                                        <option value="{{dep}}">{{dep}}</option>
                                         {% endfor %}
                                     </select><br>
                                     <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
