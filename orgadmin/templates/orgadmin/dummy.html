@@ -52,7 +52,42 @@ padding-top: .75rem;
 padding-bottom:6rem;
 }
 
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  border-radius: 30px;
+  color: white;
+  padding: 16px 32px;
+  padding-bottom:1.7% ;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  Width: 7%;
+  max-height:5%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 
+  }
+
+  .button2 {
+    background-color: white;
+    color: black;
+    border: 1px solid rgb(10,165,252);
+  }
+
+  .button2:hover {
+  background-color: rgb(10,165,252);
+  color: white;
+  }
+
+
+/* 
 .button{
   border-color: powderblue;
   color: rgb(10, 10, 10);
@@ -64,18 +99,6 @@ padding-bottom:6rem;
   margin:0 0.3em 0.3em 0;
   text-align:center;
   transition: all 0.2s;
-/* display:inline-block;
-
-border-radius:13%;
-box-sizing: border-box;
-text-decoration:none;
-font-family : Avenir Black;
-font-weight:300;
-color:#FFFFFF;
-background-color:#0055b4;
-
-
-width:11.5% */
 }
 .button:hover{
   background: #2196F3;
@@ -83,12 +106,12 @@ width:11.5% */
   /* color:#000000;
   background-color:#3377ff; */
 }
-@media all and (max-width:30em){
+/* @media all and (max-width:30em){
  .button{
 display:block;
 margin:0.2em auto;
  }
-}
+} */ */
 
 .modal {
   font-family : Avenir Black;
@@ -183,7 +206,7 @@ z-index: 0;
         <h2 style="margin-left:7%;font-family : Avenir Black;" >Organization's Joined</h2>
       </td>
       <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-          <button id="myBtn" class="button" onclick="openForm()">Create</button>
+          <button id="myBtn" class=" button button2" onclick="openForm()">Create</button>
       </td>
     </tr>
   </table> <br>
@@ -199,8 +222,7 @@ z-index: 0;
               </div>
           
               <div class="middle" >
-                  <img class=image src="{% static 'orgadmin/images/subu.jpg' %}" alt="Avatar"  >
-              <!-- <img class="image" aria-hidden="true" src="//lh3.googleusercontent.com/a-/AAuE7mBhXW5QT3UXXW5eAXXfNiEsqhzTkeL-5vZup3yo=s75-c"> -->
+                  <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
                 
               </div>
           
@@ -224,7 +246,7 @@ z-index: 0;
                   <h2 style="margin-left:7%;font-family : Avenir Black;" >Organization's Created</h2>
               </td>
               <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-                  <button id="join_btn" class="button" onclick="openForm()">Join</button>
+                  <button id="join_btn" class="button button2" onclick="openForm()">Join</button>
 
                   </div>
               </td>
@@ -245,7 +267,6 @@ z-index: 0;
                 
                     <div class="middle" >
                         <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
-                    <!-- <img class="image" aria-hidden="true" src="//lh3.googleusercontent.com/a-/AAuE7mBhXW5QT3UXXW5eAXXfNiEsqhzTkeL-5vZup3yo=s75-c"> -->
                       
                     </div>
                     <div class="bottom">
@@ -273,7 +294,7 @@ z-index: 0;
         <hr class="line">
         <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code" name="code" required>
         <hr class="line">
-        <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color:rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Create</button> <br><br><br><br><br>  
+        <button type="submit" class="button button2" style="font-family : Avenir Black;width:18%;border-radius:30px;color:rgb(10, 10, 10);margin-left:8% ;margin-top:3% ;text-align:center ;padding-bottom:5% ;">Create</button> <br><br><br><br><br>  
     </form>
   </div>
 </div>
@@ -289,7 +310,7 @@ z-index: 0;
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
         <hr class="line">
-        <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color: rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Join</button> <br><br><br><br><br>  
+        <button type="submit" class="button button2" style="font-family : Avenir Black;width:18%;border-radius:30px;color:rgb(10, 10, 10);margin-left:8% ;margin-top:3% ;text-align:center ;padding-bottom:5% ;">Join</button> <br><br><br><br><br>  
     </form>
   </div>
 </div>
