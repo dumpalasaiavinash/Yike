@@ -270,7 +270,7 @@ def activate(request, uidb64, token, user_id, password,org_id):
                 }
             )
 
-            password=hashlib.shaw256(password.encode())
+            password=hashlib.sha256(password.encode())
             password=password.hexdigest()
             
             users_table.put_item(
