@@ -27,7 +27,12 @@
 {% if messages %}
   <ul class="messages">
     {% for message in messages %}
+    <div class="w3-panel w3-red w3-display-container">
+  <span onclick="this.parentElement.style.display='none'"
+  class="w3-button w3-large w3-display-topright">&times;</span>
       <h1 class="{{ message.tags }}">{{ message }}</h1>
+
+    </div>  
     {% endfor %}
   </ul>
 {% else %}
@@ -37,6 +42,7 @@
 {% endif %}
 
 
+    <br>
     <br>
     {% if topics_size > 0 %}
     <h1> Please select a department to check and edit the hierarchy of it.  </h1>
