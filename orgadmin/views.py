@@ -8,6 +8,9 @@ from urllib import parse
 from django.http import HttpResponse, JsonResponse
 import json
 from django.views.decorators.csrf import requires_csrf_token
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status   
 
 #For sending activation function
 from django.http import HttpResponse
@@ -831,30 +834,39 @@ def index(request):
     response_rest=json.dumps([{}])
     return HttpResponse(response_rest,content_type='text/json')
 
-def complaint_rest(request):
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table('complaint')
-        response_complaint = table.scan(
-        ProjectionExpression="complaint",
 
-        )
+class complaintrest(APIView):
+        
+    def get(self,request):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('complaint')
+            response_complaint = table.scan(
+            ProjectionExpression="complaint",
+            
+            )
+            
+            complaint_list=[]
+            # print(response_complaint['Items'][0])
+            for i in range(0,len(response_complaint['Items'])):
+                complaint_list.append(response_complaint['Items'][i]['complaint'])
+            
+            print(complaint_list)
+            # print(len(complaint_list))
+            list1=[]
+            for each in range(0,len(complaint_list)):
 
-        complaint_list=[]
-        # print(response_complaint['Items'][0])
-        for i in range(0,len(response_complaint['Items'])):
-            complaint_list.append(response_complaint['Items'][i]['complaint'])
+                var={
+                    'complaint':complaint_list[each]
+                }
+                list1.append(var)
+            return Response(list1)
 
-        print(complaint_list)
-        # print(len(complaint_list))
 
-        if request.method=='GET':
-            try:
-                complaint=complaint_list
-                response_rest=json.dumps([{'complaint':complaint}])
-            except:
-                print("something went wrong")
 
-        return render(request, 'orgadmin/createform.html')
+        
+
+
+        
 def create_department(request):
     depname = request.POST.get('depname')
     print(depname)
