@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "Client/new_home/base.html" %}
 {% load staticfiles %}
 
 {% block body %}
@@ -16,9 +16,9 @@
 <div class = "sheet">
         <link href='styles.css?version=1' rel='stylesheet'></link>
     <link rel="stylesheet" href="{% static 'Client/css/first.css' %}">
-    <div class='head'><a href="{% url 'secondpage' %}"><button type="button" class="btn btn-primary btn-lg">New Complaint</button></a><div class="badge"></div></div>
-    <div class='head1'><a href="{% url 'track' %}"><button type="button" class="btn btn-primary btn-lg">Track</button></a><div class="badge"></div></div>
-    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div></div>
+    <div class='head'><a href="{% url 'Client:secondpage' %}"><button type="button" class="btn btn-primary btn-lg">New Complaint</button></a><div class="badge"></div></div>
+    <div class='head1'><a href="{% url 'Client:track' %}"><button type="button" class="btn btn-primary btn-lg">Track</button></a><div class="badge"></div></div>
+    <div class='head2'><a href="{% url 'Client:thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div></div>
 </div>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">

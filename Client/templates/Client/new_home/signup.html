@@ -1,0 +1,63 @@
+{% extends 'Client/new_home/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/logs.css' %}"/>
+<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+{% endblock %}
+
+
+{% block body %}
+
+	<div class="limiter" style="font-family:Raleway">
+		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+				<form class="login100-form validate-form" action="{% url 'Client:client_signin' %}" method='post'>
+          {% csrf_token %}
+          <span class="login100-form-title p-b-49">
+						Sign Up
+					</span>
+
+					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is required">
+						<span class="label-input100">Username</span>
+						<input class="input100" type="text" name="username" placeholder="Type your username" required>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
+						<span class="label-input100">Email Id</span>
+						<input class="input100" type="email" name="email" placeholder="Type your email id" required>
+					</div>
+
+          <div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
+						<span class="label-input100">Password</span>
+						<input class="input100" type="password" name="pass" placeholder="Type your password" required>
+					</div>
+
+          <div class="wrap-input100 validate-input m-b-33" data-validate="Password is required">
+						<span class="label-input100">Retype Password</span>
+						<input class="input100" type="password" name="re_pass" placeholder="Retype your password" required>
+					</div>
+
+
+          <center>
+            <button class="btnn" type="submit">
+              Sign Up
+            </button>
+          </center>
+
+					<div class="flex-col-c p-t-25">
+						<span class="txt1 p-b-17">
+							Already Have an account?
+						</span>
+
+						<a href="{% url 'Client:client_login' %}" class="txt2">
+							Log In
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
