@@ -618,37 +618,41 @@ def join(request):
                 ProjectionExpression="code,org_id",
                 FilterExpression=Attr('code').eq(code)
             )
-            print("********************")
-            print(response_join)
-            print("#####################")
+            try:
+                print("********************")
+                print(response_join)
+                
+                print("#####################")
 
-            #request.session['org_created']=request.session['org_created']+[ID]
-            request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]       
-            org_joined = request.session['org_joined']
-            print(org_joined)
-            print(response_join['Items'][0]['org_id'])
-            if (response_join['Items'][0]['org_id'] not in org_joined):
-                org_joined.append(int(response_join['Items'][0]['org_id']))
+                #request.session['org_created']=request.session['org_created']+[ID]
+                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]       
+                org_joined = request.session['org_joined']
                 print(org_joined)
-                print("@@@@")
-            email=request.session['email']
-            print(org_joined)
-            print(email)
+                print(response_join['Items'][0]['org_id'])
+                if (response_join['Items'][0]['org_id'] not in org_joined):
+                    org_joined.append(int(response_join['Items'][0]['org_id']))
+                    print(org_joined)
+                    print("@@@@")
+                email=request.session['email']
+                print(org_joined)
+                print(email)
 
-            dynamoDB=boto3.resource('dynamodb')
-            table=dynamoDB.Table('users')
-            response_joined = table.update_item(
-                Key={
-                    'email':email
-                },
-                UpdateExpression="set organizations_joined = :r",
-                ExpressionAttributeValues={
-                    ':r': org_joined,
+                dynamoDB=boto3.resource('dynamodb')
+                table=dynamoDB.Table('users')
+                response_joined = table.update_item(
+                    Key={
+                        'email':email
+                    },
+                    UpdateExpression="set organizations_joined = :r",
+                    ExpressionAttributeValues={
+                        ':r': org_joined,
 
-                },
-                ReturnValues="UPDATED_NEW"
-            )
-            return redirect('../create')
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+                return redirect('../create')
+            except:
+                return redirect('../create')
 
 
 
