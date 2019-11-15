@@ -22,7 +22,7 @@ def home_log(request):
     password = request.POST.get('pass')
     password=hashlib.sha256(password.encode())
     password=password.hexdigest()
-    
+
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
@@ -88,6 +88,7 @@ def home_reg(request):
                 request.session['email']=email
                 request.session['org_created']=[]
                 request.session['org_joined']=[]
+                request.session['active']=True
                 return redirect('orgadmin:create')
 
             else:
