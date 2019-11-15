@@ -49,9 +49,10 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'employee.apps.EmployeeConfig',
     'orgadmin.apps.OrgadminConfig',
+    'formCreation.apps.FormcreationConfig',
     'rest_framework',
     'chatbox',
-    
+
 
 ]
 
