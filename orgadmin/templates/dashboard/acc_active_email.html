@@ -1,10 +1,12 @@
 {% autoescape off %}
-<h4>Hi</h4>{{ user }}
-<br>
-<p>
-    Your Email:{{user_email}}
-    Your Password:{{ password }}(Can be changed after you log in)
-</p>
+Hi {{ user }}
+
+Your Email : {{user_email}}
+Your Password : {{ password }} (Can be changed after you log in)
+
 Please click on the link to join the organisation,
 http://{{ domain }}{% url 'orgadmin:activate' uidb64=uid token=token user_id=user_id password=password org_id=org_id %}
+
+
+(After clicking on link you will be redirected to home page where you to login with given credentials)
 {% endautoescape %}

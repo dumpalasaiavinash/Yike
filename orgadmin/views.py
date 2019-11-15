@@ -29,33 +29,44 @@ import string
 
 # Create your views here.
 def dashboard(request,j):
-    # email=request.session['email']
-    # org_id = org_id
-    # print(org_id)
-    
+
+    present=0 #User already present in organisation 
+
     org_id=j
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
+    departments_table=dynamodb.Table('departments')
+
+    dep_response=departments_table.scan()
     response2=table.scan()
+    #Getting departments from departments table
+    dep=[]
 
     name=[]
     department=[]
     hierarchy=[]
     no_complaints=[]
+    emp_id=[]
 
-    # print(response2['Items'])
+    for de in dep_response['Items']:
+        if(de['organization_id']==org_id):
+            dep.append(de['department_name'])
+            
     for dic in response2['Items']:
         if dic['active']==True and dic['org_id']==int(org_id):
             name.append(dic['emp_name'])
             department.append(dic['department'])
             hierarchy.append(dic['hierarchy'])
             no_complaints.append(dic['no_complaints'])
+            emp_id.append(dic['emp_id'])
 
-    info_list=zip(name,department,hierarchy,no_complaints)
+    info_list=zip(name,department,hierarchy,no_complaints,emp_id)
 
     context={
         'info_list':info_list,
-        'org_id':org_id
+        'org_id':org_id,
+        'dep':dep,
+        'present':present
     }
     
     if request.method=='POST':
@@ -65,21 +76,47 @@ def dashboard(request,j):
         no_comp=request.POST.get('no_complaints')
         email=request.POST.get('emp_email')
 
+        print(department)
+
         dynamodb=boto3.resource('dynamodb')
         table=dynamodb.Table('employees')
+        email_present_table=dynamodb.Table('users')
 
-        response=table.scan
+        #Checking if user is already registered user or not
+        email_present=email_present_table.scan(
+            ProjectionExpression="email",
+        )
+
+        check=0
+        for em in email_present['Items']:
+            if(em['email']==email):
+                check=1
+        #End of user checking        
+
+        #Incrementing the primary key
         response = table.scan(
                     ProjectionExpression="emp_id",
                 )
 
+        #Checking if person with entered email already present in organisation or not
+        for dic in response2['Items']:
+            if(dic['user_email']==email) and (dic['org_id']==org_id):
+                present=1
+                context['present']=present
+                return render(request, 'dashboard/index.html',context)
+
         emp_id=len(response['Items'])+1
         
+        #Randomly generating password
         letters=string.ascii_letters
         password_gen=''.join(random.choice(letters) for i in range(8))
         token=''.join(random.choice(letters) for i in range(10))
-
-        table.put_item(
+  
+        #Checking if the user admin entered is regestered user or a new user
+        #Below if new user is added
+        if (check==0):
+            
+            table.put_item(
             Item={
                 'org_id':org_id,
                 'emp_id':len(response['Items'])+1,
@@ -90,28 +127,92 @@ def dashboard(request,j):
                 'no_complaints':no_comp,
                 'active':False,
                 'token':token
-            }
-        )  
-        
-        current_site = get_current_site(request)
-        mail_subject = 'Click the link to join the organisation.'
-        message = render_to_string('dashboard/acc_active_email.html', {
-            'user': name,
-            'user_id':emp_id,
-            'user_email':email,
-            'password':password_gen,
-            'domain': current_site.domain,
-            'uid':urlsafe_base64_encode(force_bytes(emp_id)),
-            'token':token,
-            'org_id':org_id
-        })
-        to_email = email
-        email = EmailMessage(
-                    mail_subject, message, to=[to_email]
-        )
-        email.send()
+             }
+            )
 
-        return render(request, 'dashboard/index.html',context)   
+            current_site = get_current_site(request)
+            mail_subject = 'Click the link to join the organisation.'
+            message = render_to_string('dashboard/acc_active_email.html', {
+                'user': name,
+                'user_id':emp_id,
+                'user_email':email,
+                'password':password_gen,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(emp_id)),
+                'token':token,
+                'org_id':org_id
+            })
+            to_email = email
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+
+            return render(request, 'dashboard/index.html',context)
+        
+        #If user already registered is in added to organisation
+        elif(check==1):
+
+            table.put_item(
+            Item={
+                'org_id':org_id,
+                'emp_id':len(response['Items'])+1,
+                'emp_name':name,
+                'user_email':email,
+                'department':department,
+                'hierarchy':hierarchy,
+                'no_complaints':no_comp,
+                'active':True,
+                'token':token
+             }
+            )
+
+            current_site = get_current_site(request)
+            mail_subject = 'Joined organisation login with your old credentials.'
+            message = render_to_string('dashboard/old_credentials_email.html', {
+                'user': name,
+                'user_id':emp_id,
+                'user_email':email,
+                'password':password_gen,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(emp_id)),
+                'token':token,
+                'org_id':org_id
+            })
+            to_email = email
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+
+            #Database call for getting updated table(After registered user is added)
+            table2=dynamodb.Table('employees')
+            response3=table2.scan()
+            name=[]
+            department=[]
+            hierarchy=[]
+            no_complaints=[]
+            emp_id=[]
+
+            for dic in response3['Items']:
+                if dic['active']==True and dic['org_id']==int(org_id):
+                    name.append(dic['emp_name'])
+                    department.append(dic['department'])
+                    hierarchy.append(dic['hierarchy'])
+                    no_complaints.append(dic['no_complaints'])
+                    emp_id.append(dic['emp_id'])
+
+            info_list=zip(name,department,hierarchy,no_complaints,emp_id)
+            print(name)
+
+            context={
+                'info_list':info_list,
+                'org_id':org_id,
+                'dep':dep,
+                'present':present
+            }
+
+            return render(request, 'dashboard/index.html',context)       
 
     return render(request, 'dashboard/index.html',context)
 
@@ -123,6 +224,8 @@ def activate(request, uidb64, token, user_id, password,org_id):
     users_table=dynamodb.Table('users')
 
     response=table.scan()
+
+    #Checking for activation True is in Employee table
 
     for dic in response['Items']:
         if (dic['emp_id']==int(user_id)) and (dic['token']==str(token)) and (dic['org_id']==int(org_id)):
@@ -168,12 +271,22 @@ def activate(request, uidb64, token, user_id, password,org_id):
         'org_id':org_id
     }        
 
-    return render(request, 'dashboard/index.html',context) 
+    return redirect('../../../../../create') 
+
+
+def delete_employee(request,org_id,emp_id):
+    dynamodb=boto3.resource('dynamodb')
+    emp_table=dynamodb.Table('employees')
+    
+    response=emp_table.scan()
+
+    for emp in response['Items']:
+        if(emp['emp_id']==emp_id) and (emp['org_id']==org_id):
+            url="../../dashboard/"+str(org_id)
+            return redirect(url)
 
 
 def create(request):
-    #print('abc')
-    #print(request.session['email'])
     email=request.session['email']
 
     dynamoDB=boto3.resource('dynamodb')
