@@ -568,6 +568,33 @@
     display: table;
   }
 
+  .column2 {
+    float: left;
+    width: 40%;
+    padding: 1.5%;
+  }
+  .column2b {
+    float: left;
+    width: 57%;
+    padding: 5%;
+  }
+  .column3 {
+    float: right;
+    width: 40%;
+    padding: 1.5%;
+  }
+  .column3b {
+    float: right;
+    width: 57%;
+    padding: 5%;
+  }
+
+  .row2::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
 </style>
 
 {% load static %}
@@ -588,6 +615,35 @@
 </div>
 
 <div class="">
+  <div class="topfts">
+    <center>About Yike</center>
+    <br>
+    <div class="row2">
+      <div class="column2">
+        <img src="{% static 'home/feature.png' %}" alt="Snow" style="width:100%"><br><br>
+      </div>
+      <div class="column2b">
+        <br><br>
+        <div style="font-family: Raleway; color:rgb(200,200,200); font-size:85%;">
+          <center>Find useful statistics about your employee's work and progress</center>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row2">
+      <div class="column3">
+        <img src="{% static 'home/feature.png' %}" alt="Forest" style="width:100%"><br><br>
+      </div>
+      <div class="column3b">
+        <br><br>
+        <div style="font-family: Raleway; color:rgb(200,200,200); font-size:85%;">
+          <center>On cloud deployement makes your service's hosting easy</center>
+        </div>
+      </div>
+    </div>
+
+  </div>
   <img src="{% static 'home/images/about.png' %}" alt="about" style="width:100%;height:100%;">
 </div>
 <br>
@@ -622,15 +678,6 @@
         </div>
       </div>
     </div>
-
-
-
-    <!-- <div style="float:left;">
-      <img src="{% static 'home/feature.png' %}" alt="about" style="width:32%;height:32%;">
-    </div>
-    <div style="float:left;">
-      <img src="{% static 'home/feature.png' %}" alt="about" style="width:32%;height:32%;">
-    </div> -->
 
   </div>
   <img src="{% static 'home/images/features.png' %}" alt="about" style="width:100%;height:100%;">
