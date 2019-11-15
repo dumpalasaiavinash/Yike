@@ -623,6 +623,7 @@ def join(request):
             print("#####################")
 
             #request.session['org_created']=request.session['org_created']+[ID]
+            request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]       
             org_joined = request.session['org_joined']
             print(org_joined)
             print(response_join['Items'][0]['org_id'])
