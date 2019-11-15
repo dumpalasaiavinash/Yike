@@ -1,94 +1,76 @@
 {% extends 'home/base2.html' %}
-
 {% load static %}
-
 {% block extrahead %}
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Language" content="en">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Analytics Dashboard - This is an example dashboard created using build-in elements and components.</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/>
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
-    <meta name="msapplication-tap-highlight" content="no">
-
-<link href="{% static 'dashboard/main.cba69814a806ecc7945a.css' %}" rel="stylesheet">
 <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <style>
 
-nav{
+  nav{
 
-position:fixed
-}
-
-
-.button {
-position:relative;
-background-color: #4CAF50; /* Green */
-border: none;
-color: white;
-padding-top: 10%;
-padding-bottom:10%;
-text-align: center;
-text-decoration: none;
-display: inline-block;
-font-size: 15px;
-font-family:avenir Black;
-margin: 4px 2px;
-cursor: pointer;
-width:80%;
-}
-
-.button2 {background-color: #008CBA;} /* Blue */
-.button3 {
-background-color:#ff4d4d;
-color: white;
-border: 1px solid #ff0000;
-border-radius:10px;
-height: 10%;
+    position:fixed
+  }
 
 
-}
-.button3:hover {
-background-color: #ff6666;
-color: black;
-}
+  .button {
+    position:relative;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:80%;
+  }
 
-.button5 {
-background-color:#4CAF50;
-color: white;
-border: 1px solid #4CAF50;
-border-radius:10px;
-height: 10%;
 
 
-}
-.button5:hover {
-background-color: #4CAF50;
-color: black;
-}
-/* .button5 {background-color: #4CAF50;} Black */
+  .but {
+    position:relative;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:80%;
+  }
 
-[node-id] rect {
-          /* fill: #016e25; */
-          /* height:15%; */
-          /* width:15%; */
-          /* text-align:'center'; */
-          border-radius: 50%;
 
-      }
 
-      .field_0 {
-                /* font-family: Impact; */
-                /* text-transform: uppercase; */
-                /* fill: #a3a3a3; */
-                /* text-anchor="middle"; */
+  .button2 {background-color: #008CBA;} /* Blue */
+  .button3 {background-color: #f44336;} /* Red */
+  .button5 {background-color: #555555;} /* Black */
 
-            }
+  [node-id] rect {
+              /* fill: #016e25; */
+              /* height:15%; */
+              /* width:15%; */
+              /* text-align:'center'; */
+              border-radius: 50%;
+
+          }
+
+          .field_0 {
+                    /* font-family: Impact; */
+                    /* text-transform: uppercase; */
+                    /* fill: #a3a3a3; */
+                    /* text-anchor="middle"; */
+
+                }
 
 
 
@@ -105,565 +87,295 @@ font-family: Helvetica;
 width:100%;
 height:100%;
 padding: 1px;
-}
 
+}
 </style>
+
+
 {% endblock %}
 
 {% block body %}
-<div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
-    <div class="ui-theme-settings">
-        <div class="theme-settings__inner">
-            <div class="scrollbar-container">
-                <div class="theme-settings__options-wrapper">
-                    <h3 class="themeoptions-heading">Layout Options
-                    </h3>
-                    <div class="p-3">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="switch has-switch switch-container-class" data-class="fixed-header">
-                                                <div class="switch-animate switch-on">
-                                                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Fixed Header
-                                            </div>
-                                            <div class="widget-subheading">Makes the header top fixed, always visible!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="switch has-switch switch-container-class" data-class="fixed-sidebar">
-                                                <div class="switch-animate switch-on">
-                                                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Fixed Sidebar
-                                            </div>
-                                            <div class="widget-subheading">Makes the sidebar left fixed, always visible!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="switch has-switch switch-container-class" data-class="fixed-footer">
-                                                <div class="switch-animate switch-off">
-                                                    <input type="checkbox" data-toggle="toggle" data-onstyle="success">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Fixed Footer
-                                            </div>
-                                            <div class="widget-subheading">Makes the app footer bottom fixed, always visible!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <h3 class="themeoptions-heading">
-                        <div>
-                            Header Options
-                        </div>
-                        <button type="button" class="btn-pill btn-shadow btn-wide ml-auto btn btn-focus btn-sm switch-header-cs-class" data-class="">
-                            Restore Default
-                        </button>
-                    </h3>
-                    <h3 class="themeoptions-heading">
-                        <div>Sidebar Options</div>
-                        <button type="button" class="btn-pill btn-shadow btn-wide ml-auto btn btn-focus btn-sm switch-sidebar-cs-class" data-class="">
-                            Restore Default
-                        </button>
-                    </h3>
-                    <h3 class="themeoptions-heading">
-                        <div>Main Content Options</div>
-                        <button type="button" class="btn-pill btn-shadow btn-wide ml-auto active btn btn-focus btn-sm">Restore Default
-                        </button>
-                    </h3>
-                    <div class="p-3">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <h5 class="pb-2">Page Section Tabs
-                                </h5>
-                                <div class="theme-settings-swatches">
-                                    <div role="group" class="mt-2 btn-group">
-                                        <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class" data-class="body-tabs-line">
-                                            Line
-                                        </button>
-                                        <button type="button" class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class" data-class="body-tabs-shadow">
-                                            Shadow
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <h5 class="pb-2">Light Color Schemes
-                                </h5>
-                                <div class="theme-settings-swatches">
-                                    <div role="group" class="mt-2 btn-group">
-                                        <button type="button" class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class" data-class="app-theme-white">
-                                            White Theme
-                                        </button>
-                                        <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class" data-class="app-theme-gray">
-                                            Gray Theme
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    <div class="app-main">
-            <div class="app-sidebar sidebar-shadow">
-                <div class="app-header__logo">
-                    <div class="logo-src"></div>
-                    <div class="header__pane ml-auto">
-                        <div>
-                            <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="app-header__mobile-menu">
-                    <div>
-                        <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-                <div class="app-header__menu">
-                    <span>
-                        <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                            <span class="btn-icon-wrapper">
-                                <i class="fa fa-ellipsis-v fa-w-6"></i>
-                            </span>
-                        </button>
-                    </span>
-                </div>    <div class="scrollbar-sidebar">
-                    <div class="app-sidebar__inner">
-                        <ul class="vertical-nav-menu">
-                            <li class="app-sidebar__heading" style="text-size:20px;padding-top:10%">
-                                Menu
-                            </li>
-                            <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="{% url 'orgadmin:dashboard' org_id %}">
-                                    Dashboard
-                                </a>
-                            </li>
-                            <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="{% url 'orgadmin:departments' %}">
-                                    Departments
-                                </a>
-                            </li>
-                            <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="{% url 'orgadmin:about' org_id %}">
-                                    About
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-              <div class="app-main__outer">
-                <div class="app-main__inner">
 
-                      <div style="float:left; width:84%;height:89%;margin-top:3%">
-                        <button onclick="save()" class="button">Back</button>
-                        <div id="tree" style="margin-top:2%;position:fixed">
+<body>
 
-                        </div>
-                      </div>
 
+    <div style="float:left; width:6%;height:80%;margin-top:6%;margin-left:1.5%">
+        <a href="{% url 'orgadmin:departments' %}">
+            <span class="glyphicon glyphicon-arrow-left" style="color:black;font-size: 35px;"></span>
+        </a>
+    </div> 
 
-                      <div style="float:left; width:15%;height:89%;margin-left:1%; margin-top:5%">
+<div style="float:left; width:75%;height:89%;margin-top:3%">
+  <div id="tree" style="margin-top:2%;position:fixed">
 
-                        <!-- <br>  <br> <br>  <br> -->
-
-                        <!-- <button id="btn" class="button">Add Node</button>
-                      <br><br> -->
-
-                        <!-- <button onclick="change_name()" class="button button2">Change name</button>
-                        <br>
-                        <br> -->
-                        <button onclick="remove()" class="button button3">Remove Node</button>
-
-
-
-                        <!-- <div id="modal" class="w3-modal" onclick="this.style.display='none'">
-                            <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
-                            <div class="w3-modal-content w3-animate-zoom">
-
-                                <label><b>Username</b></label>
-                                <input class="w3-input w3-border w3-margin-bottom" id='name' type="text" placeholder="Enter Username" name="usrname" required>
-
-                                <button class="w3-button w3-block w3-green w3-section w3-padding" onclick="remove()" type="submit">Remove</button>
-
-                                <button onclick="document.getElementById('modal').style.display='none'" type="button" class="w3-button w3-red">Cancel</button>
-
-                              </div>
-                          </div> -->
-                        <br>
-                        <br>
-                        <!-- <button class="button button4">Gray</button> -->
-                        <button onclick="save()" class="button button5">Save</button>
-                        <br>
-                        <br>
-
-                        <div class="w3-container">
-                            <h2>Instructions below</h2>
-
-
-                            <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%;cursor:zoom-in;height:10%"
-                            onclick="document.getElementById('modal01').style.display='block'">
-
-                            <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
-                              <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
-                              <div class="w3-modal-content w3-animate-zoom">
-                                <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%">
-                              </div>
-                            </div>
-                          </div>
-
-
-                      </div>
-
-
-
-
-                      <!-- <div id="myModal" class="modal">
-                          <div class="modal-content">
-                              <span class="close">&times;</span>
-                          <form class="form-container"   >
-                              {% csrf_token %}
-                              <h1 style="font-family : Avenir Black;">Create Organization</h1>
-
-                              <input id="name" style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter name to Remove Hierarchy" name="name" required>
-                              <hr class="line">
-                              <button type="submit" class="button button2" style="font-family : Avenir Black;">Remove</button> <br><br><br><br><br>
-                          </form>
-                        </div>
-                      </div>
-                       -->
-                      <!-- <script>
-                          // Get the modal
-                          var modal = document.getElementById("myModal");
-
-                          // Get the button that opens the modal
-                          var btn = document.getElementById("rm");
-
-
-                          // Get the <span> element that closes the modal
-                          var span = document.getElementsByClassName("close")[0];
-
-                          // When the user clicks the button, open the modal
-                          btn.onclick = function() {
-                            modal.style.display = "block";
-                          }
-
-                          // When the user clicks on <span> (x), close the modal
-                          span.onclick = function() {
-                            modal.style.display = "none";
-                          }
-
-                          // When the user clicks anywhere outside of the modal, close it
-                          window.onclick = function(event) {
-                            if (event.target == modal) {
-                              modal.style.display = "none";
-                            }
-                          }
-
-
-                          </script> -->
-
-                      <script>
-                      // var node=[
-                      //                     { id: 1, hierarchy: "a"},
-                      //                     { id: 2, pid: 1, hierarchy: "b" },
-                      //                     { id: 3, pid: 1, hierarchy: "c" }
-                      //                 ];
-
-                      console.log('here')
-                      var node = {{node|safe}}
-                      var dep_name = '{{dep_name}}'
-                      var dep_id = '{{dep_id}}'
-                      console.log(node)
-                      // OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
-                      // OrgChart.templates.belinda.node_id = '<span style="border-radius:20%; color:white" </span>';
-
-                      // OrgChart.templates.myTemplate.size = [200, 200];
-                      //     OrgChart.templates.myTemplate.node =
-                      //                 '<circle cx="100" cy="100" r="100" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
-                      //
-                      //                 OrgChart.templates.myTemplate.ripple = {
-                      //                       radius: 100,
-                      //                       color: "#0890D3",
-                      //                       rect: null
-                      //                   };
-
-                      // OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
-                      // OrgChart.templates.myTemplate.size = [100, 100];
-                      //     OrgChart.templates.myTemplate.node =
-                      //                 '<circle cx="70" cy="70" r="70" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
-                      //
-                      //                 OrgChart.templates.myTemplate.ripple = {
-                      //                        radius: 70,
-                      //                        color: "#0890D3",
-                      //                        rect: null
-                      //                    };
-                      //
-                      //  OrgChart.templates.myTemplate.field_0 = '<text style="font-size: 24px;" fill="#ffffff" x="100" y="90" text-anchor="middle">{val}</text>';
-
-                      OrgChart.templates.polina.field_0 = '<text class="field_0"  style="font-size: 20px;border-width:20%;" fill="#1e1a4d"  x="150" y="40" text-anchor="middle">{val}</text>';
-                      // OrgChart.templates.polina.size = [300, 300];
-                      OrgChart.templates.polina.node = '<rect x="45" y="0" width="200" height="70" rx="12" ry="12" fill="#09a3eb"></rect>'
-
-                      OrgChart.templates.polina.link =
-                             '<path stroke="#686868" stroke-width="1px" fill="none" link-id="[{id}][{child-id}]" d="M{xa},{ya} C{xb},{yb} {xc},{yc} {xd},{yd}" />';
-
-
-                      OrgChart.templates.polina.nodeMenuButton =
-                                     '<g style="cursor:pointer;background-color:white" transform="matrix(1,0,0,1,235,45)" control-node-menu-id="{id}">'
-                                     + '<rect x="-2" y="-8" fill="#09a3eb" stroke-width="1px" rx="2" ry="2" width="7" height="20">'
-                                     + '</rect>'
-                                     + '<line x1="0" y1="0" x2="2.5" y2="0" fill="#ffffff" fill-opacity="1" stroke-width="2" stroke="#ffffff" />'
-                                     + '<line x1="0" y1="7" x2="2.5" y2="7" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
-                                     + '<line x1="0" y1="14" x2="2.5" y2="14" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
-                                     + '</g>';
-
-
-
-                      // OrgChart.templates.polina.ripple = {
-                      //         // radius: 100,
-                      //         color: "#0890D3",
-                      //         rect: null
-                      //     };
-
-                      var chart = new OrgChart(document.getElementById("tree"), {
-                                    // mouseScrool: OrgChart.action.scroll,
-                                    showXScroll: OrgChart.scroll.visible,
-                                    showYScroll: OrgChart.scroll.visible,
-                                    mouseScrool: OrgChart.action.zoom,
-                                    // enableSearch: false,
-                                    template: "polina",
-
-                                    nodeMenu:{
-
-                                      edit: {text:"Edit"},
-                                      add: {text:"Add"},
-                                      details: {text:"Details"},
-
-                                    },
-                                      nodeBinding: {
-                                          field_0: "hierarchy",
-                                      },
-                                      nodes: node
-                                  });
-                                  // console.log(typeof(chart))
-                                // console.log(chart)
-                                // console.log(node)
-
-                                  // var newNodes = [
-                                  //     { id: 4, pid: 2, name: "Elliot Patel", title: "Sales" },
-                                  //     { id: 5, pid: 2, name: "Lynn Hussain", title: "Sales" },
-                                  //     { id: 6, pid: 3, name: "Tanner May", title: "Developer" },
-                                  //     { id: 7, pid: 3, name: "Fran Parsons", title: "Developer" }
-                                  // ];
-
-
-                                  document.getElementById("btn").addEventListener("click", function () {
-                                      // var n = newNodes.splice(0, 1)[0];
-
-                                      var nx = prompt("Please enter the hierarchy to which this node has to be added:");
-                                      var i;
-                                      var hid=0;
-                                      var tpid;
-                                      console.log(node)
-                                      var nodes = node
-                                      console.log(nodes)
-                                      for(i in nodes){
-                                        console.log(typeof(nodes[i]['hierarchy']))
-                                        if(nodes[i]['hierarchy']==nx){
-                                          tpid=nodes[i]['id']
-                                        }
-                                        if(nodes[i]['id']>hid){
-                                          hid=nodes[i]['id']
-                                        }
-                                      }
-                                      if(tpid == null){
-                                        alert(" The given hierarchy is not available ")
-                                      }
-                                      else{
-                                        console.log('a')
-                                        var n = prompt("Please enter the new hierarchy:");
-                                        p={ id: hid+1, pid: tpid, hierarchy: n}
-                                        console.log(p)
-                                        console.log('b')
-                                        chart.addNode(p);
-                                        console.log(typeof(p))
-                                        console.log(typeof(node))
-                                        console.log(node)
-                                        console.log(node.length)
-                                        len = node.length
-                                        // node[len] = p
-                                        console.log(node)
-                                      }
-                                  });
-
-
-                                function remove() {
-                                  var nx = prompt('Enter the name of the node that you want to delete');
-                                  console.log('a')
-                                      // console.log(nx)
-                                      // console.log(document.getElementById('name'))
-                                      var nodes = node;
-                                      var tpid;
-                                      var id;
-                                      console.log(nodes)
-                                      for(i in nodes){
-                                        console.log(typeof(nodes[i]['hierarchy']))
-                                        if(nodes[i]['hierarchy']==nx){
-                                          tpid=nodes[i]['id'];
-                                          id = i;
-                                        }
-                                      }
-                                      if(tpid == null){
-                                        alert(" The given hierarchy is not available ")
-                                      }
-                                      else if(tpid==0){
-                                        alert(" Cant remove root ")
-                                      }
-                                      else{
-
-                                      chart.removeNode(tpid);
-                                      console.log(id)
-                                      console.log(node)
-                                      console.log(tpid)
-                                    }
-                                }
-
-
-                                function change_name(){
-                                  var nx = prompt("Please enter the hierarchy, the name that has to be changed:");
-                                      var i;
-                                      var hid=0;
-                                      var tpid;
-                                      var id;
-                                      console.log(node)
-                                      var nodes = node
-                                      console.log(nodes)
-                                      for(i in nodes){
-                                        console.log(typeof(nodes[i]['hierarchy']))
-                                        if(nodes[i]['hierarchy']==nx){
-                                          tpid=nodes[i]['id'];
-                                          id=i;
-                                        }
-                                        if(nodes[i]['id']>hid){
-                                          hid=nodes[i]['id']
-                                        }
-                                      }
-                                      if(tpid == null){
-                                        alert(" The given hierarchy is not available ")
-                                      }
-                                      else{
-                                        console.log('a')
-                                        var n = prompt("Please enter the new hierarchy:");
-                                        node[id]['hierarchy']=n;
-                                        console.log(node)
-                                        chart.draw()
-                                      }
-
-
-                                }
-
-
-                            function save(){
-                              console.log(JSON.stringify(node))
-                              no = JSON.stringify(node)
-                              $.ajax({
-                                      type: 'POST',
-                                      url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
-                                      data: { 'tasks': no,
-                                              'dep_id': dep_id,
-                                              csrfmiddlewaretoken: '{{ csrf_token }}'
-                                     },
-                                      dataType: 'json',
-                                      success: function(data) {
-                                        console.log(data)
-                                      }
-                                  });
-                              location.replace('{% url "orgadmin:departments" %}')
-
-
-                            }
-
-                      </script>
-
-
-
-
-
-
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
-<div class="app-drawer-overlay d-none animated fadeIn"></div>
-<script type="text/javascript" src=" {% static 'dashboard/main.cba69814a806ecc7945a.js' %}"></script>
+
+
+<div style="float:left; width:15%;height:89%;margin-left:1%; margin-top:5%">
+
+  <!-- <br>  <br> <br>  <br> -->
+
+  <!-- <button id="btn" class="button">Add Node</button>
+<br><br> -->
+
+  <!-- <button onclick="change_name()" class="button button2">Change name</button>
+  <br>
+  <br> -->
+  <button onclick="remove()" class="button button3">Remove Node</button>
+  <br>
+  <br>
+  <!-- <button class="button button4">Gray</button> -->
+  <button onclick="save()" class="button">Save</button>
+  <br>
+  <br>
+
+  <div class="w3-container">
+      <span style="font-size: 25px;padding-bottom:5%;">Instructions below</span>
+
+
+      <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%;cursor:zoom-in;height:10%"
+      onclick="document.getElementById('modal01').style.display='block'">
+
+      <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+        <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+        <div class="w3-modal-content w3-animate-zoom">
+          <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%">
+        </div>
+      </div>
+    </div>
+
+
+
+
+</div>
+
+
+
 <script>
-// Get the modal
-var modal = document.getElementById("myModal");
+// var node=[
+//                     { id: 1, hierarchy: "a"},
+//                     { id: 2, pid: 1, hierarchy: "b" },
+//                     { id: 3, pid: 1, hierarchy: "c" }
+//                 ];
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+console.log('here')
+var node = {{node|safe}}
+var dep_name = '{{dep_name}}'
+var dep_id = '{{dep_id}}'
+console.log(node)
+// OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
+// OrgChart.templates.belinda.node_id = '<span style="border-radius:20%; color:white" </span>';
+
+// OrgChart.templates.myTemplate.size = [200, 200];
+//     OrgChart.templates.myTemplate.node =
+//                 '<circle cx="100" cy="100" r="100" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
+//
+//                 OrgChart.templates.myTemplate.ripple = {
+//                       radius: 100,
+//                       color: "#0890D3",
+//                       rect: null
+//                   };
+
+// OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
+// OrgChart.templates.myTemplate.size = [100, 100];
+//     OrgChart.templates.myTemplate.node =
+//                 '<circle cx="70" cy="70" r="70" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
+//
+//                 OrgChart.templates.myTemplate.ripple = {
+//                        radius: 70,
+//                        color: "#0890D3",
+//                        rect: null
+//                    };
+//
+//  OrgChart.templates.myTemplate.field_0 = '<text style="font-size: 24px;" fill="#ffffff" x="100" y="90" text-anchor="middle">{val}</text>';
+
+OrgChart.templates.polina.field_0 = '<text class="field_0"  style="font-size: 20px;border-width:20%;" fill="#1e1a4d"  x="150" y="40" text-anchor="middle">{val}</text>';
+// OrgChart.templates.polina.size = [300, 300];
+OrgChart.templates.polina.node = '<rect x="45" y="0" width="200" height="70" rx="12" ry="12" fill="#09a3eb"></rect>'
+
+OrgChart.templates.polina.link =
+       '<path stroke="#686868" stroke-width="1px" fill="none" link-id="[{id}][{child-id}]" d="M{xa},{ya} C{xb},{yb} {xc},{yc} {xd},{yd}" />';
 
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+OrgChart.templates.polina.nodeMenuButton =
+               '<g style="cursor:pointer;background-color:white" transform="matrix(1,0,0,1,235,45)" control-node-menu-id="{id}">'
+               + '<rect x="-2" y="-8" fill="#09a3eb" stroke-width="1px" rx="2" ry="2" width="7" height="20">'
+               + '</rect>'
+               + '<line x1="0" y1="0" x2="2.5" y2="0" fill="#ffffff" fill-opacity="1" stroke-width="2" stroke="#ffffff" />'
+               + '<line x1="0" y1="7" x2="2.5" y2="7" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
+               + '<line x1="0" y1="14" x2="2.5" y2="14" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
+               + '</g>';
 
-// When the user clicks the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "block";
-}
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
+// OrgChart.templates.polina.ripple = {
+//         // radius: 100,
+//         color: "#0890D3",
+//         rect: null
+//     };
 
+var chart = new OrgChart(document.getElementById("tree"), {
+              // mouseScrool: OrgChart.action.scroll,
+              showXScroll: OrgChart.scroll.visible,
+              showYScroll: OrgChart.scroll.visible,
+              mouseScrool: OrgChart.action.zoom,
+              // enableSearch: false,
+              template: "polina",
+
+              nodeMenu:{
+
+                edit: {text:"Edit"},
+                add: {text:"Add"},
+                details: {text:"Details"},
+
+              },
+                nodeBinding: {
+                    field_0: "hierarchy",
+                },
+                nodes: node
+            });
+            // console.log(typeof(chart))
+          // console.log(chart)
+          // console.log(node)
+
+            // var newNodes = [
+            //     { id: 4, pid: 2, name: "Elliot Patel", title: "Sales" },
+            //     { id: 5, pid: 2, name: "Lynn Hussain", title: "Sales" },
+            //     { id: 6, pid: 3, name: "Tanner May", title: "Developer" },
+            //     { id: 7, pid: 3, name: "Fran Parsons", title: "Developer" }
+            // ];
+
+
+            // document.getElementById("btn").addEventListener("click", function () {
+            //     // var n = newNodes.splice(0, 1)[0];
+
+            //     var nx = prompt("Please enter the hierarchy to which this node has to be added:");
+            //     var i;
+            //     var hid=0;
+            //     var tpid;
+            //     console.log(node)
+            //     var nodes = node
+            //     console.log(nodes)
+            //     for(i in nodes){
+            //       console.log(typeof(nodes[i]['hierarchy']))
+            //       if(nodes[i]['hierarchy']==nx){
+            //         tpid=nodes[i]['id']
+            //       }
+            //       if(nodes[i]['id']>hid){
+            //         hid=nodes[i]['id']
+            //       }
+            //     }
+            //     if(tpid == null){
+            //       alert(" The given hierarchy is not available ")
+            //     }
+            //     else{
+            //       console.log('a')
+            //       var n = prompt("Please enter the new hierarchy:");
+            //       p={ id: hid+1, pid: tpid, hierarchy: n}
+            //       console.log(p)
+            //       console.log('b')
+            //       chart.addNode(p);
+            //       console.log(typeof(p))
+            //       console.log(typeof(node))
+            //       console.log(node)
+            //       console.log(node.length)
+            //       len = node.length
+            //       // node[len] = p
+            //       console.log(node)
+            //     }
+            // });
+
+
+          function remove() {
+            var nx = prompt("Please enter the hierarchy that is to be deleted:");
+                var nodes = node;
+                var tpid;
+                var id;
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id'];
+                    id = i;
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else if(tpid==0){
+                  alert(" Cant remove root ")
+                }
+                else{
+
+                chart.removeNode(tpid);
+                console.log(id)
+                console.log(node)
+                console.log(tpid)
+              }
+          }
+
+
+          function change_name(){
+            var nx = prompt("Please enter the hierarchy, the name that has to be changed:");
+                var i;
+                var hid=0;
+                var tpid;
+                var id;
+                console.log(node)
+                var nodes = node
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id'];
+                    id=i;
+                  }
+                  if(nodes[i]['id']>hid){
+                    hid=nodes[i]['id']
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else{
+                  console.log('a')
+                  var n = prompt("Please enter the new hierarchy:");
+                  node[id]['hierarchy']=n;
+                  console.log(node)
+                  chart.draw()
+                }
+
+
+          }
+
+
+      function save(){
+        console.log(JSON.stringify(node))
+        no = JSON.stringify(node)
+        $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+                data: { 'tasks': no,
+                        'dep_id': dep_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+               },
+                dataType: 'json',
+                success: function(data) {
+                  console.log(data)
+                }
+            });
+        location.replace('{% url "orgadmin:departments" %}')
+
+
+      }
 
 </script>
+
+
+
+
+
+</body>
+
 {% endblock %}
