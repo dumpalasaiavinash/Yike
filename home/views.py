@@ -27,7 +27,7 @@ def home_log(request):
         FilterExpression=Attr('email').eq(email)
         )
         print('\n\n\n')
-        print(response['Items'][0])
+        #print(response['Items'][0])
         print(type(response['Items'][0]['organizations_created']))
         for i in range(0,len(response['Items'][0]['organizations_created'])):
             response['Items'][0]['organizations_created'][i] = int(response['Items'][0]['organizations_created'][i])
