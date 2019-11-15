@@ -28,6 +28,9 @@ import datetime
 import random
 import string
 
+#Hashing password
+import hashlib
+
 
 
 # Create your views here.
@@ -113,6 +116,7 @@ def dashboard(request,j):
         #Randomly generating password
         letters=string.ascii_letters
         password_gen=''.join(random.choice(letters) for i in range(8))
+
         token=''.join(random.choice(letters) for i in range(10))
 
         #Checking if the user admin entered is regestered user or a new user
@@ -153,9 +157,10 @@ def dashboard(request,j):
 
             return render(request, 'dashboard/index.html',context)
 
+
+
         #If user already registered is in added to organisation
         elif(check==1):
-
             table.put_item(
             Item={
                 'org_id':org_id,
@@ -190,7 +195,27 @@ def dashboard(request,j):
 
             #Database call for getting updated table(After registered user is added)
             table2=dynamodb.Table('employees')
+            user_table=dynamodb.Table('users')
+
+            user_response=user_table.scan()
             response3=table2.scan()
+
+            for user in user_response['Items']:
+                if(user['email']==email):
+                    org_joined=user['organizations_joined']
+                    org_joined.append(org_id)
+
+                    user_table.update_item(
+                        Key={
+                            'user_email':dic['user_email']
+                        },
+                        UpdateExpression="set organizations_joined = :r",
+                        ExpressionAttributeValues={
+                        ':r':org_joined
+                        }
+                    )
+
+
             name=[]
             department=[]
             hierarchy=[]
@@ -242,39 +267,22 @@ def activate(request, uidb64, token, user_id, password,org_id):
                 }
             )
 
+            password=hashlib.shaw256(password.encode())
+            password=password.hexdigest()
+            
             users_table.put_item(
             Item={
                 'username':dic['emp_name'],
                 'email':dic['user_email'],
                 'password':password,
-                'organizations_created':[101],
-                'organizations_joined':[102]
+                'organizations_created':[],
+                'organizations_joined':[org_id],
+                'active':True
                 }
             )
 
 
-    response2=table.scan()
-
-    name=[]
-    department=[]
-    hierarchy=[]
-    no_complaints=[]
-
-    for dic in response2['Items']:
-        if dic['active']==True and dic['org_id']==int(org_id):
-            name.append(dic['emp_name'])
-            department.append(dic['department'])
-            hierarchy.append(dic['hierarchy'])
-            no_complaints.append(dic['no_complaints'])
-
-    info_list=zip(name,department,hierarchy,no_complaints)
-
-    context={
-        'info_list':info_list,
-        'org_id':org_id
-    }
-
-    return redirect('../../../../../create')
+    return redirect('../../../../../../../')
 
 
 def delete_employee(request,org_id,emp_id):
@@ -288,6 +296,9 @@ def delete_employee(request,org_id,emp_id):
             url="../../dashboard/"+str(org_id)
             return redirect(url)
 
+#------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------#
 
 def create(request):
     email=request.session['email']
