@@ -494,9 +494,9 @@ z-index: 0;
                     <div>
                         {% if present == 1 %}
                         <div class="alert">
-                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                             Person with entered email is already working in organisation.Please check the details.
-                        </div>  
+                        </div>
                         {% endif %}
                     </div>
                     <div class="tabs-animation">
@@ -593,7 +593,7 @@ z-index: 0;
 
                             <div id="myModal" class="modal">
                                 <div class="modal-content">
-                                    <div style="float:left"><span class="close">&times;</span></div>
+                                    <div style="float:right;"><span class="close">&times;</span></div>
                                 <form class="form-container" action="{% url 'orgadmin:dashboard' org_id %}" method="post" >
                                     {% csrf_token %}
                                     <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
@@ -605,7 +605,7 @@ z-index: 0;
                                     </select><br>
                                     <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
                                     <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
-                                    <input type="submit">  
+                                    <input type="submit">
                                 </form>
                                 </div>
                             </div>
@@ -661,12 +661,12 @@ var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
- 
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }

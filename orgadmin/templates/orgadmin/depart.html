@@ -1,132 +1,336 @@
+{% extends 'home/base2.html' %}
 {% load static %}
 {% block extrahead %}
 
+<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
 <style>
- #tree {
-  overflow: scroll;
+
+  nav{
+
+    position:fixed
+  }
+
+
+  .button {
+    position:relative;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:80%;
+  }
+
+  .button2 {background-color: #008CBA;} /* Blue */
+  .button3 {background-color: #f44336;} /* Red */
+  .button5 {background-color: #555555;} /* Black */
+
+  [node-id] rect {
+              /* fill: #016e25; */
+              /* height:15%; */
+              /* width:15%; */
+              /* text-align:'center'; */
+              border-radius: 50%;
+
+          }
+
+          .field_0 {
+                    /* font-family: Impact; */
+                    /* text-transform: uppercase; */
+                    /* fill: #a3a3a3; */
+                    /* text-anchor="middle"; */
+
+                }
+
+
+
+
+html, body{
+width: 100%;
+height: 100%;
+padding: 0;
+margin:0;
+/* overflow: hidden; */
+font-family: Helvetica;
 }
+#tree{
+width:100%;
+height:80%;
+padding: 1px;
 
-#box{
-background-color: lightgrey;
-width: 300px;
-padding: 50px;
 }
-
-
 </style>
+
 
 {% endblock %}
 
 {% block body %}
 
-<div style="width:20%;height:100%;float:left">
+<body>
+
+
+
+<div style="float:left; width:86%;height:80%;margin-top:3%">
+  <div id="tree" style="margin-top:2%;position:fixed">
+
+  </div>
+</div>
+
+
+<div style="float:left; width:13%;height:100%;margin-left:1%; margin-top:5%">
+
+  <!-- <br>  <br> <br>  <br> -->
+
+  <!-- <button id="btn" class="button">Add Node</button>
+<br><br> -->
+
+  <!-- <button onclick="change_name()" class="button button2">Change name</button>
+  <br>
+  <br> -->
+  <button onclick="remove()" class="button button3">Remove Node</button>
+  <br>
+  <br>
+  <!-- <button class="button button4">Gray</button> -->
+  <button onclick="save()" class="button">Save</button>
+  <br>
+
 
 </div>
 
-<div id="box" style="width:75%;height:100%;float:left;border:1px solid rgb(0,0,0)">
-  <button onclick="myFunction()">Click me</button>
 
-
-</div>
 
 <script>
+// var node=[
+//                     { id: 1, hierarchy: "a"},
+//                     { id: 2, pid: 1, hierarchy: "b" },
+//                     { id: 3, pid: 1, hierarchy: "c" }
+//                 ];
+
+console.log('here')
+var node = {{node|safe}}
+var dep_name = '{{dep_name}}'
+var dep_id = '{{dep_id}}'
+console.log(node)
+// OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
+// OrgChart.templates.belinda.node_id = '<span style="border-radius:20%; color:white" </span>';
+
+// OrgChart.templates.myTemplate.size = [200, 200];
+//     OrgChart.templates.myTemplate.node =
+//                 '<circle cx="100" cy="100" r="100" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
+//
+//                 OrgChart.templates.myTemplate.ripple = {
+//                       radius: 100,
+//                       color: "#0890D3",
+//                       rect: null
+//                   };
+
+// OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
+// OrgChart.templates.myTemplate.size = [100, 100];
+//     OrgChart.templates.myTemplate.node =
+//                 '<circle cx="70" cy="70" r="70" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
+//
+//                 OrgChart.templates.myTemplate.ripple = {
+//                        radius: 70,
+//                        color: "#0890D3",
+//                        rect: null
+//                    };
+//
+//  OrgChart.templates.myTemplate.field_0 = '<text style="font-size: 24px;" fill="#ffffff" x="100" y="90" text-anchor="middle">{val}</text>';
+
+OrgChart.templates.polina.field_0 = '<text class="field_0"  style="font-size: 20px;border-width:20%;" fill="#1e1a4d"  x="150" y="40" text-anchor="middle">{val}</text>';
+// OrgChart.templates.polina.size = [300, 300];
+OrgChart.templates.polina.node = '<rect x="45" y="0" width="200" height="70" rx="12" ry="12" fill="#09a3eb"></rect>'
+
+OrgChart.templates.polina.link =
+       '<path stroke="#686868" stroke-width="1px" fill="none" link-id="[{id}][{child-id}]" d="M{xa},{ya} C{xb},{yb} {xc},{yc} {xd},{yd}" />';
 
 
-  class Tree {
-    constructor(root) {
-      this._root = root || null;
-    }
-
-     _traverse(callback) {
-      const self = this;
-      function goThrough(node) {
-        callback(node);
-        node.children.forEach((child) => {
-          goThrough(child);
-        });
-      }
-      goThrough(this._root, dash);
-    }
+OrgChart.templates.polina.nodeMenuButton =
+               '<g style="cursor:pointer;background-color:white" transform="matrix(1,0,0,1,235,45)" control-node-menu-id="{id}">'
+               + '<rect x="-2" y="-8" fill="#09a3eb" stroke-width="1px" rx="2" ry="2" width="7" height="20">'
+               + '</rect>'
+               + '<line x1="0" y1="0" x2="2.5" y2="0" fill="#ffffff" fill-opacity="1" stroke-width="2" stroke="#ffffff" />'
+               + '<line x1="0" y1="7" x2="2.5" y2="7" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
+               + '<line x1="0" y1="14" x2="2.5" y2="14" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
+               + '</g>';
 
 
-    _addNode(value, parentValue) {
-      const newNode = {
-        value,
-        children: []
-      };
 
-      if (this._root === null) {
-        this._root = newNode;
-        return;
-      }
+// OrgChart.templates.polina.ripple = {
+//         // radius: 100,
+//         color: "#0890D3",
+//         rect: null
+//     };
 
-      this._traverse((node) => {
-        if (node.value === parentValue) {
-          node.children.push(newNode);
-        }
-      });
-    }
+var chart = new OrgChart(document.getElementById("tree"), {
+              // mouseScrool: OrgChart.action.scroll,
+              showXScroll: OrgChart.scroll.visible,
+              showYScroll: OrgChart.scroll.visible,
+              mouseScrool: OrgChart.action.zoom,
+              // enableSearch: false,
+              template: "polina",
 
-    _removeNode(value) {
-      this._traverse((node) => {
-        node.children.forEach((childNode, index) => {
-          if (childNode.value === value) {
-            node.children.splice(index, 1);
+              nodeMenu:{
+
+                edit: {text:"Edit"},
+                add: {text:"Add"},
+                details: {text:"Details"},
+
+              },
+                nodeBinding: {
+                    field_0: "hierarchy",
+                },
+                nodes: node
+            });
+            // console.log(typeof(chart))
+          // console.log(chart)
+          // console.log(node)
+
+            // var newNodes = [
+            //     { id: 4, pid: 2, name: "Elliot Patel", title: "Sales" },
+            //     { id: 5, pid: 2, name: "Lynn Hussain", title: "Sales" },
+            //     { id: 6, pid: 3, name: "Tanner May", title: "Developer" },
+            //     { id: 7, pid: 3, name: "Fran Parsons", title: "Developer" }
+            // ];
+
+
+            document.getElementById("btn").addEventListener("click", function () {
+                // var n = newNodes.splice(0, 1)[0];
+
+                var nx = prompt("Please enter the hierarchy to which this node has to be added:");
+                var i;
+                var hid=0;
+                var tpid;
+                console.log(node)
+                var nodes = node
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id']
+                  }
+                  if(nodes[i]['id']>hid){
+                    hid=nodes[i]['id']
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else{
+                  console.log('a')
+                  var n = prompt("Please enter the new hierarchy:");
+                  p={ id: hid+1, pid: tpid, hierarchy: n}
+                  console.log(p)
+                  console.log('b')
+                  chart.addNode(p);
+                  console.log(typeof(p))
+                  console.log(typeof(node))
+                  console.log(node)
+                  console.log(node.length)
+                  len = node.length
+                  // node[len] = p
+                  console.log(node)
+                }
+            });
+
+
+          function remove() {
+            var nx = prompt("Please enter the hierarchy that is to be deleted:");
+                var nodes = node;
+                var tpid;
+                var id;
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id'];
+                    id = i;
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else if(tpid==0){
+                  alert(" Cant remove root ")
+                }
+                else{
+
+                chart.removeNode(tpid);
+                console.log(id)
+                console.log(node)
+                console.log(tpid)
+              }
           }
-        });
-      })
-    }
 
-    _search(value) {
-      let returnNode = 'Not Found';
-      this._traverse((node) => {
-        if (node.value === value) {
-          returnNode = node;
-        }
-      });
-      return returnNode;
-    }
 
-    _displayLeafs(parentValue) {
-      const parentNode = typeof parentValue === 'string' ? this._search(parentValue) : parentValue ;
-      let leafsRet = [];
-      if (parentValue.children && !parentValue.children.length) {
-        return parentValue;
+          function change_name(){
+            var nx = prompt("Please enter the hierarchy, the name that has to be changed:");
+                var i;
+                var hid=0;
+                var tpid;
+                var id;
+                console.log(node)
+                var nodes = node
+                console.log(nodes)
+                for(i in nodes){
+                  console.log(typeof(nodes[i]['hierarchy']))
+                  if(nodes[i]['hierarchy']==nx){
+                    tpid=nodes[i]['id'];
+                    id=i;
+                  }
+                  if(nodes[i]['id']>hid){
+                    hid=nodes[i]['id']
+                  }
+                }
+                if(tpid == null){
+                  alert(" The given hierarchy is not available ")
+                }
+                else{
+                  console.log('a')
+                  var n = prompt("Please enter the new hierarchy:");
+                  node[id]['hierarchy']=n;
+                  console.log(node)
+                  chart.draw()
+                }
+
+
+          }
+
+
+      function save(){
+        console.log(JSON.stringify(node))
+        no = JSON.stringify(node)
+        $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8000/orgadmin/departments_hierarchy_update/',
+                data: { 'tasks': no,
+                        'dep_id': dep_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+               },
+                dataType: 'json',
+                success: function(data) {
+                  console.log(data)
+                }
+            });
+        location.replace('{% url "orgadmin:departments" %}')
+
+
       }
 
-      parentNode.children.forEach((child) => {
-        leafsRet.push(this._displayLeafs(child));
-      });
-
-      return leafsRet.flat();
-    }
-
-  }
-
-  class Node {
-    constructor(value, children) {
-      this.value = value;
-      this.children = children;
-    }
-  }
-
-
-</script>
-
-<script type="text/javascript">
-  const tree = new Tree();
-
-  function myFunction() {
-    tree._traverse((node)=> {
-    	console.log(node);
-    });
-  }
-
-
-
-
 </script>
 
 
+
+
+
+</body>
 
 {% endblock %}

@@ -7,57 +7,57 @@ body {
 }
 
 .navbar{
-    margin-bottom: 0px;
+    margin-bottom: 0px !important;
 }
 
 .navbar-default{
-    border-radius: 0;
+    border-radius: 0 !important;
     background-color: #0055b4 !important;
-    padding: 10px;
-    padding-left: 30px;
+    padding: 10px !important;
+    padding-left: 30px !important;
 }
 
 .navbar-default .navbar-brand{
     color:white !important;
-    padding-right: 50px;
+    padding-right: 50px !important;
 }
 
 .navbar-default .navbar-nav > li > a {
     color: white !important;
 }
 .nav-list {
-    list-style-type: none;
-    margin-top:10px;
-    padding:10px;
-    overflow: hidden;
+    list-style-type: none !important;
+    margin-top:10px !important;
+    padding:10px !important;
+    overflow: hidden !important;
 }
 
 .nav-list-item-left {
-    text-align: left;
-    display: inline-block;
-    transition: 0.3s;
+    text-align: left !important;
+    display: inline-block !important;
+    transition: 0.3s !important;
 }
 
 .nav-list-item-right {
-    text-align: right;
-    display: inline-block;
-    transition: 0.3s;
+    text-align: right !important;
+    display: inline-block !important;
+    transition: 0.3s !important;
 }
 
 .cols{
-    background-color: #fff;
-    padding: 30px;
-    font-family: 'Montserrat', sans-serif;
-    border:1px #e0e0e0 solid;
-        border-radius: 6px;
+    background-color: #fff !important;
+    padding: 30px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    border:1px #e0e0e0 solid !important;
+        border-radius: 6px !important;
 
 }
 
 .divs{
-    background-color: #fff;
-    padding: 30px;
-    font-family: 'Montserrat', sans-serif;
-    border:1px #e0e0e0 solid;
-        border-radius: 6px;
+    background-color: #fff !important;
+    padding: 30px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    border:1px #e0e0e0 solid !important;
+        border-radius: 6px !important;
 
 }

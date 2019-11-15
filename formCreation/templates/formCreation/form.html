@@ -1,3 +1,18 @@
+{% extends 'home/base.html' %}
+
+{% block extrahead %}
+
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock script %}
+
 <html>
 
 <head>
@@ -301,7 +316,7 @@
                 ev.target.appendChild(node);
                 rbs += 1
             }
-            
+
             if (rbs == 1) {
                 document.getElementById(ev.target.id).style.height = "100px";
             }
@@ -569,7 +584,7 @@
     }
 
     function generate_new_HelperText(id0) {
-        
+
         return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
             "id=\"helperText" + id0 + "\">Helper Text</p>";
     }
@@ -665,21 +680,21 @@
     function addHelper(id0, pos) {
 
         var count = "";
-        
+
         if (document.getElementById('countCheck').checked) {
             count = document.getElementById('count' + id0.id);
         }
 
         if (document.getElementById('helpCheck').checked) {
             document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
-            
+
             document.getElementById('helpertf').disabled = false;
             document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
             form['yike' + pos]['helper_enabled'] = true;
 
         }
         else {
-          
+
             document.getElementById(id0.id).innerHTML = "";
             document.getElementById('helpertf').disabled = true;
             document.getElementById('helpertf').value = "";
@@ -783,7 +798,7 @@
     }
 
     function updateCountNum(id0) {
-        
+
     }
 
     function genrate_new_textField2(widget0, formyike) {

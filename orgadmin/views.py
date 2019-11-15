@@ -5,7 +5,7 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import random
 from urllib import parse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 from django.views.decorators.csrf import requires_csrf_token
 
@@ -19,18 +19,21 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+
+from django.contrib import messages
+
 import datetime
 
 #For generating password
 import random
-import string 
+import string
 
 
 
 # Create your views here.
 def dashboard(request,j):
 
-    present=0 #User already present in organisation 
+    present=0 #User already present in organisation
 
     org_id=j
     dynamodb=boto3.resource('dynamodb')
@@ -51,7 +54,7 @@ def dashboard(request,j):
     for de in dep_response['Items']:
         if(de['organization_id']==org_id):
             dep.append(de['department_name'])
-            
+
     for dic in response2['Items']:
         if dic['active']==True and dic['org_id']==int(org_id):
             name.append(dic['emp_name'])
@@ -68,7 +71,7 @@ def dashboard(request,j):
         'dep':dep,
         'present':present
     }
-    
+
     if request.method=='POST':
         name=request.POST.get('emp_name')
         department=request.POST.get('department')
@@ -91,7 +94,7 @@ def dashboard(request,j):
         for em in email_present['Items']:
             if(em['email']==email):
                 check=1
-        #End of user checking        
+        #End of user checking
 
         #Incrementing the primary key
         response = table.scan(
@@ -106,16 +109,16 @@ def dashboard(request,j):
                 return render(request, 'dashboard/index.html',context)
 
         emp_id=len(response['Items'])+1
-        
+
         #Randomly generating password
         letters=string.ascii_letters
         password_gen=''.join(random.choice(letters) for i in range(8))
         token=''.join(random.choice(letters) for i in range(10))
-  
+
         #Checking if the user admin entered is regestered user or a new user
         #Below if new user is added
         if (check==0):
-            
+
             table.put_item(
             Item={
                 'org_id':org_id,
@@ -149,7 +152,7 @@ def dashboard(request,j):
             email.send()
 
             return render(request, 'dashboard/index.html',context)
-        
+
         #If user already registered is in added to organisation
         elif(check==1):
 
@@ -212,7 +215,7 @@ def dashboard(request,j):
                 'present':present
             }
 
-            return render(request, 'dashboard/index.html',context)       
+            return render(request, 'dashboard/index.html',context)
 
     return render(request, 'dashboard/index.html',context)
 
@@ -269,15 +272,15 @@ def activate(request, uidb64, token, user_id, password,org_id):
     context={
         'info_list':info_list,
         'org_id':org_id
-    }        
+    }
 
-    return redirect('../../../../../create') 
+    return redirect('../../../../../create')
 
 
 def delete_employee(request,org_id,emp_id):
     dynamodb=boto3.resource('dynamodb')
     emp_table=dynamodb.Table('employees')
-    
+
     response=emp_table.scan()
 
     for emp in response['Items']:
@@ -333,8 +336,8 @@ def create(request):
         )
         # print(response['Items'])
         org_names.append(response['Items'][0]['organization_name'])
-    print(email)
-    print(org_names)
+    # print(email)
+    # print(org_names)
     organizations_created_names=[]
     organizations_joined_names=[]
     count=0
@@ -365,11 +368,26 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
-    print(organizations_created)
-    print("######################")
-
+    # print(organizations_created)
+    # print("######################")
+    ids=str(organizations_created)
+    print(ids)
+    list1=[]
+    list1.append(ids.split("'"))
+    # print(list1[0][3])
+    list2=[]
+    # print(len(list1[0]))
+    for i in range(0,len(list1[0])):
+        if i%2 != 0:
+            list2.append(int(list1[0][i]))
+    # print(type(list2[0]))
+    # print(org_join_id)
+    # print("****************")
+    #print(ids.split("'"))
+    # for i in range ids.split("'"):
+    #     list1.append
     extra = (len(organizations_created)%4)-1
-    data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+    data = {'topics' : zip(organizations_created_names,list2), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
 
 
 
@@ -391,7 +409,7 @@ def created(request):
                 ProjectionExpression="organization_name,code",
                 FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
             )
-            
+
             if(len(response['Items'])==0):
                 ID=len(response_sno['Items'])+101
                 response = table.put_item(
@@ -402,11 +420,11 @@ def created(request):
                     }
                 )
                 email=request.session['email']
-                print(response_sno)
-                print("####################")
-                
-                sno=response_sno['Items'][:]['org_id']
-                print(sno)
+                # print(response_sno)
+                # print("####################")
+
+                # sno=response_sno['Items'][0]['org_id']
+                # print(sno)
                 request.session['org_created']=request.session['org_created']+[ID]
                 org_created = request.session['org_created']
                 # print(org_created)
@@ -584,7 +602,7 @@ def join(request):
             org_joined = request.session['org_joined']
             print(org_joined)
             print(response_join['Items'][0]['org_id'])
-            if (response_join['Items'][0]['org_id'] not in org_joined):    
+            if (response_join['Items'][0]['org_id'] not in org_joined):
                 org_joined.append(int(response_join['Items'][0]['org_id']))
                 print(org_joined)
                 print("@@@@")
@@ -629,6 +647,7 @@ def createform(request):
 def departments(request):
 
     organization_id = 105
+    request.session['org_id'] = organization_id
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
 
@@ -638,13 +657,16 @@ def departments(request):
     )
     departments = []
     dep_id=[]
-    for i in response['Items']:
-        departments.append(i['department_name'])
-        dep_id.append(i['department_id'])
-    print(departments)
+    if(len(response['Items'])==0):
+        departments=[]
+        dep_id=[]
+    else:
+        for i in response['Items']:
+            departments.append(i['department_name'])
+            dep_id.append(i['department_id'])
+        print(departments)
 
-    # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-    return render(request,'orgadmin/depart.html')
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username']})
 
 
 def hierarchy(request):
@@ -653,7 +675,21 @@ def hierarchy(request):
     data=res.split('_')
     dep_id=data[0]
     dep_name=data[1]
-    return render(request,'orgadmin/departments.html',{'dep_name':dep_name,'dep_id':dep_id})
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('hierarchy')
+    response = table.scan(
+        ProjectionExpression="hierarchy",
+        FilterExpression=Attr('dep_id').eq(int(dep_id))
+    )
+
+    if(len(response['Items'])==0):
+        node=[{"id":1,"hierarchy":dep_name}]
+
+    else:
+        node = response['Items'][0]['hierarchy']
+    # node='[{"id":1,"hierarchy":"a"},{"id":2,"pid":1,"hierarchy":"b"},{"id":3,"pid":1,"hierarchy":"c"},{"id":4,"pid":3,"hierarchy":"d"}]'
+    # print(type(node))
+    return render(request,'orgadmin/depart.html',{'node':node,'dep_name':dep_name,'dep_id':dep_id})
 
 
 # @requires_csrf_token
@@ -662,6 +698,43 @@ def departments_hierarchy_update(request):
     # print(hierarchy)
     # nodes = request.POST['tasks']
     print(request.POST)
+    data = request.POST
+    print('\n')
+    print(data)
+    print('\n')
+    print(data['tasks'])
+    print('\n')
+    print(data['dep_id'])
+    id=int(data['dep_id'])
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('hierarchy')
+    response = table.scan(
+        ProjectionExpression="dep_id",
+        FilterExpression=Attr('dep_id').eq(id)
+    )
+
+    if(len(response['Items'])==0):
+        response = table.put_item(
+           Item={
+            'dep_id': int(data['dep_id']),
+            'hierarchy': data['tasks']
+            }
+        )
+    else:
+        response = table.update_item(
+            Key={
+                'dep_id':id
+            },
+            UpdateExpression="set hierarchy = :r",
+            ExpressionAttributeValues={
+                ':r': data['tasks'],
+
+            },
+            ReturnValues="UPDATED_NEW"
+        )
+
+
+
     # print(request.POST['nodes'])
     # value = parse.parse_qs(request.POST.get('hierarchy'))
     # organization_id = 105
@@ -680,7 +753,8 @@ def departments_hierarchy_update(request):
     # print(departments)
 
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+    # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
+    return redirect('../departments')
 
 
 def orgadmin_page(request):
@@ -733,3 +807,66 @@ def orgadmin_page(request):
 
 
     return render(request, 'orgadmin/dummy.html', data)
+
+
+def index(request):
+    response_rest=json.dumps([{}])
+    return HttpResponse(response_rest,content_type='text/json')
+
+def complaint_rest(request):
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table('complaint')
+        response_complaint = table.scan(
+        ProjectionExpression="complaint",
+
+        )
+
+        complaint_list=[]
+        # print(response_complaint['Items'][0])
+        for i in range(0,len(response_complaint['Items'])):
+            complaint_list.append(response_complaint['Items'][i]['complaint'])
+
+        print(complaint_list)
+        # print(len(complaint_list))
+
+        if request.method=='GET':
+            try:
+                complaint=complaint_list
+                response_rest=json.dumps([{'complaint':complaint}])
+            except:
+                print("something went wrong")
+
+        return render(request, 'orgadmin/createform.html')
+def create_department(request):
+    depname = request.POST.get('depname')
+    print(depname)
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+    print(type(request.session['org_id']))
+    x=request.session['org_id']
+    response1 = dynamoTable.scan(ProjectionExpression="department_id")
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name",
+        FilterExpression=Attr('organization_id').eq(int(x)) & Attr('department_name').eq(depname)
+    )
+    print(response1['Items'])
+    lengt=0
+    for i in response1['Items']:
+        if lengt< int(i['department_id']):
+            lengt = int(i['department_id'])
+        else:
+            continue
+
+    print(lengt)
+    if(len(response['Items'])==0):
+        response = dynamoTable.put_item(
+           Item={
+            'department_id':lengt+1,
+            'department_name':depname,
+            'organization_id':x
+            }
+        )
+        messages.success(request, 'The new department has been created successfully.')
+    else:
+        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+    return redirect('../departments')
