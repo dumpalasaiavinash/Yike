@@ -292,7 +292,7 @@ z-index: 0;
                                 </a>
                             </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="{% url 'orgadmin:about' org_id %}">
+                                <a href="#">
                                     About
                                 </a>           
                             </li>
@@ -402,24 +402,6 @@ z-index: 0;
                                 <button id="myBtn" class="btn btn-primary" onclick="openForm()" style="font-size:12px">Add Employee</button>
                             </div>
 
-                            <div id="myModal" class="modal">
-                                <div class="modal-content">
-                                    <div style="float:right;"><span class="close">&times;</span></div>
-                                <form class="form-container" action="{% url 'orgadmin:dashboard' org_id %}" method="post" >
-                                    {% csrf_token %}
-                                    <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
-                                    <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
-                                    <select class="input"><br>
-                                        {% for dep in dep %}
-                                        <option value=dep>{{dep}}</option>
-                                        {% endfor %}
-                                    </select><br>
-                                    <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
-                                    <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
-                                    <input type="submit">
-                                </form>
-                                </div>
-                            </div>
                                 <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
                                     <thead>
                                     <tr>
@@ -431,20 +413,6 @@ z-index: 0;
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for name,department,hierarchy,no_complaints,emp_id in info_list %}
-                                        <tr>
-                                            <td>{{ name }}</td>
-                                            <td>{{ department }}</td>
-                                            <td>{{ hierarchy }}</td>
-                                            <td>{{ no_complaints }}</td>
-                                            <td>
-                                                <form action="{% url 'orgadmin:delete_employee' org_id emp_id %}" method='post'>
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-danger" style="font-size:12px">Delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
                                     </tbody>
                                     <tfoot>
                                     <tr>
@@ -467,33 +435,4 @@ z-index: 0;
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <script type="text/javascript" src=" {% static 'dashboard/main.cba69814a806ecc7945a.js' %}"></script>
 <script>
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-
-</script>
 {% endblock %}

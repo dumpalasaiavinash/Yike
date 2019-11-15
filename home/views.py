@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib import sessions
 
-
+#For password hashing
+import hashlib
 
 # Create your views here.
 
@@ -19,6 +20,9 @@ def home_log(request):
 
     email = request.POST.get('email')
     password = request.POST.get('pass')
+    password=hashlib.sha256(password.encode())
+    password=password.hexdigest()
+
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
@@ -66,6 +70,8 @@ def home_reg(request):
                 ProjectionExpression="email",
                 FilterExpression=Attr('email').eq(email)
             )
+            password=hashlib.sha256(password.encode())
+            password=password.hexdigest()
 
             if(len(response['Items'])==0):
                 response = table.put_item(
@@ -75,13 +81,14 @@ def home_reg(request):
                     'password': password,
                     'organizations_created':[],
                     'organizations_joined':[],
-
+                    'active':True
                     }
                 )
                 request.session['username'] = username
                 request.session['email']=email
                 request.session['org_created']=[]
                 request.session['org_joined']=[]
+                request.session['active']=True
                 return redirect('orgadmin:create')
 
             else:
