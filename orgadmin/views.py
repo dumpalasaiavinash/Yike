@@ -20,6 +20,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
+from django.contrib import messages
 
 import datetime
 
@@ -54,7 +55,7 @@ def dashboard(request,j):
             no_complaints.append(dic['no_complaints'])
 
     info_list=zip(name,department,hierarchy,no_complaints)
-
+    request.session['org_id'] = org_id
     context={
         'info_list':info_list,
         'org_id':org_id
@@ -222,8 +223,8 @@ def create(request):
         )
         # print(response['Items'])
         org_names.append(response['Items'][0]['organization_name'])
-    print(email)
-    print(org_names)
+    # print(email)
+    # print(org_names)
     organizations_created_names=[]
     organizations_joined_names=[]
     count=0
@@ -254,21 +255,21 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
-    print(organizations_created)
-    print("######################")
+    # print(organizations_created)
+    # print("######################")
     ids=str(organizations_created)
     print(ids)
     list1=[]
     list1.append(ids.split("'"))
-    print(list1[0][3])
+    # print(list1[0][3])
     list2=[]
-    print(len(list1[0]))
+    # print(len(list1[0]))
     for i in range(0,len(list1[0])):
         if i%2 != 0:
             list2.append(int(list1[0][i]))
-    print(type(list2[0]))
-    print(org_join_id)
-    print("****************")
+    # print(type(list2[0]))
+    # print(org_join_id)
+    # print("****************")
     #print(ids.split("'"))
     # for i in range ids.split("'"):
     #     list1.append
@@ -533,6 +534,7 @@ def createform(request):
 def departments(request):
 
     organization_id = 105
+    request.session['org_id'] = organization_id
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
 
@@ -551,7 +553,7 @@ def departments(request):
             dep_id.append(i['department_id'])
         print(departments)
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments)})
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username']})
 
 
 def hierarchy(request):
@@ -639,8 +641,7 @@ def departments_hierarchy_update(request):
 
 
     # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-    return JsonResponse(data)
-
+    return redirect('../departments')
 
 
 def orgadmin_page(request):
@@ -723,3 +724,36 @@ def complaint_rest(request):
                 print("something went wrong")
 
         return render(request, 'orgadmin/createform.html')
+def create_department(request):
+    depname = request.POST.get('depname')
+    print(depname)
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+    print(type(request.session['org_id']))
+    x=request.session['org_id']
+    response1 = dynamoTable.scan(ProjectionExpression="department_id")
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name",
+        FilterExpression=Attr('organization_id').eq(int(x)) & Attr('department_name').eq(depname)
+    )
+    print(response1['Items'])
+    lengt=0
+    for i in response1['Items']:
+        if lengt< int(i['department_id']):
+            lengt = int(i['department_id'])
+        else:
+            continue
+
+    print(lengt)
+    if(len(response['Items'])==0):
+        response = dynamoTable.put_item(
+           Item={
+            'department_id':lengt+1,
+            'department_name':depname,
+            'organization_id':x
+            }
+        )
+        messages.success(request, 'The new department has been created successfully.')
+    else:
+        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+    return redirect('../departments')

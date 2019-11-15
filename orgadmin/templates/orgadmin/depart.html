@@ -1,5 +1,4 @@
 {% extends 'home/base2.html' %}
-{% extends 'home/basef.html' %}
 {% load static %}
 {% block extrahead %}
 
@@ -318,9 +317,10 @@ var chart = new OrgChart(document.getElementById("tree"), {
                },
                 dataType: 'json',
                 success: function(data) {
-                  console.log(data);
+                  console.log(data)
                 }
             });
+        location.replace('{% url "orgadmin:departments" %}')
 
 
       }

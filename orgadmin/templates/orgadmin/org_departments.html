@@ -7,11 +7,12 @@
 <style>
 <!--Google Fonts	-->
 <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Oswald" rel="stylesheet">
-
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 {% endblock %}
 
 {% block body %}
@@ -23,8 +24,23 @@
 <div class="row">
   <p style="font-family: Josefin Sans;font-size:45px">Departments in your organizations</p>
 </div>
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <h1 class="{{ message.tags }}">{{ message }}</h1>
+    {% endfor %}
+  </ul>
+{% else %}
+    <h1>
+        Hello {{uname}}!   
+    </h1>
+{% endif %}
+
+
     <br>
     {% if topics_size > 0 %}
+    <h1> Please select a department to check and edit the hierarchy of it.  </h1>
+    <br>
     <div class="card-body row no-gutters align-items-center">
       <form action="{% url 'orgadmin:hierarchy' %}" method="post" >
         {% csrf_token %}
@@ -41,9 +57,43 @@
       </div>
     </form>
     </div>
-   {% endif %}  
+   {% endif %}
+
+   {% if topics_size == 0 %}
+    <h1> Please create departments for your organization to organize the hierarchy.  </h1>
+   {% endif %}
+
     <br><br><br>
-    <br><br><br><br><br><br><br><br>
+    <!-- <br><br><br><br><br><br><br><br> -->
+
+    <h1> Click here to create new department in your organization  </h1>
+    <br>
+
+    <div class="w3-container">
+      <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-green w3-large">Create department</button>
+
+      <div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+          <div class="w3-center"><br>
+          </div>
+          <form class="w3-container" action="{% url 'orgadmin:create_department' %}" method="post">
+            {% csrf_token %}
+            <div class="w3-section">
+              <label><b>New Department name</b></label>
+              <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Department name" name="depname" required>
+              <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Create</button>
+
+            </div>
+          </form>
+
+          <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+            <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red">Cancel</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
 
 </div>
 {% endblock %}
