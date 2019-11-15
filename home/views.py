@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib import sessions
 
-
+#For password hashing
+import hashlib
 
 # Create your views here.
 
@@ -66,6 +67,8 @@ def home_reg(request):
                 ProjectionExpression="email",
                 FilterExpression=Attr('email').eq(email)
             )
+            password=hashlib.sha256(password.encode())
+            password=password.hexdigest()
 
             if(len(response['Items'])==0):
                 response = table.put_item(
@@ -75,7 +78,7 @@ def home_reg(request):
                     'password': password,
                     'organizations_created':[],
                     'organizations_joined':[],
-
+                    'active':True
                     }
                 )
                 request.session['username'] = username

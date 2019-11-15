@@ -116,7 +116,6 @@ def dashboard(request,j):
         #Randomly generating password
         letters=string.ascii_letters
         password_gen=''.join(random.choice(letters) for i in range(8))
-
         token=''.join(random.choice(letters) for i in range(10))
 
         #Checking if the user admin entered is regestered user or a new user
@@ -209,10 +208,6 @@ def dashboard(request,j):
                         Key={
                             'user_email':dic['user_email']
                         },
-                        UpdateExpression="set organizations_joined = :r",
-                        ExpressionAttributeValues={
-                        ':r':org_joined
-                        }
                     )
 
 
@@ -267,7 +262,7 @@ def activate(request, uidb64, token, user_id, password,org_id):
                 }
             )
 
-            password=hashlib.shaw256(password.encode())
+            password=hashlib.sha256(password.encode())
             password=password.hexdigest()
             
             users_table.put_item(
@@ -293,8 +288,20 @@ def delete_employee(request,org_id,emp_id):
 
     for emp in response['Items']:
         if(emp['emp_id']==emp_id) and (emp['org_id']==org_id):
+            emp_table.delete_item(
+                Key={
+                    'emp_id': emp_id
+                },
+            )
             url="../../dashboard/"+str(org_id)
             return redirect(url)
+
+
+def about(request,org_id):
+    dynamodb=boto3.resource('dynamodb')
+    orga_table=dynamodb.Table('eorganization')
+
+    return render(request,'dashboard/about.html')            
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
