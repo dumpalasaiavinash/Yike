@@ -20,6 +20,9 @@ def home_log(request):
 
     email = request.POST.get('email')
     password = request.POST.get('pass')
+    password=hashlib.sha256(password.encode())
+    password=password.hexdigest()
+    
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
