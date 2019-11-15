@@ -54,7 +54,11 @@
       .container-small{
           border-radius:5px;
       }
-
+      footer{
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+      }
     </style>
 
     {% block extrahead %}
@@ -102,11 +106,14 @@
 
         </div>
     </div>
-</nav><br><br>
-    {% block body %}
+    </nav>
 
-    {% endblock %}
-<br><br>
+    <div class="" style="width:100%; position: fixed;top:10%;height:80%;">
+      {% block body %}
+
+      {% endblock %}
+    </div>
+
 
 <footer>
             <div class="container">
@@ -144,7 +151,7 @@
 
 {% block script %}
 
-{% endblock script %}
+{% endblock %}
 
 </script>
 </html>
