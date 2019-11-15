@@ -17,7 +17,6 @@ def home(request):
 
 def home_log(request):
     # if request.method == 'POST':
-
     email = request.POST.get('email')
     password = request.POST.get('pass')
     password=hashlib.sha256(password.encode())
@@ -31,8 +30,8 @@ def home_log(request):
         FilterExpression=Attr('email').eq(email)
         )
         print('\n\n\n')
+        # print(response['Items'])
         # print(response['Items'][0])
-        # print(type(response['Items'][0]['organizations_created']))
 
         print('\n\n\n')
         if(len(response['Items'])>0):
