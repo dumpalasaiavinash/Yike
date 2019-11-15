@@ -280,21 +280,6 @@ def create(request):
     return render(request, 'orgadmin/dummy.html', data)
 
 
-def complaint_rest(request):
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table('complaint')
-        response_complaint = table.scan(
-        ProjectionExpression="complaint",
-        
-        )
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print(response_complaint)
-
-        # if request.method=='GET':
-        #     try:
-        #         complaint=
-
-        return render(request, 'orgadmin/createform.html')
 def created(request):
     organization_name = request.POST.get('name')
     code=request.POST.get('code')
@@ -708,3 +693,33 @@ def orgadmin_page(request):
 
 
     return render(request, 'orgadmin/dummy.html', data)
+
+
+def index(request):
+    response_rest=json.dumps([{}])
+    return HttpResponse(response_rest,content_type='text/json')
+
+def complaint_rest(request):
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table('complaint')
+        response_complaint = table.scan(
+        ProjectionExpression="complaint",
+        
+        )
+        
+        complaint_list=[]
+        # print(response_complaint['Items'][0])
+        for i in range(0,len(response_complaint['Items'])):
+            complaint_list.append(response_complaint['Items'][i]['complaint'])
+           
+        print(complaint_list)
+        # print(len(complaint_list))
+
+        if request.method=='GET':
+            try:
+                complaint=complaint_list
+                response_rest=json.dumps([{'complaint':complaint}])
+            except:
+                print("something went wrong")
+
+        return render(request, 'orgadmin/createform.html')
