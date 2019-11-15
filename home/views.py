@@ -17,7 +17,6 @@ def home(request):
 
 def home_log(request):
     # if request.method == 'POST':
-
     email = request.POST.get('email')
     password = request.POST.get('pass')
     password=hashlib.sha256(password.encode())
