@@ -20,6 +20,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
+from django.contrib import messages
 
 import datetime
 
@@ -54,7 +55,7 @@ def dashboard(request,j):
             no_complaints.append(dic['no_complaints'])
 
     info_list=zip(name,department,hierarchy,no_complaints)
-
+    request.session['org_id'] = org_id
     context={
         'info_list':info_list,
         'org_id':org_id
@@ -533,6 +534,7 @@ def createform(request):
 def departments(request):
 
     organization_id = 105
+    request.session['org_id'] = organization_id
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
 
@@ -639,8 +641,7 @@ def departments_hierarchy_update(request):
 
 
     # return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id)})
-    return JsonResponse(data)
-
+    return redirect('../departments')
 
 
 def orgadmin_page(request):
@@ -693,3 +694,37 @@ def orgadmin_page(request):
 
 
     return render(request, 'orgadmin/dummy.html', data)
+
+def create_department(request):
+    depname = request.POST.get('depname')
+    print(depname)
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+    print(type(request.session['org_id']))
+    x=request.session['org_id']
+    response1 = dynamoTable.scan(ProjectionExpression="department_id")
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name",
+        FilterExpression=Attr('organization_id').eq(int(x)) & Attr('department_name').eq(depname)
+    )
+    print(response1['Items'])
+    lengt=0
+    for i in response1['Items']:
+        if lengt< int(i['department_id']):
+            lengt = int(i['department_id'])
+        else:
+            continue
+
+    print(lengt)
+    if(len(response['Items'])==0):
+        response = dynamoTable.put_item(
+           Item={
+            'department_id':lengt+1,
+            'department_name':depname,
+            'organization_id':x
+            }
+        )
+        messages.success(request, 'The new department has been created successfully.')
+    else:
+        messages.success(request, 'Check again if the department had been already created or not.')
+    return redirect('../departments')
