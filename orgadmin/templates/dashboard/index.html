@@ -96,6 +96,28 @@ z-index: 0;
   cursor: pointer;
 }
 
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
 </style>
 {% endblock %}
 
@@ -466,8 +488,17 @@ z-index: 0;
                         </ul>
                     </div>
                 </div>
-            </div>    <div class="app-main__outer">
+            </div>
+                <div class="app-main__outer">
                 <div class="app-main__inner">
+                    <div>
+                        {% if present == 1 %}
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            Person with entered email is already working in organisation.Please check the details.
+                        </div>
+                        {% endif %}
+                    </div>
                     <div class="tabs-animation">
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
@@ -539,7 +570,7 @@ z-index: 0;
                         </div>
                         <div class="card mb-3">
                             <div class="card-header-tab card-header">
-                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Easy Dynamic Tables</div>
+                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal">Employees</div>
                                 <div class="btn-actions-pane-right actions-icon-btn">
                                     <div class="btn-group dropdown">
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-right rm-pointers dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu"><h6 tabindex="-1" class="dropdown-header">Header</h6>
@@ -557,7 +588,7 @@ z-index: 0;
                             </div>
                             <div class="card-body">
                             <div style="float:left;">
-                             <button id="myBtn" class="button" onclick="openForm()">Add Employee</button>
+                                <button id="myBtn" class="btn btn-primary" onclick="openForm()" style="font-size:12px">Add Employee</button>
                             </div>
 
                             <div id="myModal" class="modal">
@@ -567,38 +598,50 @@ z-index: 0;
                                     {% csrf_token %}
                                     <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
                                     <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
-                                    <input class="input" type="text" name="department" placeholder="Enter Department" required><br>
+                                    <select class="input"><br>
+                                        {% for dep in dep %}
+                                        <option value=dep>{{dep}}</option>
+                                        {% endfor %}
+                                    </select><br>
                                     <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
                                     <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
-                                    <input type="submit">  
+                                    <input type="submit">
                                 </form>
                                 </div>
                             </div>
                                 <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
                                     <thead>
                                     <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
+                                        <th style="width:20%">Name</th>
+                                        <th style="width:20%">Department</th>
+                                        <th style="width:20%">Level</th>
+                                        <th style="width:20%">Complaints Handling</th>
+                                        <th style="width:20%">Delete Employee</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for name,department,hierarchy,no_complaints in info_list %}
+                                    {% for name,department,hierarchy,no_complaints,emp_id in info_list %}
                                         <tr>
                                             <td>{{ name }}</td>
                                             <td>{{ department }}</td>
                                             <td>{{ hierarchy }}</td>
                                             <td>{{ no_complaints }}</td>
+                                            <td>
+                                                <form action="{% url 'orgadmin:delete_employee' org_id emp_id %}" method='post'>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger" style="font-size:12px">Delete</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
+                                        <th style="width:20%">Name</th>
+                                        <th style="width:20%">Department</th>
+                                        <th style="width:20%">Level</th>
+                                        <th style="width:20%">Complaints Handling</th>
+                                        <th style="width:20%">Delete Employee</th>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -618,12 +661,12 @@ var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
- 
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }

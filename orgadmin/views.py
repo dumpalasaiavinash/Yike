@@ -8,6 +8,9 @@ from urllib import parse
 from django.http import HttpResponse, JsonResponse
 import json
 from django.views.decorators.csrf import requires_csrf_token
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status   
 
 #For sending activation function
 from django.http import HttpResponse
@@ -28,37 +31,51 @@ import datetime
 import random
 import string
 
+#Hashing password
+import hashlib
+
 
 
 # Create your views here.
 def dashboard(request,j):
-    # email=request.session['email']
-    # org_id = org_id
-    # print(org_id)
+
+    present=0 #User already present in organisation
 
     org_id=j
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
+    departments_table=dynamodb.Table('departments')
+
+    dep_response=departments_table.scan()
     response2=table.scan()
+    #Getting departments from departments table
+    dep=[]
 
     name=[]
     department=[]
     hierarchy=[]
     no_complaints=[]
+    emp_id=[]
 
-    # print(response2['Items'])
+    for de in dep_response['Items']:
+        if(de['organization_id']==org_id):
+            dep.append(de['department_name'])
+
     for dic in response2['Items']:
         if dic['active']==True and dic['org_id']==int(org_id):
             name.append(dic['emp_name'])
             department.append(dic['department'])
             hierarchy.append(dic['hierarchy'])
             no_complaints.append(dic['no_complaints'])
+            emp_id.append(dic['emp_id'])
 
-    info_list=zip(name,department,hierarchy,no_complaints)
-    request.session['org_id'] = org_id
+    info_list=zip(name,department,hierarchy,no_complaints,emp_id)
+
     context={
         'info_list':info_list,
-        'org_id':org_id
+        'org_id':org_id,
+        'dep':dep,
+        'present':present
     }
 
     if request.method=='POST':
@@ -68,21 +85,48 @@ def dashboard(request,j):
         no_comp=request.POST.get('no_complaints')
         email=request.POST.get('emp_email')
 
+        print(department)
+
         dynamodb=boto3.resource('dynamodb')
         table=dynamodb.Table('employees')
+        email_present_table=dynamodb.Table('users')
 
-        response=table.scan
+        #Checking if user is already registered user or not
+        email_present=email_present_table.scan(
+            ProjectionExpression="email",
+        )
+
+        check=0
+        for em in email_present['Items']:
+            if(em['email']==email):
+                check=1
+        #End of user checking
+
+        #Incrementing the primary key
         response = table.scan(
                     ProjectionExpression="emp_id",
                 )
 
+        #Checking if person with entered email already present in organisation or not
+        for dic in response2['Items']:
+            if(dic['user_email']==email) and (dic['org_id']==org_id):
+                present=1
+                context['present']=present
+                return render(request, 'dashboard/index.html',context)
+
         emp_id=len(response['Items'])+1
 
+        #Randomly generating password
         letters=string.ascii_letters
         password_gen=''.join(random.choice(letters) for i in range(8))
+
         token=''.join(random.choice(letters) for i in range(10))
 
-        table.put_item(
+        #Checking if the user admin entered is regestered user or a new user
+        #Below if new user is added
+        if (check==0):
+
+            table.put_item(
             Item={
                 'org_id':org_id,
                 'emp_id':len(response['Items'])+1,
@@ -93,28 +137,113 @@ def dashboard(request,j):
                 'no_complaints':no_comp,
                 'active':False,
                 'token':token
+             }
+            )
+
+            current_site = get_current_site(request)
+            mail_subject = 'Click the link to join the organisation.'
+            message = render_to_string('dashboard/acc_active_email.html', {
+                'user': name,
+                'user_id':emp_id,
+                'user_email':email,
+                'password':password_gen,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(emp_id)),
+                'token':token,
+                'org_id':org_id
+            })
+            to_email = email
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+
+            return render(request, 'dashboard/index.html',context)
+
+
+
+        #If user already registered is in added to organisation
+        elif(check==1):
+            table.put_item(
+            Item={
+                'org_id':org_id,
+                'emp_id':len(response['Items'])+1,
+                'emp_name':name,
+                'user_email':email,
+                'department':department,
+                'hierarchy':hierarchy,
+                'no_complaints':no_comp,
+                'active':True,
+                'token':token
+             }
+            )
+
+            current_site = get_current_site(request)
+            mail_subject = 'Joined organisation login with your old credentials.'
+            message = render_to_string('dashboard/old_credentials_email.html', {
+                'user': name,
+                'user_id':emp_id,
+                'user_email':email,
+                'password':password_gen,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(emp_id)),
+                'token':token,
+                'org_id':org_id
+            })
+            to_email = email
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+
+            #Database call for getting updated table(After registered user is added)
+            table2=dynamodb.Table('employees')
+            user_table=dynamodb.Table('users')
+
+            user_response=user_table.scan()
+            response3=table2.scan()
+
+            for user in user_response['Items']:
+                if(user['email']==email):
+                    org_joined=user['organizations_joined']
+                    org_joined.append(org_id)
+
+                    user_table.update_item(
+                        Key={
+                            'user_email':dic['user_email']
+                        },
+                        UpdateExpression="set organizations_joined = :r",
+                        ExpressionAttributeValues={
+                        ':r':org_joined
+                        }
+                    )
+
+
+            name=[]
+            department=[]
+            hierarchy=[]
+            no_complaints=[]
+            emp_id=[]
+
+            for dic in response3['Items']:
+                if dic['active']==True and dic['org_id']==int(org_id):
+                    name.append(dic['emp_name'])
+                    department.append(dic['department'])
+                    hierarchy.append(dic['hierarchy'])
+                    no_complaints.append(dic['no_complaints'])
+                    emp_id.append(dic['emp_id'])
+
+            info_list=zip(name,department,hierarchy,no_complaints,emp_id)
+            print(name)
+
+            context={
+                'info_list':info_list,
+                'org_id':org_id,
+                'dep':dep,
+                'present':present
             }
-        )
 
-        current_site = get_current_site(request)
-        mail_subject = 'Click the link to join the organisation.'
-        message = render_to_string('dashboard/acc_active_email.html', {
-            'user': name,
-            'user_id':emp_id,
-            'user_email':email,
-            'password':password_gen,
-            'domain': current_site.domain,
-            'uid':urlsafe_base64_encode(force_bytes(emp_id)),
-            'token':token,
-            'org_id':org_id
-        })
-        to_email = email
-        email = EmailMessage(
-                    mail_subject, message, to=[to_email]
-        )
-        email.send()
-
-        return render(request, 'dashboard/index.html',context)
+            return render(request, 'dashboard/index.html',context)
 
     return render(request, 'dashboard/index.html',context)
 
@@ -126,6 +255,8 @@ def activate(request, uidb64, token, user_id, password,org_id):
     users_table=dynamodb.Table('users')
 
     response=table.scan()
+
+    #Checking for activation True is in Employee table
 
     for dic in response['Items']:
         if (dic['emp_id']==int(user_id)) and (dic['token']==str(token)) and (dic['org_id']==int(org_id)):
@@ -139,44 +270,40 @@ def activate(request, uidb64, token, user_id, password,org_id):
                 }
             )
 
+            password=hashlib.sha256(password.encode())
+            password=password.hexdigest()
+            
             users_table.put_item(
             Item={
                 'username':dic['emp_name'],
                 'email':dic['user_email'],
                 'password':password,
-                'organizations_created':[101],
-                'organizations_joined':[102]
+                'organizations_created':[],
+                'organizations_joined':[org_id],
+                'active':True
                 }
             )
 
 
-    response2=table.scan()
+    return redirect('../../../../../../../')
 
-    name=[]
-    department=[]
-    hierarchy=[]
-    no_complaints=[]
 
-    for dic in response2['Items']:
-        if dic['active']==True and dic['org_id']==int(org_id):
-            name.append(dic['emp_name'])
-            department.append(dic['department'])
-            hierarchy.append(dic['hierarchy'])
-            no_complaints.append(dic['no_complaints'])
+def delete_employee(request,org_id,emp_id):
+    dynamodb=boto3.resource('dynamodb')
+    emp_table=dynamodb.Table('employees')
 
-    info_list=zip(name,department,hierarchy,no_complaints)
+    response=emp_table.scan()
 
-    context={
-        'info_list':info_list,
-        'org_id':org_id
-    }
+    for emp in response['Items']:
+        if(emp['emp_id']==emp_id) and (emp['org_id']==org_id):
+            url="../../dashboard/"+str(org_id)
+            return redirect(url)
 
-    return render(request, 'dashboard/index.html',context)
-
+#------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------#
 
 def create(request):
-    #print('abc')
-    #print(request.session['email'])
     email=request.session['email']
 
     dynamoDB=boto3.resource('dynamodb')
@@ -700,30 +827,39 @@ def index(request):
     response_rest=json.dumps([{}])
     return HttpResponse(response_rest,content_type='text/json')
 
-def complaint_rest(request):
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table('complaint')
-        response_complaint = table.scan(
-        ProjectionExpression="complaint",
-        
-        )
-        
-        complaint_list=[]
-        # print(response_complaint['Items'][0])
-        for i in range(0,len(response_complaint['Items'])):
-            complaint_list.append(response_complaint['Items'][i]['complaint'])
-           
-        print(complaint_list)
-        # print(len(complaint_list))
 
-        if request.method=='GET':
-            try:
-                complaint=complaint_list
-                response_rest=json.dumps([{'complaint':complaint}])
-            except:
-                print("something went wrong")
+class complaintrest(APIView):
+        
+    def get(self,request):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('complaint')
+            response_complaint = table.scan(
+            ProjectionExpression="complaint",
+            
+            )
+            
+            complaint_list=[]
+            # print(response_complaint['Items'][0])
+            for i in range(0,len(response_complaint['Items'])):
+                complaint_list.append(response_complaint['Items'][i]['complaint'])
+            
+            print(complaint_list)
+            # print(len(complaint_list))
+            list1=[]
+            for each in range(0,len(complaint_list)):
 
-        return render(request, 'orgadmin/createform.html')
+                var={
+                    'complaint':complaint_list[each]
+                }
+                list1.append(var)
+            return Response(list1)
+
+
+
+        
+
+
+        
 def create_department(request):
     depname = request.POST.get('depname')
     print(depname)
