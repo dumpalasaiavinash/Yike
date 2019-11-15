@@ -23,7 +23,7 @@ def home_log(request):
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
         response = table.scan(
-        ProjectionExpression="email,password,organizations_created,organizations_joined",
+        ProjectionExpression="email,password,organizations_created,organizations_joined,username",
         FilterExpression=Attr('email').eq(email)
         )
         print('\n\n\n')
@@ -37,9 +37,11 @@ def home_log(request):
         print('\n\n\n')
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
+                request.session['username'] = response['Items'][0]['username']
                 request.session['email']=response['Items'][0]['email']
                 request.session['org_created']=response['Items'][0]['organizations_created']
                 request.session['org_joined']=response['Items'][0]['organizations_joined']
+
                 print('abc')
                 return redirect('orgadmin:create')
             else:
@@ -71,11 +73,15 @@ def home_reg(request):
                     'username': username,
                     'email': email,
                     'password': password,
-                    'organizations_created':[101],
-                    'organizations_joined':[102],
+                    'organizations_created':[],
+                    'organizations_joined':[],
 
                     }
                 )
+                request.session['username'] = username
+                request.session['email']=email
+                request.session['org_created']=[]
+                request.session['org_joined']=[]
                 return redirect('orgadmin:create')
 
             else:
@@ -118,7 +124,3 @@ class user_logged_in(APIView):
         }
         data.append(var)
         return Response(data)
-
-   
-
-    

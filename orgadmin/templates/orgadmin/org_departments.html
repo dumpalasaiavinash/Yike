@@ -7,11 +7,12 @@
 <style>
 <!--Google Fonts	-->
 <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Oswald" rel="stylesheet">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 {% endblock %}
 
 {% block body %}
@@ -26,12 +27,20 @@
 {% if messages %}
   <ul class="messages">
     {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
+      <h1 class="{{ message.tags }}">{{ message }}</h1>
     {% endfor %}
   </ul>
+{% else %}
+    <h1>
+        Hello {{uname}}!   
+    </h1>
 {% endif %}
+
+
     <br>
     {% if topics_size > 0 %}
+    <h1> Please select a department to check and edit the hierarchy of it.  </h1>
+    <br>
     <div class="card-body row no-gutters align-items-center">
       <form action="{% url 'orgadmin:hierarchy' %}" method="post" >
         {% csrf_token %}
@@ -57,8 +66,8 @@
     <br><br><br>
     <!-- <br><br><br><br><br><br><br><br> -->
 
-    <h1> Click here to create department in your organization  </h1>
-
+    <h1> Click here to create new department in your organization  </h1>
+    <br>
 
     <div class="w3-container">
       <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-green w3-large">Create department</button>

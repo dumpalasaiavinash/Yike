@@ -223,8 +223,8 @@ def create(request):
         )
         # print(response['Items'])
         org_names.append(response['Items'][0]['organization_name'])
-    print(email)
-    print(org_names)
+    # print(email)
+    # print(org_names)
     organizations_created_names=[]
     organizations_joined_names=[]
     count=0
@@ -255,21 +255,21 @@ def create(request):
     #         codes_created+=[index['code']]
     #
     # print(codes_created)
-    print(organizations_created)
-    print("######################")
+    # print(organizations_created)
+    # print("######################")
     ids=str(organizations_created)
     print(ids)
     list1=[]
     list1.append(ids.split("'"))
-    print(list1[0][3])
+    # print(list1[0][3])
     list2=[]
-    print(len(list1[0]))
+    # print(len(list1[0]))
     for i in range(0,len(list1[0])):
         if i%2 != 0:
             list2.append(int(list1[0][i]))
-    print(type(list2[0]))
-    print(org_join_id)
-    print("****************")
+    # print(type(list2[0]))
+    # print(org_join_id)
+    # print("****************")
     #print(ids.split("'"))
     # for i in range ids.split("'"):
     #     list1.append
@@ -286,7 +286,7 @@ def complaint_rest(request):
         table = dynamodb.Table('complaint')
         response_complaint = table.scan(
         ProjectionExpression="complaint",
-        
+
         )
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         print(response_complaint)
@@ -568,7 +568,7 @@ def departments(request):
             dep_id.append(i['department_id'])
         print(departments)
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments)})
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username']})
 
 
 def hierarchy(request):
@@ -741,5 +741,5 @@ def create_department(request):
         )
         messages.success(request, 'The new department has been created successfully.')
     else:
-        messages.success(request, 'Check again if the department had been already created or not.')
+        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
     return redirect('../departments')
