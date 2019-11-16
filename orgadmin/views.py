@@ -383,141 +383,146 @@ def about(request,org_id):
 #------------------------------------------------------------------------------------------------------------#
 
 def create(request):
-    email=request.session['email']
+    try:
+        email=request.session['email']
 
-    dynamoDB=boto3.resource('dynamodb')
-    dynamoTable=dynamoDB.Table('users')
+        dynamoDB=boto3.resource('dynamodb')
+        dynamoTable=dynamoDB.Table('users')
 
-    response = dynamoTable.scan(
-        ProjectionExpression="organizations_created,organizations_joined",
-        FilterExpression=Attr('email').eq(email)
-    )
-
-    # print(response)
-    # print('\n**\n')
-
-    organizations_created=response['Items'][0]['organizations_created']
-    total_org_ids=copy.deepcopy(organizations_created)
-    organizations_joined=response['Items'][0]['organizations_joined']
-    for i in organizations_joined:
-        total_org_ids.append(i)
-        # topics=[]
-        # print(codes)
-        # dynamoTable=dynamoDB.Table('topics')
-        # for index in range(0,len(codes)):
-        #     response=dynamoTable.get_item(
-        #     Key={
-        #     'code':codes[index],
-        #     }
-        #     )
-        #     print(response['Item']['topic'])
-        #     topics+=[response['Item']['topic']]
-        # print(topics)
-    # print(total_org_ids)
-    for i in range(0,len(response['Items'][0]['organizations_joined'])):
-        response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
-    org_join_id=response['Items'][0]['organizations_joined']
-
-
-    org_names=[]
-    dynamoTable=dynamoDB.Table('organization')
-    for i in total_org_ids:
-        # print(type(int(i)))
         response = dynamoTable.scan(
-            ProjectionExpression="organization_name",
-            FilterExpression=Attr('org_id').eq(int(i))
+            ProjectionExpression="organizations_created,organizations_joined",
+            FilterExpression=Attr('email').eq(email)
         )
-        # print(response['Items'])
-        org_names.append(response['Items'][0]['organization_name'])
-    # print(email)
-    # print(org_names)
-    organizations_created_names=[]
-    organizations_joined_names=[]
-    count=0
-    for i in org_names:
-        if(count>=len(organizations_created)):
-            organizations_joined_names.append(i)
-        else:
-            organizations_created_names.append(i)
-        count=count+1
-    # print(organizations_joined_names)
-    # print(organizations_created_names)
+
+        # print(response)
+        # print('\n**\n')
+
+        organizations_created=response['Items'][0]['organizations_created']
+        total_org_ids=copy.deepcopy(organizations_created)
+        organizations_joined=response['Items'][0]['organizations_joined']
+        for i in organizations_joined:
+            total_org_ids.append(i)
+            # topics=[]
+            # print(codes)
+            # dynamoTable=dynamoDB.Table('topics')
+            # for index in range(0,len(codes)):
+            #     response=dynamoTable.get_item(
+            #     Key={
+            #     'code':codes[index],
+            #     }
+            #     )
+            #     print(response['Item']['topic'])
+            #     topics+=[response['Item']['topic']]
+            # print(topics)
+        # print(total_org_ids)
+        for i in range(0,len(response['Items'][0]['organizations_joined'])):
+            response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+        org_join_id=response['Items'][0]['organizations_joined']
 
 
-    # dynamoDB=boto3.resource('dynamodb')
-    # dynamoTable=dynamoDB.Table('topics')
-    # response=dynamoTable.scan(
-    # )
-    # # print(response)
-    # # print("\n\n\n\n")
-    # # print(response['Items'])
-    # topics_created=[]
-    # codes_created=[]
-    # for index in response['Items']:
-    #     # print(index['name'])
-    #     # print(request.user.username)
-    #     if(index['name']==request.user.username):
-    #         topics_created+=[index['topic']]
-    #         codes_created+=[index['code']]
-    #
-    # print(codes_created)
-    # print(organizations_created)
-    # print("######################")
-    ids=str(organizations_created)
-    print(ids)
-    list1=[]
-    list1.append(ids.split("'"))
-    # print(list1[0][3])
-    list2=[]
-    # print(len(list1[0]))
-    for i in range(0,len(list1[0])):
-        if i%2 != 0:
-            list2.append(int(list1[0][i]))
-    # print(type(list2[0]))
-    # print(org_join_id)
-    # print("****************")
-    #print(ids.split("'"))
-    # for i in range ids.split("'"):
-    #     list1.append
-    extra = (len(organizations_created)%4)-1
-    data = {'topics' : zip(organizations_created_names,list2), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+        org_names=[]
+        dynamoTable=dynamoDB.Table('organization')
+        for i in total_org_ids:
+            # print(type(int(i)))
+            response = dynamoTable.scan(
+                ProjectionExpression="organization_name",
+                FilterExpression=Attr('org_id').eq(int(i))
+            )
+            # print(response['Items'])
+            org_names.append(response['Items'][0]['organization_name'])
+        # print(email)
+        # print(org_names)
+        organizations_created_names=[]
+        organizations_joined_names=[]
+        count=0
+        for i in org_names:
+            if(count>=len(organizations_created)):
+                organizations_joined_names.append(i)
+            else:
+                organizations_created_names.append(i)
+            count=count+1
+        # print(organizations_joined_names)
+        # print(organizations_created_names)
+
+
+        # dynamoDB=boto3.resource('dynamodb')
+        # dynamoTable=dynamoDB.Table('topics')
+        # response=dynamoTable.scan(
+        # )
+        # # print(response)
+        # # print("\n\n\n\n")
+        # # print(response['Items'])
+        # topics_created=[]
+        # codes_created=[]
+        # for index in response['Items']:
+        #     # print(index['name'])
+        #     # print(request.user.username)
+        #     if(index['name']==request.user.username):
+        #         topics_created+=[index['topic']]
+        #         codes_created+=[index['code']]
+        #
+        # print(codes_created)
+        # print(organizations_created)
+        # print("######################")
+        ids=str(organizations_created)
+        print(ids)
+        list1=[]
+        list1.append(ids.split("'"))
+        # print(list1[0][3])
+        list2=[]
+        # print(len(list1[0]))
+        for i in range(0,len(list1[0])):
+            if i%2 != 0:
+                list2.append(int(list1[0][i]))
+        # print(type(list2[0]))
+        # print(org_join_id)
+        # print("****************")
+        #print(ids.split("'"))
+        # for i in range ids.split("'"):
+        #     list1.append
+        extra = (len(organizations_created)%4)-1
+        data = {'topics' : zip(organizations_created_names,list2), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
 
 
 
-    return render(request, 'orgadmin/dummy.html', data)
+        return render(request, 'orgadmin/dummy.html', data)
+    except:
+        return render(request, 'orgadmin/dummy.html', data)
+
 
 
 def created(request):
+
     organization_name = request.POST.get('name')
     code=request.POST.get('code')
-    orga_info=request.POST.get('orga_info')
-    myfile = request.FILES
-    print(myfile)
+    # orga_info=request.POST.get('orga_info')
+    # myfile = request.FILES
+    # print(myfile)
 
-    print(orga_info)
+    # print(orga_info)
 
-    fs = FileSystemStorage()
-    filename = fs.save(myfile.name, myfile)
-    f="./media/"+str(myfile)
-    s3 = boto3.client('s3')
-    bucket = 'yike'
+    # fs = FileSystemStorage()
+    # filename = fs.save(myfile.name, myfile)
+    # f="./media/"+str(myfile)
+    # s3 = boto3.client('s3')
+    # bucket = 'yike'
 
-    file_name = str(f)
-    key_name = str(myfile)
+    # file_name = str(f)
+    # key_name = str(myfile)
 
-    s3.upload_file(file_name, bucket, key_name)
+    # s3.upload_file(file_name, bucket, key_name)
 
-    bucket_location = boto3.client('s3').get_bucket_location(Bucket=bucket)
-    link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
-            bucket,
-            key_name)
+    # bucket_location = boto3.client('s3').get_bucket_location(Bucket=bucket)
+    # link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
+    #         bucket,
+    #         key_name)
 
     if (organization_name!='' and code!='' ):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('organization')
             response_sno=table.scan(
                 ProjectionExpression="org_id",
-             )
+            )
             response = table.scan(
                 ProjectionExpression="organization_name,code",
                 FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
@@ -526,12 +531,11 @@ def created(request):
             if(len(response['Items'])==0):
                 ID=len(response_sno['Items'])+101
                 response = table.put_item(
-                   Item={
+                Item={
                     'org_id': len(response_sno['Items'])+101,
                     'organization_name': organization_name,
                     'code':code,
-                    'orga_info':orga_info,
-                    'img':link
+
                     }
                 )
                 email=request.session['email']
@@ -694,6 +698,10 @@ def created(request):
 
 
                 return render(request, 'orgadmin/dummy.html', data)
+    
+                    
+
+
 
 
 def join(request):
@@ -716,7 +724,7 @@ def join(request):
                 print("#####################")
 
                 #request.session['org_created']=request.session['org_created']+[ID]
-                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]
+                
                 org_joined = request.session['org_joined']
                 print(org_joined)
                 print(response_join['Items'][0]['org_id'])
@@ -724,6 +732,10 @@ def join(request):
                     org_joined.append(int(response_join['Items'][0]['org_id']))
                     print(org_joined)
                     print("@@@@")
+                    if ([int(response_join['Items'][0]['org_id'])] not in request.session['org_joined']):
+                        request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]
+                
+                
                 email=request.session['email']
                 print(org_joined)
                 print(email)
