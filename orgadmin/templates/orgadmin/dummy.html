@@ -169,6 +169,20 @@ z-index: 0;
 
 
 {% block body %}
+                    {% if messages %}
+                      <ul class="messages">
+                        {% for message in messages %}
+                        <div class="w3-panel w3-grey w3-display-container">
+                      <span onclick="this.parentElement.style.display='none'"
+                      class="w3-button w3-large w3-display-topright">&times;</span>
+                          <h4 class="{{ message.tags }}" style="font-family:avenir Black ;"> {{ message }}</h4>
+                        </div>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                        
+                    {% endif %}
+
 
 <div style="margin-top:5%;width:100%;" >
   <br>
