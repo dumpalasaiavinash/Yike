@@ -185,6 +185,7 @@ z-index: 0;
     {% if topics_created_size > 0 %}
         {% for i,j in topics_created %}
         <div class="main" style="margin-left:2%;" >
+          <a href = "{% url 'employee:dashboard'  %}">
             
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                 
@@ -194,7 +195,7 @@ z-index: 0;
               </div>
           
               <div class="middle" >
-                  <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
+                  <img class=image src="{% static 'orgadmin/images/apple.png' %}" alt="Avatar" >
                 
               </div>
           
@@ -202,7 +203,7 @@ z-index: 0;
                 <br><br>
               </div>
             </div>
-          <!-- </a> -->
+          </a>
           </div>
 
 
@@ -239,7 +240,7 @@ z-index: 0;
                     </div>
                 
                     <div class="middle" >
-                        <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
+                        <img class=image src="{% static 'orgadmin/images/tata.jpg' %}" alt="Avatar" >
                       
                     </div>
                     <div class="bottom">
@@ -260,14 +261,14 @@ z-index: 0;
         <span class="close">&times;</span>
     <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" >
         {% csrf_token %}
-        <h1 style="font-family: 'Raleway';">Create Organization</h1>
+        <h1 style="font-family: 'Raleway';font-size: 24px;">Create Organization</h1>
   
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Organization Name" name="name" required>
         <hr class="line">
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code" name="code" required>
         <hr class="line">
-        <button type="submit" class="button button2" >Create</button> <br><br><br><br><br>  
+       <div style="margin-left: 24px;"> <button  type="submit" class="button button2" >Create</button> </div><br><br><br><br><br>  
     </form>
   </div>
 </div>
@@ -278,12 +279,12 @@ z-index: 0;
         <span class="close">&times;</span>
     <form class="form-container" action="{% url 'orgadmin:join' %}" method="post" >
       {% csrf_token %}
-        <h1 style="font-family: 'Raleway';">Join Organization</h1>
+        <h1 style="font-family: 'Raleway';font-size: 24px;">Join Organization</h1>
   
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
         <hr class="line">
-        <div style="margin-left: 25px; ; "><button type="submit" class="button button2" >Join</button> </div><br><br><br><br><br>  
+        <div style="margin-left: 25px; "><button type="submit" class="button button2" >Join</button> </div><br><br><br><br><br>  
     </form>
   </div>
 </div>
