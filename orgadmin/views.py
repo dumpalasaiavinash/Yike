@@ -57,12 +57,6 @@ def dashboard(request,j):
     #Getting departments from departments table
     dep=[]
 
-    name=[]
-    department=[]
-    hierarchy=[]
-    no_complaints=[]
-    emp_id=[]
-
     no_of_departments=0
     no_of_employees=0
     no_of_complaints=0
@@ -74,8 +68,7 @@ def dashboard(request,j):
 
     # Checking for no_of_complaintsand no_of_employees
     for emp_dic in response2['Items']:
-        if(emp_dic['org_id']==org_id):
-            print(type(emp_dic['no_complaints']))
+        if(emp_dic['org_id']==org_id) and (emp_dic['active']==True):
             no_of_employees=no_of_employees+1
             no_of_complaints=no_of_complaints+int(emp_dic['no_complaints'])
 
@@ -85,6 +78,25 @@ def dashboard(request,j):
             no_of_departments=no_of_departments+1
             dep.append(de['department_name'])
 
+
+    for dic in response2['Items']:
+        if dic['active']==True and dic['org_id']==int(org_id):
+            if dic['department'] not in dep:
+                print("Hi",dic['department'],dic['emp_id'],dic['emp_name'])
+                table.delete_item(
+                    Key={
+                        'emp_id': dic['emp_id']
+                    },
+                )
+    table=dynamodb.Table('employees')
+    response2=table.scan()
+
+    name=[]
+    department=[]
+    hierarchy=[]
+    no_complaints=[]
+    emp_id=[]
+
     for dic in response2['Items']:
         if dic['active']==True and dic['org_id']==int(org_id):
             name.append(dic['emp_name'])
@@ -92,6 +104,7 @@ def dashboard(request,j):
             hierarchy.append(dic['hierarchy'])
             no_complaints.append(dic['no_complaints'])
             emp_id.append(dic['emp_id'])
+
 
     info_list=zip(name,department,hierarchy,no_complaints,emp_id)
 
@@ -244,11 +257,6 @@ def dashboard(request,j):
                     )
 
 
-            name=[]
-            department=[]
-            hierarchy=[]
-            no_complaints=[]
-            emp_id=[]
 
             dep=[]
 
@@ -269,9 +277,28 @@ def dashboard(request,j):
 
             # Checking for no_of_complaintsand no_of_employees
             for emp_dic in response3['Items']:
-                if(emp_dic['org_id']==org_id):
+                if(emp_dic['org_id']==org_id) and (emp_dic['active']==True):
                     no_of_employees=no_of_employees+1
                     no_of_complaints=no_of_complaints+int(emp_dic['no_complaints'])
+
+            for dic in response3['Items']:
+                if dic['active']==True and dic['org_id']==int(org_id):
+                    if dic['department'] not in dep:
+                        table2.delete_item(
+                            Key={
+                                'emp_id': dic['emp_id']
+                            },
+                        )
+
+
+            name=[]
+            department=[]
+            hierarchy=[]
+            no_complaints=[]
+            emp_id=[]
+
+            table2=dynamodb.Table('employees')
+            response3=table2.scan()
 
             for dic in response3['Items']:
                 if dic['active']==True and dic['org_id']==int(org_id):
