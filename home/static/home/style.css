@@ -1,63 +1,63 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
 
-
 body {
-    background-color: #f5f7fa !important;
-
+    background-color: #f5f7fa;
+    font-family: raleway sans-serif;
 }
 
 .navbar{
-    margin-bottom: 0px !important;
+    margin-bottom: 0px;
+    font-family: raleway sans-serif;
 }
 
 .navbar-default{
-    border-radius: 0 !important;
-    background-color: #0055b4 !important;
-    padding: 10px !important;
-    padding-left: 30px !important;
+    border-radius: 0;
+    background-color: #0055b4;
+    padding: 10px;
+    padding-left: 30px;
 }
 
 .navbar-default .navbar-brand{
-    color:white !important;
-    padding-right: 50px !important;
+    color:white;
+    padding-right: 50px;
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: white !important;
+    color: white;
 }
 .nav-list {
-    list-style-type: none !important;
-    margin-top:10px !important;
-    padding:10px !important;
-    overflow: hidden !important;
+    list-style-type: none;
+    margin-top:10px;
+    padding:10px;
+    overflow: hidden;
 }
 
 .nav-list-item-left {
-    text-align: left !important;
-    display: inline-block !important;
-    transition: 0.3s !important;
+    text-align: left;
+    display: inline-block;
+    transition: 0.3s;
 }
 
 .nav-list-item-right {
-    text-align: right !important;
-    display: inline-block !important;
-    transition: 0.3s !important;
+    text-align: right;
+    display: inline-block;
+    transition: 0.3s;
 }
 
 .cols{
-    background-color: #fff !important;
-    padding: 30px !important;
-    font-family: 'Montserrat', sans-serif !important;
-    border:1px #e0e0e0 solid !important;
-        border-radius: 6px !important;
+    background-color: #fff;
+    padding: 30px;
+    font-family: 'Montserrat', sans-serif;
+    border:1px #e0e0e0 solid;
+        border-radius: 6px;
 
 }
 
 .divs{
-    background-color: #fff !important;
-    padding: 30px !important;
-    font-family: 'Montserrat', sans-serif !important;
-    border:1px #e0e0e0 solid !important;
-        border-radius: 6px !important;
+    background-color: #fff;
+    padding: 30px;
+    font-family: 'Montserrat', sans-serif;
+    border:1px #e0e0e0 solid;
+        border-radius: 6px;
 
 }

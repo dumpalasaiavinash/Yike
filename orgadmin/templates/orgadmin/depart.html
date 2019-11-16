@@ -6,6 +6,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <style>
 
   nav{
@@ -28,6 +31,25 @@
     cursor: pointer;
     width:80%;
   }
+
+
+
+  .but {
+    position:relative;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:80%;
+  }
+
+
 
   .button2 {background-color: #008CBA;} /* Blue */
   .button3 {background-color: #f44336;} /* Red */
@@ -63,7 +85,7 @@ font-family: Helvetica;
 }
 #tree{
 width:100%;
-height:80%;
+height:100%;
 padding: 1px;
 
 }
@@ -77,15 +99,20 @@ padding: 1px;
 <body>
 
 
+    <div style="float:left; width:6%;height:80%;margin-top:6%;margin-left:1.5%">
+        <a href="{% url 'orgadmin:departments' %}">
+            <span class="glyphicon glyphicon-arrow-left" style="color:black;font-size: 35px;"></span>
+        </a>
+    </div>
 
-<div style="float:left; width:86%;height:80%;margin-top:3%">
+<div style="float:left; width:75%;height:89%;margin-top:3%">
   <div id="tree" style="margin-top:2%;position:fixed">
 
   </div>
 </div>
 
 
-<div style="float:left; width:13%;height:100%;margin-left:1%; margin-top:5%">
+<div style="float:left; width:15%;height:89%;margin-left:1%; margin-top:5%">
 
   <!-- <br>  <br> <br>  <br> -->
 
@@ -95,12 +122,30 @@ padding: 1px;
   <!-- <button onclick="change_name()" class="button button2">Change name</button>
   <br>
   <br> -->
-  <button onclick="remove()" class="button button3">Remove Node</button>
+  <button onclick="remove()" class="btn btn-outline-danger btn-lg">Remove Node</button>
   <br>
   <br>
   <!-- <button class="button button4">Gray</button> -->
-  <button onclick="save()" class="button">Save</button>
+  <button onclick="save()" class="btn btn-outline-success btn-lg">Save</button>
   <br>
+  <br>
+
+  <div class="w3-container">
+      <span style="font-size: 25px;padding-bottom:5%;color:#09a3eb">Instructions below</span>
+
+
+      <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%;cursor:zoom-in;height:10%"
+      onclick="document.getElementById('modal01').style.display='block'">
+
+      <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+        <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+        <div class="w3-modal-content w3-animate-zoom">
+          <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%">
+        </div>
+      </div>
+    </div>
+
+
 
 
 </div>
@@ -202,44 +247,44 @@ var chart = new OrgChart(document.getElementById("tree"), {
             // ];
 
 
-            document.getElementById("btn").addEventListener("click", function () {
-                // var n = newNodes.splice(0, 1)[0];
+            // document.getElementById("btn").addEventListener("click", function () {
+            //     // var n = newNodes.splice(0, 1)[0];
 
-                var nx = prompt("Please enter the hierarchy to which this node has to be added:");
-                var i;
-                var hid=0;
-                var tpid;
-                console.log(node)
-                var nodes = node
-                console.log(nodes)
-                for(i in nodes){
-                  console.log(typeof(nodes[i]['hierarchy']))
-                  if(nodes[i]['hierarchy']==nx){
-                    tpid=nodes[i]['id']
-                  }
-                  if(nodes[i]['id']>hid){
-                    hid=nodes[i]['id']
-                  }
-                }
-                if(tpid == null){
-                  alert(" The given hierarchy is not available ")
-                }
-                else{
-                  console.log('a')
-                  var n = prompt("Please enter the new hierarchy:");
-                  p={ id: hid+1, pid: tpid, hierarchy: n}
-                  console.log(p)
-                  console.log('b')
-                  chart.addNode(p);
-                  console.log(typeof(p))
-                  console.log(typeof(node))
-                  console.log(node)
-                  console.log(node.length)
-                  len = node.length
-                  // node[len] = p
-                  console.log(node)
-                }
-            });
+            //     var nx = prompt("Please enter the hierarchy to which this node has to be added:");
+            //     var i;
+            //     var hid=0;
+            //     var tpid;
+            //     console.log(node)
+            //     var nodes = node
+            //     console.log(nodes)
+            //     for(i in nodes){
+            //       console.log(typeof(nodes[i]['hierarchy']))
+            //       if(nodes[i]['hierarchy']==nx){
+            //         tpid=nodes[i]['id']
+            //       }
+            //       if(nodes[i]['id']>hid){
+            //         hid=nodes[i]['id']
+            //       }
+            //     }
+            //     if(tpid == null){
+            //       alert(" The given hierarchy is not available ")
+            //     }
+            //     else{
+            //       console.log('a')
+            //       var n = prompt("Please enter the new hierarchy:");
+            //       p={ id: hid+1, pid: tpid, hierarchy: n}
+            //       console.log(p)
+            //       console.log('b')
+            //       chart.addNode(p);
+            //       console.log(typeof(p))
+            //       console.log(typeof(node))
+            //       console.log(node)
+            //       console.log(node.length)
+            //       len = node.length
+            //       // node[len] = p
+            //       console.log(node)
+            //     }
+            // });
 
 
           function remove() {

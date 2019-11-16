@@ -1,13 +1,21 @@
+{% extends 'home/base2.html' %}
 {% load static %}
 {% block extrahead %}
 
 <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
 <style>
 
+  nav{
+
+    position:fixed
+  }
+
+
   .button {
+    position:relative;
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;
@@ -24,6 +32,25 @@
   .button2 {background-color: #008CBA;} /* Blue */
   .button3 {background-color: #f44336;} /* Red */
   .button5 {background-color: #555555;} /* Black */
+
+  [node-id] rect {
+              /* fill: #016e25; */
+              /* height:15%; */
+              /* width:15%; */
+              /* text-align:'center'; */
+              border-radius: 50%;
+
+          }
+
+          .field_0 {
+                    /* font-family: Impact; */
+                    /* text-transform: uppercase; */
+                    /* fill: #a3a3a3; */
+                    /* text-anchor="middle"; */
+
+                }
+
+
 
 
 html, body{
@@ -49,32 +76,53 @@ padding: 1px;
 
 <body>
 
-<div style="float:left; width:86%;border-style: groove;">
-  <div id="tree">
+
+
+<div style="float:left; width:84%;height:89%;margin-top:3%">
+  <div id="tree" style="margin-top:2%;position:fixed">
 
   </div>
 </div>
 
 
-<div style="float:left; width:13%; background-color:rgb(255,255,255);height:100%;margin:left:40px;border-style: groove;">
+<div style="float:left; width:15%;height:89%;margin-left:1%; margin-top:5%">
 
-  <br>  <br> <br>  <br>
+  <!-- <br>  <br> <br>  <br> -->
 
-  <button id="btn" class="button">Add Node</button>
-<br><br>
+  <!-- <button id="btn" class="button">Add Node</button>
+<br><br> -->
 
-  <button onclick="change_name()" class="button button2">Change name</button>
+  <!-- <button onclick="change_name()" class="button button2">Change name</button>
   <br>
-  <br>
+  <br> -->
   <button onclick="remove()" class="button button3">Remove Node</button>
   <br>
   <br>
   <!-- <button class="button button4">Gray</button> -->
-  <button onclick="save()" class="button button5">Save</button>
+  <button onclick="save()" class="button">Save</button>
   <br>
+  <br>
+
+  <div class="w3-container">
+      <h2>Instructions below</h2>
+
+
+      <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%;cursor:zoom-in;height:10%"
+      onclick="document.getElementById('modal01').style.display='block'">
+
+      <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+        <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+        <div class="w3-modal-content w3-animate-zoom">
+          <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%">
+        </div>
+      </div>
+    </div>
+
+
 
 
 </div>
+
 
 
 <script>
@@ -89,8 +137,72 @@ var node = {{node|safe}}
 var dep_name = '{{dep_name}}'
 var dep_id = '{{dep_id}}'
 console.log(node)
-var chart = new OrgChart(document.getElementById("tree"), {
+// OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
+// OrgChart.templates.belinda.node_id = '<span style="border-radius:20%; color:white" </span>';
 
+// OrgChart.templates.myTemplate.size = [200, 200];
+//     OrgChart.templates.myTemplate.node =
+//                 '<circle cx="100" cy="100" r="100" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
+//
+//                 OrgChart.templates.myTemplate.ripple = {
+//                       radius: 100,
+//                       color: "#0890D3",
+//                       rect: null
+//                   };
+
+// OrgChart.templates.myTemplate = Object.assign({}, OrgChart.templates.ana);
+// OrgChart.templates.myTemplate.size = [100, 100];
+//     OrgChart.templates.myTemplate.node =
+//                 '<circle cx="70" cy="70" r="70" fill="#4D4D4D" stroke-width="1" stroke="#1C1C1C"></circle>';
+//
+//                 OrgChart.templates.myTemplate.ripple = {
+//                        radius: 70,
+//                        color: "#0890D3",
+//                        rect: null
+//                    };
+//
+//  OrgChart.templates.myTemplate.field_0 = '<text style="font-size: 24px;" fill="#ffffff" x="100" y="90" text-anchor="middle">{val}</text>';
+
+OrgChart.templates.polina.field_0 = '<text class="field_0"  style="font-size: 20px;border-width:20%;" fill="#1e1a4d"  x="150" y="40" text-anchor="middle">{val}</text>';
+// OrgChart.templates.polina.size = [300, 300];
+OrgChart.templates.polina.node = '<rect x="45" y="0" width="200" height="70" rx="12" ry="12" fill="#09a3eb"></rect>'
+
+OrgChart.templates.polina.link =
+       '<path stroke="#686868" stroke-width="1px" fill="none" link-id="[{id}][{child-id}]" d="M{xa},{ya} C{xb},{yb} {xc},{yc} {xd},{yd}" />';
+
+
+OrgChart.templates.polina.nodeMenuButton =
+               '<g style="cursor:pointer;background-color:white" transform="matrix(1,0,0,1,235,45)" control-node-menu-id="{id}">'
+               + '<rect x="-2" y="-8" fill="#09a3eb" stroke-width="1px" rx="2" ry="2" width="7" height="20">'
+               + '</rect>'
+               + '<line x1="0" y1="0" x2="2.5" y2="0" fill="#ffffff" fill-opacity="1" stroke-width="2" stroke="#ffffff" />'
+               + '<line x1="0" y1="7" x2="2.5" y2="7" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
+               + '<line x1="0" y1="14" x2="2.5" y2="14" fill="#ffffff" stroke-width="2" stroke="#ffffff" />'
+               + '</g>';
+
+
+
+// OrgChart.templates.polina.ripple = {
+//         // radius: 100,
+//         color: "#0890D3",
+//         rect: null
+//     };
+
+var chart = new OrgChart(document.getElementById("tree"), {
+              // mouseScrool: OrgChart.action.scroll,
+              showXScroll: OrgChart.scroll.visible,
+              showYScroll: OrgChart.scroll.visible,
+              mouseScrool: OrgChart.action.zoom,
+              // enableSearch: false,
+              template: "polina",
+
+              nodeMenu:{
+
+                edit: {text:"Edit"},
+                add: {text:"Add"},
+                details: {text:"Details"},
+
+              },
                 nodeBinding: {
                     field_0: "hierarchy",
                 },
@@ -107,8 +219,10 @@ var chart = new OrgChart(document.getElementById("tree"), {
             //     { id: 7, pid: 3, name: "Fran Parsons", title: "Developer" }
             // ];
 
+
             document.getElementById("btn").addEventListener("click", function () {
                 // var n = newNodes.splice(0, 1)[0];
+
                 var nx = prompt("Please enter the hierarchy to which this node has to be added:");
                 var i;
                 var hid=0;
@@ -221,9 +335,10 @@ var chart = new OrgChart(document.getElementById("tree"), {
                },
                 dataType: 'json',
                 success: function(data) {
-                  console.log(data);
+                  console.log(data)
                 }
             });
+        location.replace('{% url "orgadmin:departments" %}')
 
 
       }

@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 <!--<link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/dummy.css' %}">-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -15,7 +16,7 @@
 <style>
 
 .body{
-  font-family : Avenir black !important;
+  font-family: 'Raleway' !important;
 }
 
 .w3-card-4:{
@@ -51,47 +52,38 @@ padding-top: 1rem;
 padding-top: .75rem;
 padding-bottom:6rem;
 }
-
-
-.button{
-  border-color: powderblue;
-  color: rgb(10, 10, 10);
-  border-radius:13%;
-  background-color: transparent;;
-  width:11.5%;
-  font-family : Avenir Black;
-  padding:0.3em 1.2em;
-  margin:0 0.3em 0.3em 0;
-  text-align:center;
-  transition: all 0.2s;
-/* display:inline-block;
-
-border-radius:13%;
-box-sizing: border-box;
-text-decoration:none;
-font-family : Avenir Black;
-font-weight:300;
-color:#FFFFFF;
-background-color:#0055b4;
-
-
-width:11.5% */
-}
-.button:hover{
-  background: #2196F3;
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
   color: white;
-  /* color:#000000;
-  background-color:#3377ff; */
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+
 }
-@media all and (max-width:30em){
- .button{
-display:block;
-margin:0.2em auto;
- }
+
+.button2 {
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  border: 2px solid powderblue;
 }
+
+.button2:hover {
+  background-color: powderblue;
+  color:white;
+}
+
+
 
 .modal {
-  font-family : Avenir Black;
+  font-family: 'Raleway';
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -113,15 +105,15 @@ margin:0.2em auto;
   padding: 30px;
   border: 1px solid #888;
   width: 30%;
-  font-family : Avenir Black;
+  font-family: 'Raleway';
 }
 
 .input{
-font-family : Avenir Black;
+  font-family: 'Raleway';
 box-flex: 1;
 flex-grow: 1;
 flex-shrink: 1;
-font-family: Roboto,Arial,sans-serif;
+font-family: 'Raleway';
 font-size: 16px;
 font-weight: 400;
 letter-spacing: .1px;
@@ -177,42 +169,45 @@ z-index: 0;
 {% block body %}
 
 <div style="margin-top:5%;width:100%;" >
+  <br>
   <table style="width: 100%;">
     <tr>
       <td style="width: 50%;">
-        <h2 style="margin-left:7%;font-family : Avenir Black;" >Organization's Joined</h2>
+        <h2 style="margin-left:7%;font-family: 'Raleway';color: gray;font-size:24px ;" >Organization's Joined</h2>
       </td>
-      <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-                  <button id="join_btn" class="button" onclick="openForm()">Join</button>
-              </td>
+      <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+
+          <button id="join_btn" class="button button2" onclick="openForm()">Join</button>
+      </td>
     </tr>
-  </table> <br>
+  </table>
+  <hr style="border: 1px solid #adadad;margin-left:3%;margin-right:4.5% ;">
     {% if topics_created_size > 0 %}
         {% for i,j in topics_created %}
         <div class="main" style="margin-left:2%;" >
-            
+          <a href = "{% url 'employee:dashboard'  %}">
+
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
-                
+
               <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
-                  
+
           <br>{{i}}<br><br>
               </div>
-          
+
               <div class="middle" >
-                  <img class=image src="{% static 'orgadmin/images/subu.jpg' %}" alt="Avatar"  >
-              <!-- <img class="image" aria-hidden="true" src="//lh3.googleusercontent.com/a-/AAuE7mBhXW5QT3UXXW5eAXXfNiEsqhzTkeL-5vZup3yo=s75-c"> -->
-                
+                  <img class=image src="{% static 'orgadmin/images/apple.png' %}" alt="Avatar" >
+
               </div>
-          
+
               <div class="bottom">
                 <br><br>
               </div>
             </div>
-          <!-- </a> -->
+          </a>
           </div>
 
 
-               
+
         {% endfor %}
         {% endif %}<br><br><br><br>
 
@@ -221,30 +216,32 @@ z-index: 0;
         <table style="width: 100%;">
             <tr>
               <td style="width: 50%;"><br>
-                  <h2 style="margin-left:7%;font-family : Avenir Black;" >Organization's Created</h2>
+                  <h2 style="margin-left:7%;font-family: 'Raleway';color: gray;font-size:24px ;" >Organization's Created</h2>
               </td>
-              <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-               <button id="myBtn" class="button" onclick="openForm()">Create</button>
-              </td> 
+              <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+                <button id="myBtn" class=" button button2" onclick="openForm()">Create</button>
+
+                  </div>
+              </td>
             </tr>
-          </table> <br>
-     
+          </table>
+          <hr style="border: 1px solid #adadad;margin-left:3%;margin-right:4.5% ;">
+
         {% if topics_size > 0 %}
             {% for i, j in topics %}
             <div class="main" style="margin-left:2%;" >
                 <a href = "{% url 'orgadmin:dashboard' j %}">
-                  
 
-                
+
+
                   <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                     <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
                 <br>{{i}}<br><br>
                     </div>
-                
+
                     <div class="middle" >
-                        <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
-                    <!-- <img class="image" aria-hidden="true" src="//lh3.googleusercontent.com/a-/AAuE7mBhXW5QT3UXXW5eAXXfNiEsqhzTkeL-5vZup3yo=s75-c"> -->
-                      
+                        <img class=image src="{% static 'orgadmin/images/tata.jpg' %}" alt="Avatar" >
+
                     </div>
                     <div class="bottom">
                         <br><br>
@@ -264,29 +261,16 @@ z-index: 0;
         <span class="close">&times;</span>
     <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" id="create_form">
         {% csrf_token %}
-        <h1 style="font-family : Avenir Black;">Create Organization</h1>
-  
+        <h1 style="font-family: 'Raleway';font-size: 24px;">Create Organization</h1>
+
            <!-- <label ><b>Organization Name:</b></label> -->
-        <div style="padding-top:10%">
-        <span style="font-size:25px">Organisation Name</span>   
-        <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Organization Name" name="name" required>
-        </div>
-        <div style="padding-top:10%">
-        <span style="font-size:25px">Enter Code</span>
-        <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code" name="code" required>
-        </div>
-        <div style="padding-top:10%">
-        <span style="font-size:25px">Select Image</span>
-        <input style="font-family : Avenir Black;" class="input" type="file"  name="image"  accept="image/*"required><br>
-        </div>
-        <div>
-        <textarea name="orga_info" rows="10" cols="30">Enter Company Info Here..</textarea>
-        </div>
-        <div style="padding-top:10%">
-        <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color:rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Create</button> <br><br><br><br><br>  
-        </div>
+        <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Organization Name" name="name" required>
+        <hr class="line">
+        <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code" name="code" required>
+        <hr class="line">
+       <div style="margin-left: 24px;"> <button  type="submit" class="button button2" >Create</button> </div><br><br><br><br><br>
     </form>
-    
+
 
   </div>
 </div>
@@ -297,31 +281,31 @@ z-index: 0;
         <span class="close">&times;</span>
     <form class="form-container" action="{% url 'orgadmin:join' %}" method="post" >
       {% csrf_token %}
-        <h1 style="font-family : Avenir Black;">Join Organization</h1>
-  
+        <h1 style="font-family: 'Raleway';font-size: 24px;">Join Organization</h1>
+
            <!-- <label ><b>Organization Name:</b></label> -->
-        <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
+        <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
         <hr class="line">
-        <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color: rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Join</button> <br><br><br><br><br>  
+        <div style="margin-left: 25px; "><button type="submit" class="button button2" >Join</button> </div><br><br><br><br><br>
     </form>
   </div>
 </div>
 
-  
+
   {% block scripts %}
-    
+
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
- 
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }
@@ -361,6 +345,6 @@ window.onclick = function(event) {
 
 
   {% endblock %}
-  
+
 
 {% endblock %}

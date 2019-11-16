@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends 'Client/new_home/base.html' %}
 {% load static %}
 {% block body %}
 
@@ -74,7 +74,7 @@
                 }
                 </style>
                 <body>
-                                <form method="POST" action="{% url 'client_loggedin' %}">
+                                <form method="POST" action="{% url 'Client:client_loggedin' %}">
                                         {% csrf_token %}
                   <div class="container">
 
@@ -106,4 +106,4 @@
                  </body>
                 </html>
 
-             {% endblock %}   
+             {% endblock %}

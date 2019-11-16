@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends 'Client/new_home/base.html' %}
 {% load static %}
 {% block body %}
 
@@ -30,11 +30,11 @@
                 button {
                   background-color: #4CAF50;
                   color: white;
-                  padding: 14px 20px;
-                  margin: 8px 0;
+                  padding: 7px 10px;
+                  margin: 40px 0;
                   border: none;
                   cursor: pointer;
-                  width: 100%;
+                  width: 10%;
                   opacity: 0.9;
                 }
 
@@ -44,19 +44,18 @@
 
                 /* Extra styles for the cancel button */
                 .cancelbtn {
-                  padding: 14px 20px;
+                  padding: 10px 10px;
                   background-color: #f44336;
+                  float:left;
                 }
-
-                /* Float cancel and signup buttons and add an equal width */
-                .cancelbtn, .signupbtn {
-                  float: left;
-                  width: 50%;
+                .signupbtn {
+                  padding: 10px 10px;
+                  float: right;
                 }
 
                 /* Add padding to container elements */
                 .container {
-                  padding: 16px;
+                  padding: 100px;
                 }
 
                 /* Clear floats */
@@ -74,16 +73,16 @@
                 }
                 </style>
                 <body>
-                                <form method="POST" action="{% url 'client_signin' %}">
+                                <form method="POST" action="{% url 'Client:client_signin' %}">
                                         {% csrf_token %}
                   <div class="container">
 
                     <hr>
                     <label for="Username"><b>Username</b></label>
-                    <input type="text" id = "userid" title = "no special characters" placeholder="Username" name="Username" pattern = "^(?=.*[a-z])|(?=.*[A-Z])|(?=.*[0-9]).{4,16}$" required>
+                    <input type="text" id = "userid" title = "must be alpha numeric" placeholder="Username" name="Username" pattern = "^(?=.*[a-z])|(?=.*[A-Z])|(?=.*[0-9]).{4,16}$" required>
                     <p id ="usertext"></p>
-                    <label for="email"><b>Email</b></label>
-                    <input type="text" placeholder="Enter Email" name="email" required>
+                    <label for="email"  ><b>Email</b></label>
+                    <input type="text" title = "Enter valid email!" placeholder="Enter Email" name="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
 
                     <label for="psw"><b>Password</b></label>
                     <input id = "myInput" type="password" title="at least 1 lowercase and 1 uppercase and one numeric and special character atleast length is 8 " placeholder="Enter Password" pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$" name="psw"  required>
@@ -120,4 +119,4 @@
                  </body>
                 </html>
 
-             {% endblock %}   
+             {% endblock %}

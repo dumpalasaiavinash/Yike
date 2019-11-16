@@ -282,20 +282,20 @@ z-index: 0;
                                 Menu
                             </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
-                                    Dashboard
-                                </a>
-                            </li>                                                 
-                            <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
-                                    Departments
-                                </a>
-                            </li>
-                            <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
-                                    About
-                                </a>           
-                            </li>
+                                    <a href="{% url 'orgadmin:dashboard' org_id%}">
+                                        Dashboard
+                                    </a>
+                                </li>                                                 
+                                <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                    <a href="{% url 'orgadmin:departments'%}">
+                                        Departments
+                                    </a>
+                                </li>
+                                <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                    <a href="{% url 'orgadmin:about' org_id %}">
+                                        About
+                                    </a>           
+                                </li>
                         </ul>
                     </div>
                 </div>

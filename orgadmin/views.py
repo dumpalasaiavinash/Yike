@@ -10,7 +10,7 @@ import json
 from django.views.decorators.csrf import requires_csrf_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status   
+from rest_framework import status
 
 #For sending activation function
 from django.http import HttpResponse
@@ -45,6 +45,7 @@ def dashboard(request,j):
     present=0 #User already present in organisation
 
     org_id=j
+    request.session['org_id']=org_id
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     departments_table=dynamodb.Table('departments')
@@ -65,7 +66,7 @@ def dashboard(request,j):
     no_of_departments=0
     no_of_employees=0
     no_of_complaints=0
-    
+
     #Getting Organisation Name
     for org in org_response['Items']:
         if(org['org_id']==org_id):
@@ -322,7 +323,7 @@ def activate(request, uidb64, token, user_id, password,org_id):
 
             password=hashlib.sha256(password.encode())
             password=password.hexdigest()
-            
+
             users_table.put_item(
             Item={
                 'username':dic['emp_name'],
@@ -365,7 +366,7 @@ def about(request,org_id):
             org_info=org['orga_info']
             org_img=org['orga_img']
 
-    
+
     context={
         'org_name':org_name,
         'org_info':org_info,
@@ -374,7 +375,7 @@ def about(request,org_id):
     }
 
 
-    return render(request,'dashboard/about.html',context)            
+    return render(request,'dashboard/about.html',context)
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
@@ -707,36 +708,41 @@ def join(request):
                 ProjectionExpression="code,org_id",
                 FilterExpression=Attr('code').eq(code)
             )
-            print("********************")
-            print(response_join)
-            print("#####################")
+            try:
+                print("********************")
+                print(response_join)
 
-            #request.session['org_created']=request.session['org_created']+[ID]
-            org_joined = request.session['org_joined']
-            print(org_joined)
-            print(response_join['Items'][0]['org_id'])
-            if (response_join['Items'][0]['org_id'] not in org_joined):
-                org_joined.append(int(response_join['Items'][0]['org_id']))
+                print("#####################")
+
+                #request.session['org_created']=request.session['org_created']+[ID]
+                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]
+                org_joined = request.session['org_joined']
                 print(org_joined)
-                print("@@@@")
-            email=request.session['email']
-            print(org_joined)
-            print(email)
+                print(response_join['Items'][0]['org_id'])
+                if (response_join['Items'][0]['org_id'] not in org_joined):
+                    org_joined.append(int(response_join['Items'][0]['org_id']))
+                    print(org_joined)
+                    print("@@@@")
+                email=request.session['email']
+                print(org_joined)
+                print(email)
 
-            dynamoDB=boto3.resource('dynamodb')
-            table=dynamoDB.Table('users')
-            response_joined = table.update_item(
-                Key={
-                    'email':email
-                },
-                UpdateExpression="set organizations_joined = :r",
-                ExpressionAttributeValues={
-                    ':r': org_joined,
+                dynamoDB=boto3.resource('dynamodb')
+                table=dynamoDB.Table('users')
+                response_joined = table.update_item(
+                    Key={
+                        'email':email
+                    },
+                    UpdateExpression="set organizations_joined = :r",
+                    ExpressionAttributeValues={
+                        ':r': org_joined,
 
-                },
-                ReturnValues="UPDATED_NEW"
-            )
-            return redirect('../create')
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+                return redirect('../create')
+            except:
+                return redirect('../create')
 
 
 
@@ -759,8 +765,8 @@ def createform(request):
 
 def departments(request):
 
-    organization_id = 105
-    request.session['org_id'] = organization_id
+    organization_id = request.session['org_id']
+    # request.session['org_id'] = organization_id
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
 
@@ -779,7 +785,7 @@ def departments(request):
             dep_id.append(i['department_id'])
         print(departments)
 
-    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username']})
+    return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username'],'org_id':organization_id})
 
 
 def hierarchy(request):
@@ -802,7 +808,7 @@ def hierarchy(request):
         node = response['Items'][0]['hierarchy']
     # node='[{"id":1,"hierarchy":"a"},{"id":2,"pid":1,"hierarchy":"b"},{"id":3,"pid":1,"hierarchy":"c"},{"id":4,"pid":3,"hierarchy":"d"}]'
     # print(type(node))
-    return render(request,'orgadmin/depart.html',{'node':node,'dep_name':dep_name,'dep_id':dep_id})
+    return render(request,'orgadmin/depart.html',{'node':node,'dep_name':dep_name,'dep_id':dep_id,'org_id':request.session['org_id']})
 
 
 # @requires_csrf_token
@@ -928,20 +934,20 @@ def index(request):
 
 
 class complaintrest(APIView):
-        
+
     def get(self,request):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('complaint')
             response_complaint = table.scan(
             ProjectionExpression="complaint",
-            
+
             )
-            
+
             complaint_list=[]
             # print(response_complaint['Items'][0])
             for i in range(0,len(response_complaint['Items'])):
                 complaint_list.append(response_complaint['Items'][i]['complaint'])
-            
+
             print(complaint_list)
             # print(len(complaint_list))
             list1=[]
@@ -955,10 +961,10 @@ class complaintrest(APIView):
 
 
 
-        
 
 
-        
+
+
 def create_department(request):
     depname = request.POST.get('depname')
     print(depname)
