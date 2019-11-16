@@ -391,8 +391,7 @@ def about(request,org_id):
     for org in orga_table['Items']:
         if(org['org_id']==org_id):
             org_name=org['organization_name']
-            org_info=org['orga_info']
-            org_img=org['orga_img']
+
 
 
     context={
@@ -429,19 +428,7 @@ def create(request):
         organizations_joined=response['Items'][0]['organizations_joined']
         for i in organizations_joined:
             total_org_ids.append(i)
-            # topics=[]
-            # print(codes)
-            # dynamoTable=dynamoDB.Table('topics')
-            # for index in range(0,len(codes)):
-            #     response=dynamoTable.get_item(
-            #     Key={
-            #     'code':codes[index],
-            #     }
-            #     )
-            #     print(response['Item']['topic'])
-            #     topics+=[response['Item']['topic']]
-            # print(topics)
-        # print(total_org_ids)
+            
         for i in range(0,len(response['Items'][0]['organizations_joined'])):
             response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
         org_join_id=response['Items'][0]['organizations_joined']
@@ -468,29 +455,7 @@ def create(request):
             else:
                 organizations_created_names.append(i)
             count=count+1
-        # print(organizations_joined_names)
-        # print(organizations_created_names)
-
-
-        # dynamoDB=boto3.resource('dynamodb')
-        # dynamoTable=dynamoDB.Table('topics')
-        # response=dynamoTable.scan(
-        # )
-        # # print(response)
-        # # print("\n\n\n\n")
-        # # print(response['Items'])
-        # topics_created=[]
-        # codes_created=[]
-        # for index in response['Items']:
-        #     # print(index['name'])
-        #     # print(request.user.username)
-        #     if(index['name']==request.user.username):
-        #         topics_created+=[index['topic']]
-        #         codes_created+=[index['code']]
-        #
-        # print(codes_created)
-        # print(organizations_created)
-        # print("######################")
+      
         ids=str(organizations_created)
         print(ids)
         list1=[]
@@ -522,27 +487,7 @@ def created(request):
 
     organization_name = request.POST.get('name')
     code=request.POST.get('code')
-    # orga_info=request.POST.get('orga_info')
-    # myfile = request.FILES
-    # print(myfile)
-
-    # print(orga_info)
-
-    # fs = FileSystemStorage()
-    # filename = fs.save(myfile.name, myfile)
-    # f="./media/"+str(myfile)
-    # s3 = boto3.client('s3')
-    # bucket = 'yike'
-
-    # file_name = str(f)
-    # key_name = str(myfile)
-
-    # s3.upload_file(file_name, bucket, key_name)
-
-    # bucket_location = boto3.client('s3').get_bucket_location(Bucket=bucket)
-    # link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
-    #         bucket,
-    #         key_name)
+   
 
     if (organization_name!='' and code!='' ):
             dynamodb = boto3.resource('dynamodb')
@@ -554,12 +499,18 @@ def created(request):
                 ProjectionExpression="organization_name,code",
                 FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
             )
-
+            
             if(len(response['Items'])==0):
-                ID=len(response_sno['Items'])+101
+                ID=0
+                for i in response_sno['Items']:
+                    if(ID<int(i['org_id'])):
+                        ID=int(i['org_id'])
+
+                print(ID)
+                ID=ID+1
                 response = table.put_item(
                 Item={
-                    'org_id': len(response_sno['Items'])+101,
+                    'org_id': ID,
                     'organization_name': organization_name,
                     'code':code,
 
@@ -658,6 +609,7 @@ def created(request):
 
 
             else:
+                messages.success(request, 'Organization with same name or code already exists, try with another name or code')
                 # print(request.session['org_created'])
                 #print('abc')
                 #print(request.session['email'])
