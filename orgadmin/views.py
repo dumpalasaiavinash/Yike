@@ -391,8 +391,7 @@ def about(request,org_id):
     for org in orga_table['Items']:
         if(org['org_id']==org_id):
             org_name=org['organization_name']
-            org_info=org['orga_info']
-            org_img=org['orga_img']
+
 
 
     context={

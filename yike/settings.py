@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'formCreation.apps.FormcreationConfig',
     'rest_framework',
     'chatbox',
-    'crispy_forms',
 
 
 ]
