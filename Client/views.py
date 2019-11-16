@@ -97,6 +97,7 @@ def client_signin(request):
         email    = request.POST.get('email')
         password = request.POST.get('pass')
         repassword = request.POST.get('re_pass')
+        Email = email
         print(username,email,password,repassword)
 
         #mail validation
@@ -115,7 +116,7 @@ def client_signin(request):
                 if(con['username']==username or con['email']==email):
                     print('yes')
                     print(con['username'],username,con['email'],email)
-                    return render(request,'Client/client_signup.html')
+                    return render(request,'Client/new_home/signup.html')
                 else:
                      if(password==repassword):
                         print(password)
@@ -149,6 +150,14 @@ def client_signin(request):
                                     mail_subject, message, to=[to_email]
                         )
                         email.send()
+                        request.session['clientname'] = username
+                        client_session = request.session['clientname']
+                        print(client_session)
+                        message = 'Hi,'+str(client_session)+' We have sent an activation link to '
+                        message = message+Email
+                        add = ' Click on the link to Activate your account'
+                        message = message+add
+                        print(message)
                         return render(request,'Client/client_signed.html')
         else:
             if(password==repassword):
@@ -170,7 +179,7 @@ def client_signin(request):
                                 }
                         )
                         current_site = get_current_site(request)
-                        mail_subject = 'Email COnfirmation'
+                        mail_subject = 'Email Confirmation'
                         message = render_to_string('Client/acc_active_email.html', {
                             'user': username,
                             'user_email':email,
@@ -183,6 +192,14 @@ def client_signin(request):
                                     mail_subject, message, to=[to_email]
                         )
                         email.send()
+                        request.session['clientname'] = username
+                        client_session = request.session['clientname']
+                        print(client_session)
+                        message = 'Hi,'+str(client_session)+' We have sent an activation link to'
+                        message = message+Email
+                        add = ' Click on link to Activate your account'
+                        message = message+add
+                        print(message)
                         return render(request,'Client/client_signed.html')
     return render(request,'Client/new_home/signup.html')
 
@@ -203,6 +220,7 @@ def activate(request,token,email,username,client_id):
                         ':r':True
                     }
                 )
+
             return render(request,'Client/client_verify.html')
 
 
@@ -225,7 +243,11 @@ def client_loggedin(request):
             print(passw['password'],password_hashed)
             if(passw['password'] == password_hashed):
                 return render(request,'Client/first.html')
+            else:
+                error = 'Invalid Credentials!'
+                return render(request,'Client/new_home/login.html',{'error':error})
+
     return render(request,'Client/new_home/login.html')
 
 def email_verification(request):
-    return render(request,'Client/client_verify.html')
+    return render(request,'Client/client_signed.html')

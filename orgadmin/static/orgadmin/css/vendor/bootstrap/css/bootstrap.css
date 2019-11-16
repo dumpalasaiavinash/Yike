@@ -597,10 +597,7 @@ pre code {
 }
 
 .container {
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
+
   width: 100%;
 }
 
@@ -630,10 +627,6 @@ pre code {
 
 .container-fluid {
   width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
   width: 100%;
 }
 
@@ -666,8 +659,7 @@ pre code {
   position: relative;
   width: 100%;
   min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
+  
 }
 
 .col {
