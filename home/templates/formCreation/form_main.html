@@ -5,7 +5,8 @@
 
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -117,8 +118,16 @@
             background-color: wheat;
             width: 100%;
             overflow: hidden;
-            height: 100px;
+            min-height: 80px;
         }
+
+        .checkdrop {
+            background-color: wheat;
+            width: 100%;
+            overflow: hidden;
+            min-height: 80px;
+        }
+
 
         .helpertext {
             width: 80%;
@@ -136,6 +145,11 @@
             float: left;
         }
 
+        .saveButton {
+            margin: 10px;
+            float: right;
+        }
+
         .container {
             position: relative;
             display: inline-block;
@@ -149,7 +163,6 @@
             background-color: #FFF;
             height: 90%;
             top: 20px;
-            text-align: center;
             border-radius: 6px;
             padding: 8px 0;
             position: absolute;
@@ -168,9 +181,11 @@
             background-color: whitesmoke;
             margin-left: 20%;
             margin-top: 20px;
+            text-align: center;
             padding: 20px 20px 20px 20px;
             overflow-x: hidden;
             overflow-x: auto;
+
         }
 
         #contain {
@@ -266,7 +281,7 @@
             opacity: 1;
         }
 
-        .yike_button_icon{
+        .yike_button_icon {
             width: 10%;
             height: 80%;
             margin-top: 10%;
@@ -286,52 +301,137 @@
             width: 100%;
         }
 
-        .imgfile_name{
+        .imgfile_name {
             margin-top: 16px;
             margin-left: 16px;
-            color: rgba(0,0,0,0.37);
+            color: rgba(0, 0, 0, 0.37);
         }
 
+        .radiolabel {
+            color: rgba(0, 0, 0, 0.37);
+            font-weight: initial;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .checklabel {
+            color: rgba(0, 0, 0, 0.37);
+            font-weight: initial;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
     </style>
     <script>
+        var ild = 0;
 
-        var yikedtp = 0, yiketf = 0, yiketa = 0, yikerb = 0, yikecb = 0, yikef = 0, yikem = 0, yiket = 0, yikeiu=0;
+        var yikedtp = 0, yiketf = 0, yiketa = 0, yikerb = 0, yikecb = 0, yikef = 0, yikem = 0, yiket = 0, yikeiu = 0, yikefu = 0;
 
         function allowDrop(ev) {
             ev.preventDefault();
         }
 
         function drag(ev) {
+            ild = 0;
             ev.dataTransfer.setData("text", ev.target.id);
         }
         var rbs = 0
 
         function drop2(ev) {
+            console.log("drop2")
             ev.preventDefault();
             var data = ev.dataTransfer.getData("text");
             var node = document.createElement("div");
+            console.log(ev.target)
 
-            if (data == "drag3") {
-                node.innerHTML = node.innerHTML + rb;
+            if (data == "drag3" && ev.target.id.includes('radiogroup')) {
+                var val1 = ev.target.id.replace('radiogroup', '');
+                var pos = jQuery(ev.target).attr('pos');
+                var nR = form['yike' + pos]["nR"];
+                form['yike' + pos]['radios']['' + nR] = {
+                    'label': "Radio" + nR,
+                };
+                form['yike' + pos]['nR'] += 1;
+                node.setAttribute('group', val1);
+                node.innerHTML = node.innerHTML + generate_new_RadioButton(val1, nR)
                 ev.target.appendChild(node);
-                rbs += 1
-            }
-
-            if (rbs == 1) {
-                document.getElementById(ev.target.id).style.height = "100px";
             }
             else {
-                var h = (100 + 40 * (rbs - 1)) + "px";
-                document.getElementById(ev.target.id).style.height = h;
+                ild = 1;
+                if (jQuery(ev.target).attr('group')) {
+                    var val1 = jQuery(ev.target).attr('group')
+                    var pos = jQuery('#radiogroup' + val1).attr('pos');
+                    var nR = form['yike' + pos]["nR"];
+                    form['yike' + pos]['radios']['' + nR] = {
+                        'label': "Radio" + nR,
+                    };
+                    form['yike' + pos]['nR'] += 1;
+                    node.setAttribute('group', val1);
+                    console.log(val1)
+                    node.innerHTML = node.innerHTML + generate_new_RadioButton(val1, nR)
+                    document.getElementById('radiogroup' + val1).appendChild(node);
+                }
             }
+
+        }
+        function drop3(ev) {
+            console.log("drop3")
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var node = document.createElement("div");
+            console.log(ev.target)
+
+            if (data == "drag7" && ev.target.id.includes('checkgroup')) {
+                var val1 = ev.target.id.replace('checkgroup', '');
+                var pos = jQuery(ev.target).attr('pos');
+                var nR = form['yike' + pos]["nR"];
+                form['yike' + pos]['checks']['' + nR] = {
+                    'label': "Checkbox" + nR,
+                };
+                form['yike' + pos]['nR'] += 1;
+                node.setAttribute('group', val1);
+                node.innerHTML = node.innerHTML + generate_new_checkButton(val1, nR)
+                ev.target.appendChild(node);
+            }
+            else {
+                ild = 1;
+                if (jQuery(ev.target).attr('group')) {
+                    var val1 = jQuery(ev.target).attr('group')
+                    var pos = jQuery('#checkgroup' + val1).attr('pos');
+                    var nR = form['yike' + pos]["nR"];
+                    form['yike' + pos]['checks']['' + nR] = {
+                        'label': "Checkbox" + nR,
+                    };
+                    form['yike' + pos]['nR'] += 1;
+                    node.setAttribute('group', val1);
+                    console.log(val1)
+                    node.innerHTML = node.innerHTML + generate_new_checkButton(val1, nR)
+                    document.getElementById('checkgroup' + val1).appendChild(node);
+                }
+            }
+
+        }
+
+
+        function drop5(ev) {
+            ild = 1
+
+        }
+
+        function drop4(ev) {
+            console.log("ohhh")
         }
 
         function drop(ev) {
             ev.preventDefault();
+            console.log("drop1")
             var data = ev.dataTransfer.getData("text");
             var node = document.createElement("div");
+            node.setAttribute('pos', yikef);
 
-            if (data == "drag1") {
+            if (ild == 1) {
+                return;
+            }
+            else if (data == "drag1") {
                 node.setAttribute('id', "divtextfield" + yiketf);
                 node.setAttribute('onclick', 'editor(\'textfield' + yiketf + '\')');
                 node.innerHTML = node.innerHTML + genrate_new_textField();
@@ -355,6 +455,8 @@
 
                 node.setAttribute('id', "divtextarea" + yiketa);
                 node.setAttribute('onclick', 'editor(\'textarea' + yiketa + '\')');
+                node.setAttribute('ondragover', '');
+                node.setAttribute('ondrop', 'drop4(event)')
                 node.innerHTML = node.innerHTML + genrate_new_textArea();
                 yiketa += 1;
                 form["yike" + yikef] = {
@@ -396,7 +498,7 @@
                 node.setAttribute('onclick', 'editor(\'Text' + yiket + '\')');
                 form["yike" + yikef] = {
                     "type": "text",
-                    "size": 14,
+                    "size": 12,
                     "color": "rgba(0,0,0,0.37)",
                     "content": "Text"
                 }
@@ -408,10 +510,37 @@
             }
 
 
-            else if(data == "drag8"){
+            else if (data == "drag8") {
                 node.innerHTML = node.innerHTML + generate_new_ImageUpload();
+                node.setAttribute('id', "divimageU" + yikeiu);
+                node.setAttribute('onclick', 'editor(\'imageU' + yikeiu + '\')');
                 ev.target.appendChild(node);
-
+                form["yike" + yikef] = {
+                    "type": "image_Upload",
+                    "label": "label",
+                    "helper_text": "Helper Text",
+                    "helper_enabled": false,
+                };
+                yikef += 1;
+                ev.target.appendChild(node);
+                form["nE"] = yikef;
+                yikeiu += 1;
+            }
+            else if (data == "drag9") {
+                node.innerHTML = node.innerHTML + generate_new_FileUpload();
+                node.setAttribute('id', "divfileU" + yikefu);
+                node.setAttribute('onclick', 'editor(\'fileU' + yikefu + '\')');
+                ev.target.appendChild(node);
+                form["yike" + yikef] = {
+                    "type": "file_Upload",
+                    "label": "label",
+                    "helper_text": "Helper Text",
+                    "helper_enabled": false,
+                };
+                yikef += 1;
+                ev.target.appendChild(node);
+                form["nE"] = yikef;
+                yikeiu += 1;
             }
 
             else if (data == "drag5") {
@@ -436,10 +565,35 @@
 
             else if (data == "drag10") {
                 node.innerHTML = node.innerHTML + generate_new_RadioGroup();
+                node.setAttribute('ondragover', '');
+                form["yike" + yikef] = {
+                    "type": "radiogroup",
+                    "label": "label for radiogroup",
+                    "nR": 0,
+                    "radios": {}
+                }
+                yikef += 1;
+                form["nE"] = yikef;
+                ev.target.appendChild(node);
                 yikerb += 1;
 
             }
 
+            else if (data == "drag11") {
+                node.innerHTML = node.innerHTML + generate_new_checkGroup();
+                node.setAttribute('ondragover', '');
+                form["yike" + yikef] = {
+                    "type": "checkgroup",
+                    "label": "label for Checkgroup",
+                    "nR": 0,
+                    "checks": {}
+                }
+                yikef += 1;
+                form["nE"] = yikef;
+                ev.target.appendChild(node);
+                yikerb += 1;
+
+            }
 
 
             addNode_at_pos(1)
@@ -475,13 +629,21 @@
                 div1 = jQuery('#' + children[index].id);
                 div2 = jQuery('#' + children[index - 1].id);
 
+                pos1 = jQuery('#' + children[index].id).attr('pos');
+                pos2 = jQuery('#' + children[index - 1].id).attr('pos');
+
                 tdiv1 = div1.clone();
                 tdiv2 = div2.clone();
                 if (!div2.is(':empty')) {
                     div1.replaceWith(tdiv2);
                     div2.replaceWith(tdiv1);
+
+                    tobj = form['yike' + pos1];
+                    form['yike' + pos1] = form['yike' + pos2];
+                    form['yike' + pos2] = tobj;
                     window.mdc.autoInit();
                 }
+
             }
         }
         function moveDown(id0) {
@@ -492,11 +654,17 @@
                 div1 = jQuery('#' + children[index].id);
                 div2 = jQuery('#' + children[index + 1].id);
 
+                pos1 = jQuery('#' + children[index].id).attr('pos');
+                pos2 = jQuery('#' + children[index + 1].id).attr('pos');
+
                 tdiv1 = div1.clone();
                 tdiv2 = div2.clone();
                 if (!div2.is(':empty')) {
                     div1.replaceWith(tdiv2);
                     div2.replaceWith(tdiv1);
+                    tobj = form['yike' + pos1];
+                    form['yike' + pos1] = form['yike' + pos2];
+                    form['yike' + pos2] = tobj;
                     window.mdc.autoInit();
                 }
             }
@@ -518,6 +686,8 @@
         <div class="div1">
             <button class="mdc-button mdc-button--raised previewButton" onclick="preview()"> <span
                     class="mdc-button__ripple"></span>Preview</button>
+            <button class="mdc-button mdc-button--raised saveButton" onclick="saveForm()"> <span
+                    class="mdc-button__ripple"></span>Save</button>
             <div id="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
         </div>
         <div class="div2">
@@ -547,22 +717,27 @@
                         tabindex="0">
                         Image Upload
                     </li>
-                    <li id="drag7" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Checkbox
-                    </li>
                     <li id="drag9" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
                         tabindex="0">
                         File Upload
-                    </li>
-                    <li id="drag3" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                    tabindex="0">
-                         Radio
                     </li>
                     <li id="drag10" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
                         tabindex="0">
                         Radio Group
                     </li>
+                    <li id="drag11" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Checkbox Group
+                    </li>
+                    <li id="drag3" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Radio
+                    </li>
+                    <li id="drag7" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
+                        tabindex="0">
+                        Checkbox
+                    </li>
+
 
 
         </div>
@@ -575,6 +750,24 @@
 
 </html>
 <script>
+
+
+
+    var addSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/form/add/');
+    addSocket.onopen = function (e) {
+        console.log('open', e)
+    }
+    addSocket.onmessage = function (e) {
+        console.log('open', e)
+    }
+    addSocket.onclose = function (e) {
+    console.log('close', e)
+    }
+    addSocket.onerror = function (e) {
+        console.log('error', e)
+    }
+
+
     var cb = "<div class=\"mdc-form-field object_of_form\"><div class=\"mdc-checkbox\"><input type=\"checkbox\"class=\"mdc-checkbox__native-control\"id=\"checkbox-1\"/><div class=\"mdc-checkbox__background\">"
         + "<svg class=\"mdc-checkbox__checkmark\"viewBox=\"0 0 24 24\"><path class=\"mdc-checkbox__checkmark-path\"fill=\"none\"d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>"
         + "</svg><div class=\"mdc-checkbox__mixedmark\"></div></div></div><label for=\"checkbox-1\">Checkbox 1</label></div>";
@@ -589,19 +782,69 @@
     var rb = "<div class=\"mdc-form-field\"><div class=\"mdc-radio\"><input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio-1\" name=\"radios\" checked><div class=\"mdc-radio__background\"><div class=\"mdc-radio__outer-circle\"></div><div class=\"mdc-radio__inner-circle\"></div></div></div><label for=\"radio-1\">Radio 1</label></div>";
 
     function generate_new_RadioGroup() {
-        return "<div class =\"object_of_form\"><h4 class=\" demo-title mdc-typography--headline9\" >Label for Radio Group </h2>" +
-            "<div class=\"radiodrop\" id=\"radiogroup" + yikerb + "\"ondrop=\"drop2(event)\"  ondragover=\"allowDrop(event)\"></div></div>";
+        return "<div  ondrop=\"drop5(event)\" class =\"object_of_form\"><h4 id=\"labelradiogroup" + yikerb + "\" onclick=\"editor(\'labelradiogroup" + yikerb + "\')\" class=\"radiolabel demo-title mdc-typography--headline9\" >Label for Radio Group </h4>" +
+            "<div class=\"radiodrop\" id=\"radiogroup" + yikerb + "\"ondrop=\"drop2(event)\" pos=\"" + yikef + "\" ondragover=\"allowDrop(event)\"></div></div>";
     }
+
+    function generate_new_RadioButton(g_no, nR) {
+        return "<div group = \"" + g_no + "\" class=\"mdc-form-field\">" +
+            "<div group = \"" + g_no + "\" class=\"mdc-radio\">" +
+            "<input disabled class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio_" + g_no + "_" + nR + "\" name=\"radiogroup_" + g_no + "\">" +
+            "<div class=\"mdc-radio__background\">" +
+            "<div class=\"mdc-radio__outer-circle\"></div>" +
+            "<div class=\"mdc-radio__inner-circle\"></div>" +
+            "</div>" +
+            "<div group = \"" + g_no + "\" class=\"mdc-radio__ripple\"></div>" +
+            "</div>" +
+            "<label group = \"" + g_no + "\" style= \"color:rgba(0,0,0,0.37)\" pos=\"" + nR + "\" onclick=\" editor('radio" + g_no + "_" + nR + "') \" id=\"radio" + g_no + "_" + nR + "\" for=\"radio" + nR + "\">Radio 1</label>" +
+            "</div>"
+    }
+
+
+    function generate_new_checkGroup() {
+        return "<div  ondrop=\"drop5(event)\" class =\"object_of_form\"><h4 id=\"labelcheckgroup" + yikerb + "\" onclick=\"editor(\'labelcheckgroup" + yikerb + "\')\" class=\"checklabel demo-title mdc-typography--headline9\" >Label for check Group </h4>" +
+            "<div class=\"checkdrop\" id=\"checkgroup" + yikerb + "\"ondrop=\"drop3(event)\" pos=\"" + yikef + "\" ondragover=\"allowDrop(event)\"></div></div>";
+    }
+
+    function generate_new_checkButton(g_no, nR) {
+        return "<div group = \"" + g_no + "\" class=\"mdc-form-field\">" +
+            "<div group = \"" + g_no + "\" class=\"mdc-checkbox\">" +
+            "<input disabled group = \"" + g_no + "\" type=\"checkbox\"" +
+            "class=\"mdc-checkbox__native-control\"" +
+            "id=\"check_" + g_no + "_" + nR + "\">" +
+            "<div group = \"" + g_no + "\" class=\"mdc-checkbox__background\">" +
+            "<svg class=\"mdc-checkbox__checkmark\"" +
+            "viewBox=\"0 0 24 24\">" +
+            "<path class=\"mdc-checkbox__checkmark-path\"" +
+            "fill=\"none\"" +
+            "d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>" +
+            "</svg>" +
+            "<div group = \"" + g_no + "\" class=\"mdc-checkbox__mixedmark\"></div>" +
+            "</div>" +
+            "<div  group = \"" + g_no + "\"class=\"mdc-checkbox__ripple\"></div>" +
+            "</div>" +
+            "<label group = \"" + g_no + "\" style= \"color:rgba(0,0,0,0.37)\" pos=\"" + nR + "\" onclick=\" editor('check" + g_no + "_" + nR + "') \" id=\"check" + g_no + "_" + nR + "\" for=\"checkbox-1\">Checkbox" + nR + "</label>" +
+            "</div>"
+    }
+
+
+
 
     function generate_new_Text() {
         return "<div class\"object_of_form\"><div class=\"mdc-text-field-helper-line helpertext \"><span class=\"posteller\" id = \"posText" + yiket + "\">" + yikef + "</span><p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
             "id=\"Text" + yiket + "\">Text</p></div></div>";
     }
 
-    function generate_new_ImageUpload(){
-        return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\">Image Label</div></div><div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button disabled class=\"yike_button_icon mdc-button mdc-button--raised \">  <span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>"+
-        "<div class=\"imgfile_name\">No image selected</div>"+
-        "</div><div id=\"helperimgupload" + yikeiu + "\"class=\"mdc-text-field-helper-line helpertext\">"+generate_new_HelperText("ssss")+"</div>"
+    function generate_new_ImageUpload() {
+        return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span class=\"posteller\" id = \"posimageU" + yikeiu + "\">" + yikef + "</span><span id=\"labelimageU" + yikeiu + "\">Image Label</span></div></div><div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button disabled class=\"yike_button_icon mdc-button mdc-button--raised \">  <span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>" +
+            "<div class=\"imgfile_name\">No image selected</div>" +
+            "</div><div id=\"helperimageU" + yikeiu + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    }
+
+    function generate_new_FileUpload() {
+        return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span class=\"posteller\" id = \"posfileU" + yikefu + "\">" + yikef + "</span><span id=\"labelfileU" + yikefu + "\">File Label</span></div></div><div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button disabled class=\"yike_button_icon mdc-button mdc-button--raised \">  <span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">attach_file</i></button></div>" +
+            "<div class=\"imgfile_name\">No file selected</div>" +
+            "</div><div id=\"helperfileU" + yikefu + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
     }
 
     function genrate_new_textField() {
@@ -646,14 +889,14 @@
             var hdisabled = ishelper ? '' : 'disabled';
 
             div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
-                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+                "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
                 "<tr><td>Character Count</td><td><input type='checkbox' id=\"countCheck\" " + cchecked + " onclick=\"addCount(helper" + id + "," + pos + ")\"></td></tr>" +
-                "<tr><td>Number Characters</td><td><input type='Number' id=\"numtf\" onfocusout=\"updateCount('counthelper" + id + "','numtf'," + pos + ")\" " + cdisabled + " value=" + count + "  ></td></tr>" +
+                "<tr><td>Number Characters</td><td><input type='Number' id=\"numtf\" onkeyup=\"updateCount('counthelper" + id + "','numtf'," + pos + ")\" " + cdisabled + " value=" + count + "  ></td></tr>" +
                 "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper(helper" + id + "," + pos + ")\"></td></tr>" +
-                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\" >Move up</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
                 "</Table>"
 
         }
@@ -671,13 +914,13 @@
                 "<option value=\"mm dd y\">mm dd yy</option>" +
                 "<option value=\"dd mm yy\">mm dd yyyy</option>";
             div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
-                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+                "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
                 "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + "," + pos + ")\"></td></tr>" +
-                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
                 "<tr><td>Format</td><td><select id=\"format\" onchange=\"changeFormat(" + id + ",this,this.selectedIndex)\">" + options + "</select></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
                 "</Table>"
 
 
@@ -693,12 +936,12 @@
             var hdisabled = ishelper ? '' : 'disabled';
 
             div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
-                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+                "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
                 "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + "," + pos + ")\"></td></tr>" +
-                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
                 "</Table>"
 
         }
@@ -711,14 +954,91 @@
             var content = obj["content"];
 
             div4editor.innerHTML = "<Table style='width:100%'><tr>" +
-                "<td>Content</td><td><textarea id = \"content\" onfocusout=\"updateContent('" + id + "','content'," + pos + ")\">" + content + "</textarea></td></tr>" +
-                "<tr> <td>Font size</td><td><input type='Text'   id=\"sizetf\" value=\"" + size + "\" onfocusout=\"updateFont('" + id + "','sizetf'," + pos + ")\"></td></tr>" +
+                "<td>Content</td><td><textarea id = \"content\" onkeyup=\"updateContent('" + id + "','content'," + pos + ")\">" + content + "</textarea></td></tr>" +
+                "<tr> <td>Font size</td><td><input type='Text'   id=\"sizetf\" value=\"" + size + "\" onkeyup=\"updateFont('" + id + "','sizetf'," + pos + ")\"></td></tr>" +
                 "<tr> <td>Text Color</td><td><input type='Color' id=\"colorp\" value=\"" + color + "\" onchange=\"updateColor('" + id + "','colorp'," + pos + ")\"></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
                 "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
                 "</table>";
         }
+        else if (id.includes("image") || id.includes("file")) {
+            div4editor.innerHTML = "";
+            var pos = document.getElementById('pos' + id).innerHTML;
+            var obj = form['yike' + pos];
+            var labelText = obj['label'];
+            var isHelperEnabled = obj["helper_enabled"]
+            var helper_text = isHelperEnabled ? obj["helper_text"] : "";
+            var hdisabled = isHelperEnabled ? "" : 'disabled';
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+                "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+                "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + "," + pos + ")\"></td></tr>" +
+                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper_text + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+                "</Table>"
+
+        }
+        else if (id.includes('group')) {
+            div4editor.innerHTML = "";
+            var pos = jQuery('#' + id.replace('label', '')).attr("pos");
+            var obj = form['yike' + pos];
+            var labelText = obj['label'];
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+                "\" type=\"text\" onkeyup=\"updatelabel('" + id + "','label'," + pos + ")\"> </td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+                "</Table>"
+        }
+
+        else if (id.includes('radio')) {
+            div4editor.innerHTML = "";
+            var pos = jQuery('#' + id.replace('label', '')).attr("pos");
+            var g_no = jQuery('#' + id.replace('label', '')).attr("group");
+            var g_pos = jQuery('#radiogroup' + g_no).attr("pos");
+            console.log(form['yike' + g_pos]["radios"])
+            var obj = form['yike' + g_pos]["radios"]['' + pos];
+            var labelText = obj['label'];
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+                "\" type=\"text\" onkeyup=\"updatelabel4('" + id + "','label'," + pos + "," + g_pos + ")\"> </td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+                "</Table>"
+        }
+
+        else if (id.includes('check')) {
+            div4editor.innerHTML = "";
+            var pos = jQuery('#' + id.replace('label', '')).attr("pos");
+            var g_no = jQuery('#' + id.replace('label', '')).attr("group");
+            var g_pos = jQuery('#checkgroup' + g_no).attr("pos");
+            console.log(form['yike' + g_pos]["checks"])
+            var obj = form['yike' + g_pos]["checks"]['' + pos];
+            var labelText = obj['label'];
+            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+                "\" type=\"text\" onkeyup=\"updatelabel5('" + id + "','label'," + pos + "," + g_pos + ")\"> </td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+                "</Table>"
+        }
+    }
+
+
+    function updatelabel4(id1, id2, pos, g_no) {
+        var b = document.getElementById(id2).value;
+        document.getElementById(id1).innerHTML = b;
+        form['yike' + g_no]['radios']['' + pos]['label'] = b;
+
+    }
+
+    function updatelabel5(id1, id2, pos, g_no) {
+        var b = document.getElementById(id2).value;
+        document.getElementById(id1).innerHTML = b;
+        form['yike' + g_no]['checks']['' + pos]['label'] = b;
+
     }
 
     function updatelabel(id1, id2, pos) {
@@ -727,19 +1047,19 @@
         form['yike' + pos]['label'] = b;
     }
 
-    function updateColor(id1,id2,pos){
+    function updateColor(id1, id2, pos) {
         var color = document.getElementById(id2).value;
         document.getElementById(id1).style.color = color;
         form['yike' + pos]['color'] = color;
     }
 
-    function updateFont(id1,id2,pos){
+    function updateFont(id1, id2, pos) {
         var fs = document.getElementById(id2).value;
         document.getElementById(id1).style.fontSize = fs;
         form['yike' + pos]['size'] = fs;
     }
 
-    function updateContent(id1,id2,pos){
+    function updateContent(id1, id2, pos) {
         var cont = document.getElementById(id2).value;
         document.getElementById(id1).innerHTML = cont;
         form['yike' + pos]['content'] = cont;
@@ -778,7 +1098,6 @@
 
             document.getElementById('helpertf').disabled = false;
             document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
-            form.log(pos)
             form['yike' + pos]['helper_enabled'] = true;
 
         }
@@ -844,6 +1163,10 @@
     function DeleteItem(id0, pos) {
         var parent = document.getElementById("dropzone");
         var element = document.getElementById('div' + id0.id);
+        pos = jQuery('#div' + id0.id).attr("pos");
+        form['yike' + pos] = {
+            "type": "em"
+        }
         parent.removeChild(element);
     }
 
@@ -868,7 +1191,18 @@
                 preForm.appendChild(node);
                 window.mdc.autoInit()
             }
-
+            else if (widget_type == "image_Upload") {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_ImageUpload2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+            else if (widget_type == "file_Upload") {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_FileUpload2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
             else if (widget_type == "mobile") {
                 var node = document.createElement("div");
                 node.innerHTML = generate_new_mobilefield2(i);
@@ -883,8 +1217,29 @@
                 $('#predatepicker' + i).datepicker({ dateFormat: 'dd/mm/yy' });
                 window.mdc.autoInit();
             }
+            else if (widget_type == 'text') {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_Text2(widget0, i);
+                preForm.appendChild(node);
+            }
+            else if (widget_type == "radiogroup") {
+                var node = document.createElement("div");
+                console.log("previewRadio")
+                node.innerHTML = generate_new_radioGroup2(widget0, i);
+                preForm.appendChild(node);
+            }
+            else if (widget_type == "checkgroup") {
+                var node = document.createElement("div");
+                console.log("previewcheck")
+                node.innerHTML = generate_new_checkGroup2(widget0, i);
+                preForm.appendChild(node);
+            }
 
         }
+        var node = document.createElement("div");
+        node.innerHTML = "<br><br><br>" + generate_new_button() + "<br><br><br>";
+        preForm.appendChild(node);
+
     }
 
     function updateCountNum(id0) {
@@ -919,9 +1274,121 @@
 
     }
 
+    function generate_new_ImageUpload2(widget0, formyike) {
+        var label = widget0["label"];
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelperimageU' + formyike, widget0["helper_text"]) : "";
+        return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span>" + label + "</span></div></div>" +
+            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('preimageU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+            "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>" +
+            "<div class=\"imgfile_name\" id=\"fnpreimageU" + formyike + "\">No image selected</div><input onchange=\"readURL(this)\" type='file' id=\"preimageU" + formyike + "\" style=\"display:none\"/>" +
+            "</div><div id=\"helperimageU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div><div id=\"divimgpreimageU" + formyike + "\" style=\"width:100px;margin-left:10%;height:100px;padding:10px;overflow:hidden;border:1px solid blue;display:none;\">" +
+            "<img style=\"width:100px\"id=\"imgpreimageU" + formyike + "\" src=\"#\" alt=\".\" /></div>";
+    }
+
+    function generate_new_FileUpload2(widget0, formyike) {
+        var label = widget0["label"];
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelperfileU' + formyike, widget0["helper_text"]) : "";
+        return "<div class=\"object_of_form2\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span style=\"text-align:left\">" + label + "</span></div></div>" +
+            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('prefileU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+            "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">attach_file</i></button></div>" +
+            "<div class=\"imgfile_name\" id=\"fnprefileU" + formyike + "\">No file selected</div><input onchange=\"readURL2(this)\" type='file' id=\"prefileU" + formyike + "\" style=\"display:none\"/>" +
+            "</div><div id=\"helperfileU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
+    }
+
+    function generate_new_button() {
+        return "<button class=\"mdc-button mdc-button--raised\">  <span class=\"mdc-button__ripple\"></span> Submit</button>";
+    }
+
+    function generate_new_radioGroup2(widget0, formyike) {
+        var label = widget0["label"];
+        var nR = widget0["nR"];
+        var rbs = "";
+
+        var radios = widget0["radios"]
+        console.log(radios)
+        for (var i = 0; i < nR; ++i) {
+            rbs += generate_new_RadioButton2(radios, i, formyike)
+        }
+        return "<div style= \"text-align:left;margin-left:10%\" class=\"object_of_form2\"><h4 class=\"radiolabel demo-title mdc-typography--headline9\">" + label + "</h4>" +
+            "<div class=\"radiodrop\">" + rbs + "</div><div>";
+    }
+
+    function generate_new_checkGroup2(widget0, formyike) {
+        var label = widget0["label"];
+        var nR = widget0["nR"];
+        var rbs = "";
+
+        var checks = widget0["checks"]
+        console.log(checks)
+        for (var i = 0; i < nR; ++i) {
+            rbs += generate_new_checkButton2(checks, i, formyike)
+        }
+        return "<div style= \"text-align:left;margin-left:10%\" class=\"object_of_form2\"><h4 class=\"checklabel demo-title mdc-typography--headline9\">" + label + "</h4>" +
+            "<div class=\"checkdrop\">" + rbs + "</div><div>";
+    }
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            document.getElementById('fn' + input.id).innerHTML = input.files[0].name
+            reader.onload = function (e) {
+                $('#divimg' + input.id).css('display', 'block');
+                $('#img' + input.id).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readURL2(input) {
+        if (input.files && input.files[0]) {
+            document.getElementById('fn' + input.id).innerHTML = input.files[0].name
+        }
+    }
+
     function generate_new_HelperText2(id0, val) {
         return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
             "id=\"helperText" + id0 + "\">" + val + "</p>";
+    }
+
+    function generate_new_RadioButton2(radio, index, pos) {
+        var labelText = radio['' + index]['label'];
+
+        return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
+            "<div  class=\"mdc-radio\">" +
+            "<input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radiogroup_" + pos + "_" + index + "\" name=\"radiogroup_" + pos + "\">" +
+            "<div class=\"mdc-radio__background\">" +
+            "<div class=\"mdc-radio__outer-circle\"></div>" +
+            "<div class=\"mdc-radio__inner-circle\"></div>" +
+            "</div>" +
+            "<div class=\"mdc-radio__ripple\"></div>" +
+            "</div>" +
+            "<label  for=\"radio-1\">" + labelText + "</label>" +
+            "</div>"
+    }
+
+    function generate_new_checkButton2(check, index, pos) {
+        var labelText = check['' + index]['label'];
+
+        return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
+            "<div class=\"mdc-checkbox\">" +
+            "<input type=\"checkbox\" id=\"checkgroup_" + pos + "_" + index + "\"" +
+            "class=\"mdc-checkbox__native-control\"" +
+            "id=\"checkbox-1\"/>" +
+            "<div class=\"mdc-checkbox__background\">" +
+            "<svg class=\"mdc-checkbox__checkmark\"" +
+            "viewBox=\"0 0 24 24\">" +
+            "<path class=\"mdc-checkbox__checkmark-path\"" +
+            "fill=\"none\"" +
+            "d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>" +
+            "</svg>" +
+            "<div class=\"mdc-checkbox__mixedmark\"></div>" +
+            "</div>" +
+            "<div class=\"mdc-checkbox__ripple\"></div>" +
+            "</div>" +
+            "<label for=\"checkbox-1\">" + labelText + "</label>" +
+            "</div>";
     }
 
     function generate_new_Count2(id0, val) {
@@ -938,12 +1405,22 @@
             "<div class=\"mdc-notched-outline__notch\"><label for=\"predatepicker" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeldatepicker" + formyike + "\">" + label + "</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelperdatepicker" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
     }
 
+    function generate_new_Text2(widget0, formyike) {
+        var tcolor = widget0["color"];
+        var fs = widget0['size'];
+        var text0 = widget0["content"];
+        return "<div class\"object_of_form\"><div class=\"mdc-text-field-helper-line helpertext \"><p style = \"color:" + tcolor + " ; font-size:" + fs + "\"class=\"mdc-text-field-helper-text  mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+            ">" + text0 + "</p></div></div>";
+    }
+
+
     function togglec() {
         var popup = document.getElementById("contain");
         var f = document.getElementById("shadder");
         popup.classList.toggle("show");
         f.classList.toggle("show");
     }
+
 
 
 

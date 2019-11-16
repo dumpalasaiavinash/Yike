@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'orgadmin.apps.OrgadminConfig',
     'rest_framework',
     'chatbox',
+    'channels',
     
 
 ]
@@ -66,6 +67,17 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'yike.urls'
+
+ASGI_APPLICATION = 'yike.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 TEMPLATES = [
     {
