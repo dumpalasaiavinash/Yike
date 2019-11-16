@@ -3,12 +3,25 @@
 {% block extrahead %}
 
 <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+
+<!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Oswald" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+
+
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
 <style>
 
   nav{
@@ -18,20 +31,25 @@
 
 
   .button {
-    position:relative;
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+    border-radius: 8px ;
+    background-color: white;
+    color: black;
+    padding: 14px 28px;
     font-size: 16px;
-    margin: 4px 2px;
     cursor: pointer;
-    width:80%;
   }
 
+  .danger {
+    border-color: #f44336;
+    background-color:white;
+    color: red;
+  }
+
+  .success {
+    border-color: #4CAF50;
+    background-color:white;
+    color: green;
+  }
 
 
   .but {
@@ -105,14 +123,14 @@ padding: 1px;
         </a>
     </div>
 
-<div style="float:left; width:75%;height:89%;margin-top:3%">
+<div style="float:left; width:78%;height:89%;margin-top:3%">
   <div id="tree" style="margin-top:2%;position:fixed">
 
   </div>
 </div>
 
 
-<div style="float:left; width:15%;height:89%;margin-left:1%; margin-top:5%">
+<div style="float:left; width:12%;height:89%;margin-left:1%; margin-top:5%">
 
   <!-- <br>  <br> <br>  <br> -->
 
@@ -122,11 +140,11 @@ padding: 1px;
   <!-- <button onclick="change_name()" class="button button2">Change name</button>
   <br>
   <br> -->
-  <button onclick="remove()" class="btn btn-outline-danger btn-lg">Remove Node</button>
+  <button onclick="remove()" type="button" class="btn danger" style="width:80%;height:9%">Remove Node</button>
   <br>
   <br>
   <!-- <button class="button button4">Gray</button> -->
-  <button onclick="save()" class="btn btn-outline-success btn-lg">Save</button>
+  <button onclick="save()" type="button" class="btn success" style="width:80%;height:9%">Save</button>
   <br>
   <br>
 

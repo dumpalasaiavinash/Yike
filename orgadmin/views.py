@@ -10,7 +10,7 @@ import json
 from django.views.decorators.csrf import requires_csrf_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status   
+from rest_framework import status
 
 #For sending activation function
 from django.http import HttpResponse
@@ -268,7 +268,7 @@ def activate(request, uidb64, token, user_id, password,org_id):
 
             password=hashlib.sha256(password.encode())
             password=password.hexdigest()
-            
+
             users_table.put_item(
             Item={
                 'username':dic['emp_name'],
@@ -306,7 +306,7 @@ def about(request,org_id):
         'org_id':org_id
     }
 
-    return render(request,'dashboard/about.html',context)            
+    return render(request,'dashboard/about.html',context)
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
@@ -620,11 +620,11 @@ def join(request):
             try:
                 print("********************")
                 print(response_join)
-                
+
                 print("#####################")
 
                 #request.session['org_created']=request.session['org_created']+[ID]
-                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]       
+                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]
                 org_joined = request.session['org_joined']
                 print(org_joined)
                 print(response_join['Items'][0]['org_id'])
@@ -843,20 +843,20 @@ def index(request):
 
 
 class complaintrest(APIView):
-        
+
     def get(self,request):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('complaint')
             response_complaint = table.scan(
             ProjectionExpression="complaint",
-            
+
             )
-            
+
             complaint_list=[]
             # print(response_complaint['Items'][0])
             for i in range(0,len(response_complaint['Items'])):
                 complaint_list.append(response_complaint['Items'][i]['complaint'])
-            
+
             print(complaint_list)
             # print(len(complaint_list))
             list1=[]
@@ -870,10 +870,10 @@ class complaintrest(APIView):
 
 
 
-        
 
 
-        
+
+
 def create_department(request):
     depname = request.POST.get('depname')
     print(depname)
@@ -906,4 +906,52 @@ def create_department(request):
         messages.success(request, 'The new department has been created successfully.')
     else:
         messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+    return redirect('../departments')
+
+
+
+
+
+def remove_department(request):
+    depname = request.POST.get('depname')
+    print(depname)
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+    print(type(request.session['org_id']))
+    x=request.session['org_id']
+    response1 = dynamoTable.scan(ProjectionExpression="department_id")
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name,department_id",
+        FilterExpression=Attr('organization_id').eq(int(x)) & Attr('department_name').eq(depname)
+    )
+    # print(response1['Items'])
+    lengt=0
+    for i in response1['Items']:
+        if lengt< int(i['department_id']):
+            lengt = int(i['department_id'])
+        else:
+            continue
+    print(response['Items'])
+    # print(lengt)
+    if(len(response['Items'])==0):
+
+        messages.success(request, 'Please check again as the given department is not there in your organization.')
+
+    else:
+        print(response['Items'])
+        dynamoTable.delete_item(
+        Key={
+            'department_id': response['Items'][0]['department_id'] ,
+        },
+        )
+
+        dynamoTable=dynamoDB.Table('hierarchy')
+
+        dynamoTable.delete_item(
+        Key={
+            'dep_id': response['Items'][0]['department_id'] ,
+        },
+        )
+
+        messages.success(request, 'The department has been removed successfully.')
     return redirect('../departments')

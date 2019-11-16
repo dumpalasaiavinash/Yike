@@ -18,6 +18,7 @@ urlpatterns = [
     path('hierarchy/',views.hierarchy, name='hierarchy'),
     path('departments_hierarchy_update/',views.departments_hierarchy_update, name='departments_hierarchy_update'),
     path('create_department/',views.create_department, name='create_department'),
+    path('remove_department/',views.remove_department, name='remove_department'),
     path('api', views.complaintrest.as_view(), name='api'),
-    
+
 ]
