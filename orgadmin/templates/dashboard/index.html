@@ -395,16 +395,33 @@ z-index: 0;
                                     <div style="float:right;"><span class="close">&times;</span></div>
                                 <form class="form-container" action="{% url 'orgadmin:dashboard' org_id %}" method="post" >
                                     {% csrf_token %}
-                                    <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
-                                    <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
-                                    <select class="input" name="department"><br>
-                                        {% for dep in dep %}
-                                        <option value="{{dep}}">{{dep}}</option>
-                                        {% endfor %}
-                                    </select><br>
-                                    <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
-                                    <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
-                                    <input type="submit">
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Employee Name<br>
+                                        <input class="input" type="text" name="emp_name" placeholder="Enter Name" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Email
+                                        <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required>    
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Select Department<br>
+                                        <select class="input" name="department"><br>
+                                            {% for dep in dep %}
+                                            <option value="{{dep}}">{{dep}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Hierarchy<br>
+                                        <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        No of Complaints<br>
+                                        <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        <input type="submit" style="color:blue">
+                                    </div>
                                 </form>
                                 </div>
                             </div>
