@@ -435,15 +435,17 @@ def create(request):
 
 
         org_names=[]
+        org_code=[]
         dynamoTable=dynamoDB.Table('organization')
         for i in total_org_ids:
             # print(type(int(i)))
             response = dynamoTable.scan(
-                ProjectionExpression="organization_name",
+                ProjectionExpression="organization_name,code",
                 FilterExpression=Attr('org_id').eq(int(i))
             )
             # print(response['Items'])
             org_names.append(response['Items'][0]['organization_name'])
+            org_code.append(response['Items'][0]['code'])
         # print(email)
         # print(org_names)
         organizations_created_names=[]
@@ -473,7 +475,7 @@ def create(request):
         # for i in range ids.split("'"):
         #     list1.append
         extra = (len(organizations_created)%4)-1
-        data = {'topics' : zip(organizations_created_names,list2), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+        data = {'topics' : zip(organizations_created_names,list2,org_code), 'topics_created' : zip(organizations_joined_names,org_join_id,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
 
 
 
@@ -486,18 +488,19 @@ def create(request):
 def created(request):
 
     organization_name = request.POST.get('name')
-    code=request.POST.get('code')
+    # code=request.POST.get('code')
+    
    
 
-    if (organization_name!='' and code!='' ):
+    if (organization_name!='' ):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('organization')
             response_sno=table.scan(
                 ProjectionExpression="org_id",
             )
             response = table.scan(
-                ProjectionExpression="organization_name,code",
-                FilterExpression=Attr('organization_name').eq(organization_name) | Attr('code').eq(code)
+                ProjectionExpression="organization_name",
+                FilterExpression=Attr('organization_name').eq(organization_name)
             )
             
             if(len(response['Items'])==0):
@@ -508,6 +511,10 @@ def created(request):
 
                 print(ID)
                 ID=ID+1
+                hash_code=organization_name+str(ID)
+                print(hash_code)
+                
+                code=hash_code[:-1]
                 response = table.put_item(
                 Item={
                     'org_id': ID,
@@ -572,14 +579,16 @@ def created(request):
 
 
                 org_names=[]
+                org_code=[]
                 dynamoTable=dynamoDB.Table('organization')
                 for i in total_org_ids:
                     #print(type(int(i)))
                     response1 = dynamoTable.scan(
-                        ProjectionExpression="organization_name",
+                        ProjectionExpression="organization_name,code",
                         FilterExpression=Attr('org_id').eq(int(i))
                     )
                     org_names.append(response1['Items'][0]['organization_name'])
+                    org_code.append(response1['Items'][0]['code'])
                     #print(org_names)
                     organizations_created_names=[]
                     organizations_joined_names=[]
@@ -602,14 +611,17 @@ def created(request):
 
 
                 extra = (len(organizations_created)%4)-1
-                data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,organizations_joined), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+                data = {'topics' : zip(organizations_created_names,organizations_created,org_code), 'topics_created' : zip(organizations_joined_names,organizations_joined,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
                 # print(request.session['org_created'])
                 return render(request, 'orgadmin/dummy.html', data)
 
 
 
             else:
-                messages.success(request, 'Organization with same name or code already exists, try with another name or code')
+                messages.add_message(request,messages.INFO, 'Organization with same name already exists, try with another name')
+
+                print(messages)
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 # print(request.session['org_created'])
                 #print('abc')
                 #print(request.session['email'])
@@ -640,15 +652,17 @@ def created(request):
 
 
                 org_names=[]
+                org_code=[]
                 dynamoTable=dynamoDB.Table('organization')
                 for i in total_org_ids:
                     print(type(int(i)))
                     response = dynamoTable.scan(
-                        ProjectionExpression="organization_name",
+                        ProjectionExpression="organization_name,code",
                         FilterExpression=Attr('org_id').eq(int(i))
                     )
                     print(response['Items'])
                     org_names.append(response['Items'][0]['organization_name'])
+                    org_code.append(response['Items'][0]['code'])
 
                 organizations_created_names=[]
                 organizations_joined_names=[]
@@ -663,7 +677,7 @@ def created(request):
                 #print(organizations_created_names)
 
                 extra = (len(organizations_created)%4)-1
-                data = {'topics' : zip(organizations_created_names,organizations_created), 'topics_created' : zip(organizations_joined_names,org_join_id), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+                data = {'topics' : zip(organizations_created_names,organizations_created,org_code), 'topics_created' : zip(organizations_joined_names,org_join_id,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
                 # print('a')
                 # print(organizations_joined_names)
                 # print('b')
@@ -677,6 +691,10 @@ def created(request):
 
 
                 return render(request, 'orgadmin/dummy.html', data)
+    
+
+                
+                    
 
 
 

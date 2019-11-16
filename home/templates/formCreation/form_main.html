@@ -14,6 +14,31 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/material-datetime-picker/2.4.0/material-datetime-picker.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+        .notice {
+            position: relative;
+            margin: 0.6em;
+            background: #F9F9F9;
+            border-left: 4px solid #DDD;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
+        }
+
+        .notice:before {
+            position: absolute;
+            top: 50%;
+            margin-top: -17px;
+            left: -17px;
+            background-color: #DDD;
+            color: #FFF;
+            width: 30px;
+            height: 20px;
+            border-radius: 100%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-family: Georgia;
+            text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+        }
+
         .button1 {
             width: 90%;
             background-color: purple;
@@ -24,7 +49,7 @@
 
         .div1 {
             width: 60%;
-            background-color: wheat;
+            background-color: whitesmoke;
             float: left;
             height: 100%;
         }
@@ -41,6 +66,7 @@
             width: 20%;
             float: right;
             height: 100%;
+            background-color: white;
         }
 
         #dropzone {
@@ -691,52 +717,40 @@
             <div id="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
         </div>
         <div class="div2">
-            <h2 class="mdc-typography--subtitle1 comp_heading">Components</h3>
-                <ul class="mdc-list demo-list comp_ul">
-                    <li id="drag4" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Text
-                    </li>
-                    <li id="drag1" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        TextField
-                    </li>
-                    <li id="drag2" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        TextArea
-                    </li>
-                    <li id="drag5" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        DatePicker
-                    </li>
-                    <li id="drag6" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Mobile Number
-                    </li>
-                    <li id="drag8" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Image Upload
-                    </li>
-                    <li id="drag9" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        File Upload
-                    </li>
-                    <li id="drag10" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Radio Group
-                    </li>
-                    <li id="drag11" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Checkbox Group
-                    </li>
-                    <li id="drag3" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Radio
-                    </li>
-                    <li id="drag7" draggable="true" ondragstart="drag(event)" class="mdc-list-item mdc-ripple-upgraded"
-                        tabindex="0">
-                        Checkbox
-                    </li>
+            <h4>Components</h4>
+            <div class="notice info" id="drag4" draggable="true" ondragstart="drag(event)">
+                <p>Text</p>
+            </div>
+            <div class="notice info" id="drag1" draggable="true" ondragstart="drag(event)">
+                <p>Text Field</p>
+            </div>
+            <div class="notice info" id="drag2" draggable="true" ondragstart="drag(event)">
+                <p>Text Area</p>
+            </div>
+            <div class="notice info" id="drag5" draggable="true" ondragstart="drag(event)">
+                <p>Date Picker</p>
+            </div>
+            <div class="notice info" id="drag6" draggable="true" ondragstart="drag(event)">
+                <p>Mobile Number</p>
+            </div>
+            <div class="notice info" id="drag8" draggable="true" ondragstart="drag(event)">
+                <p>Image</p>
+            </div>
+            <div class="notice info" id="drag9" draggable="true" ondragstart="drag(event)">
+                <p>Location</p>
+            </div>
+            <div class="notice info" id="drag10" draggable="true" ondragstart="drag(event)">
+                <p>Radio Group</p>
+            </div>
+            <div class="notice info" id="drag3" draggable="true" ondragstart="drag(event)">
+                <p>Radio</p>
+            </div>
+            <div class="notice info" id="drag11" draggable="true" ondragstart="drag(event)">
+                <p>Check box Group</p>
+            </div>
+            <div class="notice info" id="drag7" draggable="true" ondragstart="drag(event)">
+                <p>Check box</p>
+            </div>
 
 
 
@@ -761,7 +775,7 @@
         console.log('open', e)
     }
     addSocket.onclose = function (e) {
-    console.log('close', e)
+        console.log('close', e)
     }
     addSocket.onerror = function (e) {
         console.log('error', e)
