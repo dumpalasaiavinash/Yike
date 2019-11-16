@@ -1,7 +1,21 @@
-{% extends 'Client/new_home/base.html' %}
+{% extends 'Client/new_home/base_no.html' %}
+{% block extrahead %}
+<style media="screen">
+  .ctr{
+    background-color:black;
+    padding:3%;
+    margin-left:10px;
+    margin-right:10px;
+    border-radius:5px;
+  }
 
+</style>
+{% endblock %}
 {% block body %}
+<br><br><br><br>
+<div class="ctr">
 
-<br><br><br>
-<h1>succesfully signed up</h1>
+Pls chk ur email for activation link <br>
+<center><button type="button" name="button" >Reload</button></center>
+</div>
 {% endblock %}

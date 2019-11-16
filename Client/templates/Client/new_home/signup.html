@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extrahead %}
-<link rel="stylesheet" type="text/css" href="{% static 'home/css/logs.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'Client/css/logs.css' %}"/>
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 {% endblock %}
 
@@ -20,17 +20,16 @@
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is required">
 						<span class="label-input100">Username</span>
-						<input class="input100" type="text" name="username" placeholder="Type your username" required>
+						<input class="input100" type="text" name="username" title="Alphanumerics only" placeholder="Type your username" pattern = "^(?=.*[a-z])|(?=.*[A-Z])|(?=.*[0-9]).{4,16}$" required>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
 						<span class="label-input100">Email Id</span>
-						<input class="input100" type="email" name="email" placeholder="Type your email id" required>
+						<input class="input100" type="email" name="email" placeholder="Type your email id" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
 					</div>
-
           <div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
 						<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="pass" placeholder="Type your password" required>
+						<input class="input100" title="at least 1 lowercase and 1 uppercase and one numeric and special character atleast length is 8 " type="password" name="pass" placeholder="Type your password"  pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$" required>
 					</div>
 
           <div class="wrap-input100 validate-input m-b-33" data-validate="Password is required">
@@ -59,5 +58,5 @@
 		</div>
 	</div>
 
-
+	  
 {% endblock %}
