@@ -1,0 +1,23 @@
+{% extends 'Client/new_home/base_no.html' %}
+{% block extrahead %}
+<style media="screen">
+  .ctr{
+    background-color:white;
+    padding:3%;
+    margin-left:10px;
+    margin-right:10px;
+    border-radius:5px;
+  }
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block body %}
+<br><br><br><br>
+<div class="ctr">
+
+Pls chk ur email for activation link <br>
+{{message}}
+<a href="{% url 'Client:refresh' client_id %}"><i class="fa fa-refresh" style="font-size:36px;"></i></a>
+</div>
+{% endblock %}

@@ -1,29 +1,29 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700');
 
-
 body {
-    background-color: #f5f7fa !important;
-
+    background-color: #f5f7fa;
+    font-family: raleway sans-serif;
 }
 
 .navbar{
     margin-bottom: 0px;
+    font-family: raleway sans-serif;
 }
 
 .navbar-default{
     border-radius: 0;
-    background-color: #0055b4 !important;
+    background-color: #0055b4;
     padding: 10px;
     padding-left: 30px;
 }
 
 .navbar-default .navbar-brand{
-    color:white !important;
+    color:white;
     padding-right: 50px;
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: white !important;
+    color: white;
 }
 .nav-list {
     list-style-type: none;

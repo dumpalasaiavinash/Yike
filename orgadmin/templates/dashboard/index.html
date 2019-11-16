@@ -96,6 +96,28 @@ z-index: 0;
   cursor: pointer;
 }
 
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
 </style>
 {% endblock %}
 
@@ -256,224 +278,49 @@ z-index: 0;
                 </div>    <div class="scrollbar-sidebar">
                     <div class="app-sidebar__inner">
                         <ul class="vertical-nav-menu">
-                            <li class="app-sidebar__heading">Menu</li>
-                            <li
-                                 class="mm-active"
-
-
-
-
-
-                            >
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-rocket"></i>
-                                    Dashboards
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
-                                <ul
-
-
-
-
-
-
-                                >
-                                    <li>
-                                        <a href="index.html" class="mm-active">
-                                            <i class="metismenu-icon">
-                                            </i>Analytics
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="dashboards-commerce.html">
-                                            <i class="metismenu-icon">
-                                            </i>Commerce
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="dashboards-sales.html">
-                                            <i class="metismenu-icon">
-                                            </i>Sales
-                                        </a>
-                                    </li>
-                                    <li
-
-
-                                    >
-                                        <a href="#">
-                                            <i class="metismenu-icon"></i>
-                                            Minimal
-                                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                        </a>
-                                        <ul
-
-
-                                        >
-                                            <li>
-                                                <a href="dashboards-minimal-1.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Variation 1
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboards-minimal-2.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Variation 2
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="dashboards-crm.html">
-                                            <i class="metismenu-icon"></i>
-                                            CRM
-                                        </a>
-                                    </li>
-                                </ul>
+                            <li class="app-sidebar__heading" style="text-size:20px;padding-top:10%">
+                                Menu
                             </li>
-                            <li
-
-
-
-
-
-
-                            >
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-browser"></i>
-                                    Pages
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                            <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                <a href="{% url 'orgadmin:dashboard' org_id%}">
+                                    Dashboard
                                 </a>
-                                <ul
-
-
-
-
-
-
-                                >
-                                    <li>
-                                        <a href="pages-login.html">
-                                            <i class="metismenu-icon"></i>
-                                            Login
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-login-boxed.html">
-                                            <i class="metismenu-icon">
-                                            </i>Login Boxed
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-register.html">
-                                            <i class="metismenu-icon">
-                                            </i>Register
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-register-boxed.html">
-                                            <i class="metismenu-icon">
-                                            </i>Register Boxed
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-forgot-password.html">
-                                            <i class="metismenu-icon">
-                                            </i>Forgot Password
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-forgot-password-boxed.html">
-                                            <i class="metismenu-icon">
-                                            </i>Forgot Password Boxed
-                                        </a>
-                                    </li>
-                                </ul>
                             </li>
-                            <li
-
-
-
-
-
-
-                            >
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-plugin"></i>
-                                    Applications
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                            <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                <a href="{% url 'orgadmin:departments'%}">
+                                    Departments
                                 </a>
-                                <ul
-
-
-
-                                >
-                                    <li>
-                                        <a href="apps-mailbox.html">
-                                            <i class="metismenu-icon">
-                                            </i>Mailbox
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="apps-chat.html">
-                                            <i class="metismenu-icon">
-                                            </i>Chat
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="apps-faq-section.html">
-                                            <i class="metismenu-icon">
-                                            </i>FAQ Section
-                                        </a>
-                                    </li>
-                                    <li
-
-
-
-                                    >
-                                        <a href="#">
-                                            <i class="metismenu-icon"></i>
-                                            Forums
-                                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                        </a>
-                                        <ul
-
-
-
-                                        >
-                                            <li>
-                                                <a href="apps-forum-list.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Forum Listing
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="apps-forum-threads.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Forum Threads
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="apps-forum-discussion.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Forum Discussion
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                            </li>
+                            <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                <a href="{% url 'form:form_test'%}">
+                                    Complaint_form
+                                </a>
+                            </li>
+                            <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                <a href="{% url 'orgadmin:dashboard' org_id %}">
+                                    About
+                                </a>
                             </li>
                         </ul>
                     </div>
                 </div>
-            </div>    <div class="app-main__outer">
+            </div>
+                <div class="app-main__outer">
                 <div class="app-main__inner">
+                    <div>
+                        {% if present == 1 %}
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            Person with entered email is already working in organisation.Please check the details.
+                        </div>
+                        {% endif %}
+                    </div>
                     <div class="tabs-animation">
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                                     <i class="header-icon lnr-charts icon-gradient bg-happy-green"> </i>
-                                    Portfolio Performance
+                                    {{ organisation_name }} Info
                                 </div>
                             </div>
                             <div class="no-gutters row">
@@ -481,17 +328,13 @@ z-index: 0;
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
-                                            <i class="lnr-laptop-phone text-dark opacity-8"></i></div>
-                                        <div class="widget-chart-content">
-                                            <div class="widget-subheading">Cash Deposits</div>
-                                            <div class="widget-numbers">1,7M</div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                <div class="d-inline text-danger pr-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">54.1%</span>
-                                                </div>
-                                                less earnings
+                                            <i>
+                                                <span class="glyphicon">&#xe008;</span>
+                                            </i>
                                             </div>
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">No Of Employees</div>
+                                            <div class="widget-numbers">{{ no_of_employees }}</div>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -500,17 +343,13 @@ z-index: 0;
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
-                                            <i class="lnr-graduation-hat text-white"></i></div>
-                                        <div class="widget-chart-content">
-                                            <div class="widget-subheading">Invested Dividents</div>
-                                            <div class="widget-numbers"><span>9M</span></div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                Grow Rate:
-                                                <span class="text-info pl-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">14.1%</span>
-                                                </span>
+                                            <i>
+                                                <span class="glyphicon">&#xe137;</span>
+                                            </i>
                                             </div>
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">No Of Departments</div>
+                                            <div class="widget-numbers"><span>{{ no_of_departments }}</span></div>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -519,17 +358,13 @@ z-index: 0;
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-success"></div>
-                                            <i class="lnr-apartment text-white"></i></div>
-                                        <div class="widget-chart-content">
-                                            <div class="widget-subheading">Capital Gains</div>
-                                            <div class="widget-numbers text-success"><span>$563</span></div>
-                                            <div class="widget-description text-focus">
-                                                Increased by
-                                                <span class="text-warning pl-1">
-                                                    <i class="fa fa-angle-up"></i>
-                                                    <span class="pl-1">7.35%</span>
-                                                </span>
+                                            <i>
+                                            <span class="glyphicon">&#xe206;</span>
+                                            </i>
                                             </div>
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">No Of Complaints Handling</div>
+                                            <div class="widget-numbers text-success"><span>{{ no_of_complaints }}</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -539,7 +374,7 @@ z-index: 0;
                         </div>
                         <div class="card mb-3">
                             <div class="card-header-tab card-header">
-                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Easy Dynamic Tables</div>
+                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal">Employees</div>
                                 <div class="btn-actions-pane-right actions-icon-btn">
                                     <div class="btn-group dropdown">
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-right rm-pointers dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu"><h6 tabindex="-1" class="dropdown-header">Header</h6>
@@ -557,7 +392,7 @@ z-index: 0;
                             </div>
                             <div class="card-body">
                             <div style="float:left;">
-                             <button id="myBtn" class="button" onclick="openForm()">Add Employee</button>
+                                <button id="myBtn" class="btn btn-primary" onclick="openForm()" style="font-size:12px">Add Employee</button>
                             </div>
 
                             <div id="myModal" class="modal">
@@ -565,40 +400,69 @@ z-index: 0;
                                     <div style="float:right;"><span class="close">&times;</span></div>
                                 <form class="form-container" action="{% url 'orgadmin:dashboard' org_id %}" method="post" >
                                     {% csrf_token %}
-                                    <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
-                                    <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
-                                    <input class="input" type="text" name="department" placeholder="Enter Department" required><br>
-                                    <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
-                                    <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
-                                    <input type="submit">  
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Employee Name<br>
+                                        <input class="input" type="text" name="emp_name" placeholder="Enter Name" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Email
+                                        <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Select Department<br>
+                                        <select class="input" name="department"><br>
+                                            {% for dep in dep %}
+                                            <option value="{{dep}}">{{dep}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Hierarchy<br>
+                                        <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        No of Complaints<br>
+                                        <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        <input type="submit" style="color:blue">
+                                    </div>
                                 </form>
                                 </div>
                             </div>
                                 <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
                                     <thead>
                                     <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
+                                        <th style="width:20%">Name</th>
+                                        <th style="width:20%">Department</th>
+                                        <th style="width:20%">Level</th>
+                                        <th style="width:20%">Complaints Handling</th>
+                                        <th style="width:20%">Delete Employee</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for name,department,hierarchy,no_complaints in info_list %}
+                                    {% for name,department,hierarchy,no_complaints,emp_id in info_list %}
                                         <tr>
                                             <td>{{ name }}</td>
                                             <td>{{ department }}</td>
                                             <td>{{ hierarchy }}</td>
                                             <td>{{ no_complaints }}</td>
+                                            <td>
+                                                <form action="{% url 'orgadmin:delete_employee' org_id emp_id %}" method='post'>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger" style="font-size:12px">Delete</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
+                                        <th style="width:20%">Name</th>
+                                        <th style="width:20%">Department</th>
+                                        <th style="width:20%">Level</th>
+                                        <th style="width:20%">Complaints Handling</th>
+                                        <th style="width:20%">Delete Employee</th>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -618,12 +482,12 @@ var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
- 
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }

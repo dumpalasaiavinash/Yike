@@ -1,0 +1,61 @@
+{% extends 'Client/new_home/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/logs.css' %}"/>
+<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+{% endblock %}
+
+
+{% block body %}
+<div class="limiter" style="font-family:raleway;">
+  <div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+    <div class="wrap-login100 p-l-55 p-r-55 p-t-55 p-b-54">
+      <form class="login100-form validate-form" action="{% url 'Client:client_loggedin' %}" method="post">
+        {% csrf_token %}
+        <span class="login100-form-title p-b-49" >
+          Login
+        </span>
+
+        <div class="wrap-input100 validate-input m-b-23" data-validate = "Username is required">
+          <span class="label-input100" style="font-size:150%;margin-bottom:5px">Email</span>
+          <input class="input100" type="text" name="email" placeholder="Type your email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+        </div>
+        <br>
+        <div class="wrap-input100 validate-input" data-validate="Password is required">
+          <span class="label-input100" style="font-size:150%;">Password</span>
+          <input class="input100" type="password" name="pass" placeholder="Type your password" title="at least 1 lowercase and 1 uppercase and one numeric and special character atleast length is 8 "  pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$" required>
+        </div>
+
+        <br><br><br>
+
+        <center>
+          <button class="btnn" type="submit">
+            Login
+          </button>
+        </center>
+
+        <div class="flex-col-c p-t-60">
+          <span class="txt1 p-b-17">
+            Or Sign Up Using
+          </span>
+
+          <a href="{% url 'Client:client_signup' %}" class="txt2">
+            Sign Up
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<h1></h1>
+<script>
+{%if error%}
+var a = "{{error}}"
+alert(a)
+{% endif %}
+</script>
+
+
+{% endblock %}
