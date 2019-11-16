@@ -138,7 +138,7 @@ def client_signin(request):
                                 }
                         )
                         current_site = get_current_site(request)
-                        mail_subject = 'Email COnfirmation'
+                        mail_subject = 'Email Confirmation'
                         message = render_to_string('Client/acc_active_email.html', {
                             'user': username,
                             'user_email':email,
@@ -180,7 +180,7 @@ def client_signin(request):
                                 }
                         )
                         current_site = get_current_site(request)
-                        mail_subject = 'Email Confirmation'
+                        mail_subject = 'Email confirmation'
                         message = render_to_string('Client/acc_active_email.html', {
                             'user': username,
                             'user_email':email,
