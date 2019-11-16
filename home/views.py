@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib import sessions
+from django.contrib import messages
 
 #For password hashing
 import hashlib
@@ -48,10 +49,13 @@ def home_log(request):
                 print('abc')
                 return redirect('orgadmin:create')
             else:
+                messages.success(request, 'Failed to login as the password does not match.')
                 return redirect('home:login')
         else:
+            messages.success(request, 'Failed to login as the email ID is not registered.')
             return redirect('home:login')
     else:
+        messages.success(request, 'Failed to login as the email or password is provided empty')
         return redirect('home:login')
 
 def home_reg(request):
@@ -91,10 +95,13 @@ def home_reg(request):
                 return redirect('orgadmin:create')
 
             else:
+                messages.success(request, 'The email ID is already registerd.')
                 return redirect('home:signup')
         else:
+            messages.success(request, 'Failed to register as the password and retype password do not match.')
             return redirect('home:signup')
     else:
+        messages.success(request, 'Failed to register as some fields are not provided.')
         return redirect('home:signup')
 
 
