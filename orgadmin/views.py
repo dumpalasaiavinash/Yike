@@ -998,3 +998,51 @@ def create_department(request):
     else:
         messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
     return redirect('../departments')
+
+
+
+
+
+def remove_department(request):
+    depname = request.POST.get('depname')
+    print(depname)
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+    print(type(request.session['org_id']))
+    x=request.session['org_id']
+    response1 = dynamoTable.scan(ProjectionExpression="department_id")
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name,department_id",
+        FilterExpression=Attr('organization_id').eq(int(x)) & Attr('department_name').eq(depname)
+    )
+    # print(response1['Items'])
+    lengt=0
+    for i in response1['Items']:
+        if lengt< int(i['department_id']):
+            lengt = int(i['department_id'])
+        else:
+            continue
+    print(response['Items'])
+    # print(lengt)
+    if(len(response['Items'])==0):
+
+        messages.success(request, 'Please check again as the given department is not there in your organization.')
+
+    else:
+        print(response['Items'])
+        dynamoTable.delete_item(
+        Key={
+            'department_id': response['Items'][0]['department_id'] ,
+        },
+        )
+
+        dynamoTable=dynamoDB.Table('hierarchy')
+
+        dynamoTable.delete_item(
+        Key={
+            'dep_id': response['Items'][0]['department_id'] ,
+        },
+        )
+
+        messages.success(request, 'The department has been removed successfully.')
+    return redirect('../departments')
