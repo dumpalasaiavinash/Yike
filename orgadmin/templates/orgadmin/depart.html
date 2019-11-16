@@ -3,9 +3,25 @@
 {% block extrahead %}
 
 <script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <!-- <meta name="viewport" content="width=device-width, user-scalable=no" /> -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+
+<!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Oswald" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+
+
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
 <style>
 
   nav{
@@ -15,11 +31,33 @@
 
 
   .button {
+    border-radius: 8px ;
+    background-color: white;
+    color: black;
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .danger {
+    border-color: #f44336;
+    background-color:white;
+    color: red;
+  }
+
+  .success {
+    border-color: #4CAF50;
+    background-color:white;
+    color: green;
+  }
+
+
+  .but {
     position:relative;
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;
-    padding: 15px 32px;
+    /* padding: 15px 32px; */
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -28,19 +66,12 @@
     cursor: pointer;
     width:80%;
   }
-  
+
+
+
   .button2 {background-color: #008CBA;} /* Blue */
-  .button3 {
-    background-color: white;
-    color: black;
-    border: 1px solid #ff0000;
-    border-radius:30px;
-    
-            
-            
-  
-  } 
-    .button5 {background-color: #555555;} /* Black */
+  .button3 {background-color: #f44336;} /* Red */
+  .button5 {background-color: #555555;} /* Black */
 
   [node-id] rect {
               /* fill: #016e25; */
@@ -86,15 +117,20 @@ padding: 1px;
 <body>
 
 
+    <div style="float:left; width:6%;height:80%;margin-top:6%;margin-left:1.5%">
+        <a href="{% url 'orgadmin:departments' %}">
+            <span class="glyphicon glyphicon-arrow-left" style="color:black;font-size: 35px;"></span>
+        </a>
+    </div>
 
-<div style="float:left; width:86%;height:90%;margin-top:3%">
+<div style="float:left; width:78%;height:89%;margin-top:3%">
   <div id="tree" style="margin-top:2%;position:fixed">
 
   </div>
 </div>
 
 
-<div style="float:left; width:13%;height:80%;margin-left:1%; margin-top:5%">
+<div style="float:left; width:12%;height:89%;margin-left:1%; margin-top:5%">
 
   <!-- <br>  <br> <br>  <br> -->
 
@@ -104,21 +140,21 @@ padding: 1px;
   <!-- <button onclick="change_name()" class="button button2">Change name</button>
   <br>
   <br> -->
-  <button onclick="remove()" class="button button3">Remove Node</button>
+  <button onclick="remove()" type="button" class="btn danger" style="width:80%;height:9%">Remove Node</button>
   <br>
   <br>
   <!-- <button class="button button4">Gray</button> -->
-  <button onclick="save()" class="button">Save</button>
+  <button onclick="save()" type="button" class="btn success" style="width:80%;height:9%">Save</button>
   <br>
-  <br>  
+  <br>
 
   <div class="w3-container">
-      <h2>Instructions below</h2>
+      <span style="font-size: 25px;padding-bottom:5%;color:#09a3eb">Instructions below</span>
 
-    
+
       <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%;cursor:zoom-in;height:10%"
       onclick="document.getElementById('modal01').style.display='block'">
-    
+
       <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
         <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
         <div class="w3-modal-content w3-animate-zoom">
@@ -126,6 +162,8 @@ padding: 1px;
         </div>
       </div>
     </div>
+
+
 
 
 </div>
@@ -227,44 +265,44 @@ var chart = new OrgChart(document.getElementById("tree"), {
             // ];
 
 
-            document.getElementById("btn").addEventListener("click", function () {
-                // var n = newNodes.splice(0, 1)[0];
+            // document.getElementById("btn").addEventListener("click", function () {
+            //     // var n = newNodes.splice(0, 1)[0];
 
-                var nx = prompt("Please enter the hierarchy to which this node has to be added:");
-                var i;
-                var hid=0;
-                var tpid;
-                console.log(node)
-                var nodes = node
-                console.log(nodes)
-                for(i in nodes){
-                  console.log(typeof(nodes[i]['hierarchy']))
-                  if(nodes[i]['hierarchy']==nx){
-                    tpid=nodes[i]['id']
-                  }
-                  if(nodes[i]['id']>hid){
-                    hid=nodes[i]['id']
-                  }
-                }
-                if(tpid == null){
-                  alert(" The given hierarchy is not available ")
-                }
-                else{
-                  console.log('a')
-                  var n = prompt("Please enter the new hierarchy:");
-                  p={ id: hid+1, pid: tpid, hierarchy: n}
-                  console.log(p)
-                  console.log('b')
-                  chart.addNode(p);
-                  console.log(typeof(p))
-                  console.log(typeof(node))
-                  console.log(node)
-                  console.log(node.length)
-                  len = node.length
-                  // node[len] = p
-                  console.log(node)
-                }
-            });
+            //     var nx = prompt("Please enter the hierarchy to which this node has to be added:");
+            //     var i;
+            //     var hid=0;
+            //     var tpid;
+            //     console.log(node)
+            //     var nodes = node
+            //     console.log(nodes)
+            //     for(i in nodes){
+            //       console.log(typeof(nodes[i]['hierarchy']))
+            //       if(nodes[i]['hierarchy']==nx){
+            //         tpid=nodes[i]['id']
+            //       }
+            //       if(nodes[i]['id']>hid){
+            //         hid=nodes[i]['id']
+            //       }
+            //     }
+            //     if(tpid == null){
+            //       alert(" The given hierarchy is not available ")
+            //     }
+            //     else{
+            //       console.log('a')
+            //       var n = prompt("Please enter the new hierarchy:");
+            //       p={ id: hid+1, pid: tpid, hierarchy: n}
+            //       console.log(p)
+            //       console.log('b')
+            //       chart.addNode(p);
+            //       console.log(typeof(p))
+            //       console.log(typeof(node))
+            //       console.log(node)
+            //       console.log(node.length)
+            //       len = node.length
+            //       // node[len] = p
+            //       console.log(node)
+            //     }
+            // });
 
 
           function remove() {

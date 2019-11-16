@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "Client/new_home/base.html" %}
 {% load staticfiles %}
 
 
@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="{% static "Client/css/first.css" %}">
     <span class='head'><button type="button" class="btn btn-primary btn-lg">New Complaint<span class="badge"></span></button></span>
     <span class="head1"><button type="button" class="btn btn-primary btn-lg">Track<span class="badge"></span></button></span>
-    <div class='head2'><a href="{% url 'thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div>
+    <div class='head2'><a href="{% url 'Client:thirdpage' %}"><button type="button" class="btn btn-primary btn-lg">Chat</button></a><div class="badge"></div>
   </div>
 </div>
 
 <div>
-<form method="POST" action="{% url 'secondpage' %}">
+<form method="POST" action="{% url 'Client:secondpage' %}">
 {% csrf_token %}
 
   <div  style="margin-left:150px"class="dropdown">

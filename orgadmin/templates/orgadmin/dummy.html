@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 <!--<link rel="stylesheet" type="text/css" href="{% static 'orgadmin/css/dummy.css' %}">-->
@@ -23,7 +23,7 @@
   margin-bottom:1.5%;
 }
 .w3-card-4:hover{
-box-shadow: 10px 10px 10px grey;
+box-shadow: 2px 2px 2px grey;
 }
 
 .bottom{
@@ -65,10 +65,13 @@ padding-bottom:6rem;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   cursor: pointer;
+  width: 110px;
+  height: 50px;
+  
 }
 
 .button2 {
-  border-radius: 10px;
+  border-radius: 30px;
   background-color: white; 
   color: black; 
   border: 2px solid powderblue;
@@ -169,43 +172,44 @@ z-index: 0;
 
 <div style="margin-top:5%;width:100%;" >
   <br>
-  <table style="width: 100%;">
-    <tr>
+  <table style="width: 100%;padding-bottom: 0%;">
+    <tr style="padding-bottom:0%;">
       <td style="width: 50%;">
         <h2 style="margin-left:7%;font-family: 'Raleway';color: gray;font-size:24px ;" >Organization's Joined</h2>
       </td>
       <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-          
+
           <button id="join_btn" class="button button2" onclick="openForm()">Join</button>
       </td>
     </tr>
-  </table>
-  <hr style="border: 1px solid #adadad;margin-left:3%;margin-right:4.5% ;"> 
+  </table><hr style="border: 1px solid #adadad;margin-left:3%;margin-right:4.5% ;">
+   <br>
     {% if topics_created_size > 0 %}
         {% for i,j in topics_created %}
         <div class="main" style="margin-left:2%;" >
-            
+          <a href = "{% url 'employee:dashboard'  %}">
+
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
-                
+
               <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
-                  
+
           <br>{{i}}<br><br>
               </div>
-          
+
               <div class="middle" >
-                  <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
+                  <img class=image src="{% static 'orgadmin/images/bill.jpg' %}" alt="Avatar" >
                 
               </div>
-          
+
               <div class="bottom">
-                <br><br>
+                <p style="font-family: raleway;margin: 5%;"> Enter your Organization</p>
               </div>
             </div>
-          <!-- </a> -->
+          </a>
           </div>
 
 
-               
+
         {% endfor %}
         {% endif %}<br><br><br><br>
 
@@ -218,31 +222,31 @@ z-index: 0;
               </td>
               <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
                 <button id="myBtn" class=" button button2" onclick="openForm()">Create</button>
-                 
+
                   </div>
               </td>
             </tr>
           </table> 
-          <hr style="border: 1px solid #adadad;margin-left:3%;margin-right:4.5% ;"> 
+          <hr style="border: 1px solid #adadad;margin-left:3%;margin-right:4.5% ;"> <br>
      
         {% if topics_size > 0 %}
             {% for i, j in topics %}
             <div class="main" style="margin-left:2%;" >
                 <a href = "{% url 'orgadmin:dashboard' j %}">
-                  
 
-                
+
+
                   <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                     <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
                 <br>{{i}}<br><br>
                     </div>
-                
+
                     <div class="middle" >
-                        <img class=image src="{% static 'dashboard/complaint.png' %}" alt="Avatar" >
-                      
+                        <img class=image src="{% static 'orgadmin/images/tata.jpg' %}" alt="Avatar" >
+                     
                     </div>
                     <div class="bottom">
-                        <br><br>
+                        <p style="font-family: raleway;margin: 5%;"> Enter your Organization</p>
                       </div>
                       </div>
                   </a>
@@ -257,17 +261,19 @@ z-index: 0;
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" >
+    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" id="create_form">
         {% csrf_token %}
-        <h1 style="font-family: 'Raleway';">Create Organization</h1>
-  
+        <h1 style="font-family: 'Raleway';font-size: 24px;">Create Organization</h1>
+
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Organization Name" name="name" required>
         <hr class="line">
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code" name="code" required>
         <hr class="line">
-        <button type="submit" class="button button2" style="font-family: 'Raleway';width:18%;border-radius:30px;color:rgb(10, 10, 10);margin-left:8% ;margin-top:3% ;text-align:center ;padding-bottom:5% ;">Create</button> <br><br><br><br><br>  
+       <div style="margin-left: 24px;"> <button  type="submit" class="button button2" >Create</button> </div><br><br><br><br><br>
     </form>
+
+
   </div>
 </div>
 
@@ -277,31 +283,31 @@ z-index: 0;
         <span class="close">&times;</span>
     <form class="form-container" action="{% url 'orgadmin:join' %}" method="post" >
       {% csrf_token %}
-        <h1 style="font-family: 'Raleway';">Join Organization</h1>
-  
+        <h1 style="font-family: 'Raleway';font-size: 24px;">Join Organization</h1>
+
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
         <hr class="line">
-        <button type="submit" class="button button2" style="font-family: 'Raleway';width:18%;border-radius:30px;color:rgb(10, 10, 10);margin-left:8% ;margin-top:3% ;text-align:center ;padding-bottom:5% ;">Join</button> <br><br><br><br><br>  
+        <div style="margin-left: 25px; "><button type="submit" class="button button2" >Join</button> </div><br><br><br><br><br>
     </form>
   </div>
 </div>
 
-  
+
   {% block scripts %}
-    
+
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
- 
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }
@@ -341,6 +347,6 @@ window.onclick = function(event) {
 
 
   {% endblock %}
-  
+
 
 {% endblock %}

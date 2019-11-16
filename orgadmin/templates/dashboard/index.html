@@ -282,19 +282,24 @@ z-index: 0;
                                 Menu
                             </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
+                                <a href="{% url 'orgadmin:dashboard' org_id%}">
                                     Dashboard
                                 </a>
-                            </li>                                                 
+                            </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
-                                <a href="#">
+                                <a href="{% url 'orgadmin:departments'%}">
                                     Departments
+                                </a>
+                            </li>
+                            <li class="mm-active" style="padding-top:5%;font-size:20px">
+                                <a href="{% url 'form:form_test'%}">
+                                    Complaint_form
                                 </a>
                             </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px">
                                 <a href="{% url 'orgadmin:about' org_id %}">
                                     About
-                                </a>           
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -315,7 +320,7 @@ z-index: 0;
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                                     <i class="header-icon lnr-charts icon-gradient bg-happy-green"> </i>
-                                    Portfolio Performance
+                                    {{ organisation_name }} Info
                                 </div>
                             </div>
                             <div class="no-gutters row">
@@ -323,17 +328,13 @@ z-index: 0;
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
-                                            <i class="lnr-laptop-phone text-dark opacity-8"></i></div>
-                                        <div class="widget-chart-content">
-                                            <div class="widget-subheading">Cash Deposits</div>
-                                            <div class="widget-numbers">1,7M</div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                <div class="d-inline text-danger pr-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">54.1%</span>
-                                                </div>
-                                                less earnings
+                                            <i>
+                                                <span class="glyphicon">&#xe008;</span>
+                                            </i>
                                             </div>
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">No Of Employees</div>
+                                            <div class="widget-numbers">{{ no_of_employees }}</div>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -342,17 +343,13 @@ z-index: 0;
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
-                                            <i class="lnr-graduation-hat text-white"></i></div>
-                                        <div class="widget-chart-content">
-                                            <div class="widget-subheading">Invested Dividents</div>
-                                            <div class="widget-numbers"><span>9M</span></div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                Grow Rate:
-                                                <span class="text-info pl-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">14.1%</span>
-                                                </span>
+                                            <i>
+                                                <span class="glyphicon">&#xe137;</span>
+                                            </i>
                                             </div>
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">No Of Departments</div>
+                                            <div class="widget-numbers"><span>{{ no_of_departments }}</span></div>
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -361,17 +358,13 @@ z-index: 0;
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-success"></div>
-                                            <i class="lnr-apartment text-white"></i></div>
-                                        <div class="widget-chart-content">
-                                            <div class="widget-subheading">Capital Gains</div>
-                                            <div class="widget-numbers text-success"><span>$563</span></div>
-                                            <div class="widget-description text-focus">
-                                                Increased by
-                                                <span class="text-warning pl-1">
-                                                    <i class="fa fa-angle-up"></i>
-                                                    <span class="pl-1">7.35%</span>
-                                                </span>
+                                            <i>
+                                            <span class="glyphicon">&#xe206;</span>
+                                            </i>
                                             </div>
+                                        <div class="widget-chart-content">
+                                            <div class="widget-subheading">No Of Complaints Handling</div>
+                                            <div class="widget-numbers text-success"><span>{{ no_of_complaints }}</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -407,16 +400,33 @@ z-index: 0;
                                     <div style="float:right;"><span class="close">&times;</span></div>
                                 <form class="form-container" action="{% url 'orgadmin:dashboard' org_id %}" method="post" >
                                     {% csrf_token %}
-                                    <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
-                                    <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
-                                    <select class="input"><br>
-                                        {% for dep in dep %}
-                                        <option value=dep>{{dep}}</option>
-                                        {% endfor %}
-                                    </select><br>
-                                    <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required><br>
-                                    <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
-                                    <input type="submit">
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Employee Name<br>
+                                        <input class="input" type="text" name="emp_name" placeholder="Enter Name" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Email
+                                        <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Select Department<br>
+                                        <select class="input" name="department"><br>
+                                            {% for dep in dep %}
+                                            <option value="{{dep}}">{{dep}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        Hierarchy<br>
+                                        <input class="input" type="text" name="hierarchy" placeholder="Enter Hierarchy" required>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        No of Complaints<br>
+                                        <input class="input" type="text" name="no_complaints" placeholder="No_of_complaints_handling" required><br>
+                                    </div>
+                                    <div style="padding-top:5%;font-size:20px">
+                                        <input type="submit" style="color:blue">
+                                    </div>
                                 </form>
                                 </div>
                             </div>

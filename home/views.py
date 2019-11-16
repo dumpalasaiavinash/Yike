@@ -30,7 +30,7 @@ def home_log(request):
         FilterExpression=Attr('email').eq(email)
         )
         print('\n\n\n')
-        print(response['Items'])
+        # print(response['Items'])
         # print(response['Items'][0])
 
         print('\n\n\n')
@@ -40,7 +40,6 @@ def home_log(request):
                     response['Items'][0]['organizations_created'][i] = int(response['Items'][0]['organizations_created'][i])
                 for i in range(0,len(response['Items'][0]['organizations_joined'])):
                     response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
-
                 request.session['username'] = response['Items'][0]['username']
                 request.session['email']=response['Items'][0]['email']
                 request.session['org_created']=response['Items'][0]['organizations_created']
