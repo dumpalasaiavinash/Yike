@@ -28,7 +28,7 @@ import datetime
 import random
 import string
 
-
+check = 0
 # Create your views here.
 def firstpage(request):
     return render(request, 'Client/first.html')
@@ -95,6 +95,7 @@ def client_signin(request):
         context = response['Items']
         username = request.POST.get('username')
         email    = request.POST.get('email')
+
         password = request.POST.get('pass')
         repassword = request.POST.get('re_pass')
         Email = email
@@ -137,7 +138,7 @@ def client_signin(request):
                                 }
                         )
                         current_site = get_current_site(request)
-                        mail_subject = 'Email COnfirmation'
+                        mail_subject = 'Email Confirmation'
                         message = render_to_string('Client/acc_active_email.html', {
                             'user': username,
                             'user_email':email,
@@ -152,13 +153,13 @@ def client_signin(request):
                         email.send()
                         request.session['clientname'] = username
                         client_session = request.session['clientname']
-                        print(client_session)
                         message = 'Hi,'+str(client_session)+' We have sent an activation link to '
                         message = message+Email
                         add = ' Click on the link to Activate your account'
                         message = message+add
                         print(message)
-                        return render(request,'Client/client_signed.html')
+                        context={'client_id':client_id,'message':message}
+                        return render(request,'Client/client_signed.html',context)
         else:
             if(password==repassword):
                         print(password)
@@ -179,7 +180,7 @@ def client_signin(request):
                                 }
                         )
                         current_site = get_current_site(request)
-                        mail_subject = 'Email Confirmation'
+                        mail_subject = 'Email confirmation'
                         message = render_to_string('Client/acc_active_email.html', {
                             'user': username,
                             'user_email':email,
@@ -200,14 +201,21 @@ def client_signin(request):
                         add = ' Click on link to Activate your account'
                         message = message+add
                         print(message)
-                        return render(request,'Client/client_signed.html')
+
+                        context={'client_id':client_id,'message':message}
+                        return render(request,'Client/client_signed.html',context)
+
     return render(request,'Client/new_home/signup.html')
 
 def activate(request,token,email,username,client_id):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('clients')
-
     response=table.scan()
+
+    print(token)
+    print(email)
+    print(username)
+    print(client_id)
 
     for cli in response['Items']:
         if (cli['client_id']==int(client_id)) and (cli['token']==token):
@@ -219,12 +227,27 @@ def activate(request,token,email,username,client_id):
                     ExpressionAttributeValues={
                         ':r':True
                     }
-                )
+                    )
+            print("______----ACcepted----_____")
+            return render(request,'Client/first.html')
+        else:
+            return render(request,'Client/first.html')
 
-            return render(request,'Client/client_verify.html')
+def refresh(request,client_id):
+    print('refresh post',client_id)
+    dynamodb=boto3.resource('dynamodb')
+    table=dynamodb.Table('clients')
 
+    response=table.scan()
 
-
+    for cli in response['Items']:
+        if (cli['client_id']==client_id):
+            if(cli['active']==True):
+                print('refresh true')
+                return render(request,'Client/first.html')
+            else:
+                context={'client_id':client_id}
+                return render(request,'Client/client_signed.html',context)
 
 def client_login(request):
     return render(request,'Client/new_home/login.html')

@@ -17,6 +17,20 @@
           Login
         </span>
 
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <div class="w3-panel w3-grey w3-display-container">
+
+              <h4 class="{{ message.tags }}" style="font-family:avenir Black ;"> {{ message }}</h4>
+
+            </div>
+            {% endfor %}
+          </ul>
+        {% endif %}
+<br>
+
+
         <div class="wrap-input100 validate-input m-b-23" data-validate = "Username is required">
           <span class="label-input100" style="font-size:150%;margin-bottom:5px">Email</span>
           <input class="input100" type="text" name="email" placeholder="Type your email" required>

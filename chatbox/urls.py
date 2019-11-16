@@ -7,6 +7,7 @@ urlpatterns = [
     path('msg/',views.msg,name='msg'),
     path('temp/',views.preview),
     path('recents/', views.recents),
-    path('mesgs/',views.mesgs)
+    path('mesgs/',views.mesgs),
+    path('add/',views.MessageBox)
 
 ]

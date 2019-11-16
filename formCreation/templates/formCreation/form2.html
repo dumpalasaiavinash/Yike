@@ -6,16 +6,28 @@
 <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
 <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.12.4.js"></script>
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-datetime-picker/2.4.0/material-datetime-picker.css">
+
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link href="{% static 'dashboard/main.cba69814a806ecc7945a.css' %}" rel="stylesheet">
 <script type="text/javascript" src=" {% static 'dashboard/main.cba69814a806ecc7945a.js' %}"></script>
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-datetime-picker/2.4.0/material-datetime-picker.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
 <style>
+  .c_r{
+    font-family: Roboto, sans-serif;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+    letter-spacing: .0178571429em;
+    text-transform: inherit;
+  }
   .notice {
     position: relative;
     margin: 0.6em;
@@ -318,196 +330,376 @@
     .button {
         width: 100%;
     }
+    .imgfile_name {
+            margin-top: 16px;
+            margin-left: 16px;
+            color: rgba(0, 0, 0, 0.37);
+        }
+
+        .radiolabel {
+            color: rgba(0, 0, 0, 0.37);
+            font-weight: initial;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .checklabel {
+            color: rgba(0, 0, 0, 0.37);
+            font-weight: initial;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
 </style>
 <script>
+ var ild = 0;
 
-    var yikedtp = 0, yiketf = 0, yiketa = 0, yikerb = 0, yikecb = 0, yikef = 0, yikem = 0;
+var yikedtp = 0, yiketf = 0, yiketa = 0, yikerb = 0, yikecb = 0, yikef = 0, yikem = 0, yiket = 0, yikeiu = 0, yikefu = 0;
 
-    function allowDrop(ev) {
-        ev.preventDefault();
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ild = 0;
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+var rbs = 0
+
+function drop2(ev) {
+    console.log("drop2")
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var node = document.createElement("div");
+    console.log(ev.target)
+
+    if (data == "drag3" && ev.target.id.includes('radiogroup')) {
+        var val1 = ev.target.id.replace('radiogroup', '');
+        var pos = jQuery(ev.target).attr('pos');
+        var nR = form['yike' + pos]["nR"];
+        form['yike' + pos]['radios']['' + nR] = {
+            'label': "Radio" + nR,
+        };
+        form['yike' + pos]['nR'] += 1;
+        node.setAttribute('group', val1);
+        node.innerHTML = node.innerHTML + generate_new_RadioButton(val1, nR)
+        ev.target.appendChild(node);
     }
-
-    function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);
-    }
-    var rbs = 0
-
-    function drop2(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        var node = document.createElement("div");
-
-        if (data == "drag3") {
-            node.innerHTML = node.innerHTML + rb;
-            ev.target.appendChild(node);
-            rbs += 1
-        }
-
-        if (rbs == 1) {
-            document.getElementById(ev.target.id).style.height = "100px";
-        }
-        else {
-            var h = (100 + 40 * (rbs - 1)) + "px";
-            document.getElementById(ev.target.id).style.height = h;
-        }
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        var node = document.createElement("div");
-
-        if (data == "drag1") {
-            node.setAttribute('id', "divtextfield" + yiketf);
-            node.setAttribute('onclick', 'editor(\'textfield' + yiketf + '\')');
-            node.innerHTML = node.innerHTML + genrate_new_textField();
-            form["yike" + yikef] = {
-                "type": "textfield",
-                "label": "label",
-                "count_enabled": false,
-                "count_char": 0,
-                "helper_enabled": false,
-                "helper_text": "",
-                "is_req": true,
+    else {
+        ild = 1;
+        if (jQuery(ev.target).attr('group')) {
+            var val1 = jQuery(ev.target).attr('group')
+            var pos = jQuery('#radiogroup' + val1).attr('pos');
+            var nR = form['yike' + pos]["nR"];
+            form['yike' + pos]['radios']['' + nR] = {
+                'label': "Radio" + nR,
             };
-            yiketf += 1;
-            yikef += 1;
-            form["nE"] = yikef;
-            ev.target.appendChild(node);
-
-
+            form['yike' + pos]['nR'] += 1;
+            node.setAttribute('group', val1);
+            console.log(val1)
+            node.innerHTML = node.innerHTML + generate_new_RadioButton(val1, nR)
+            document.getElementById('radiogroup' + val1).appendChild(node);
         }
-        else if (data == "drag2") {
+    }
 
-            node.setAttribute('id', "divtextarea" + yiketa);
-            node.setAttribute('onclick', 'editor(\'textarea' + yiketa + '\')');
-            node.innerHTML = node.innerHTML + genrate_new_textArea();
-            yiketa += 1;
-            form["yike" + yikef] = {
-                "type": "textarea",
-                "label": "label",
-                "count_enabled": false,
-                "count_char": 0,
-                "helper_enabled": false,
-                "helper_text": "",
-                "is_req": true,
+}
+function drop3(ev) {
+    console.log("drop3")
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var node = document.createElement("div");
+    console.log(ev.target)
+
+    if (data == "drag7" && ev.target.id.includes('checkgroup')) {
+        var val1 = ev.target.id.replace('checkgroup', '');
+        var pos = jQuery(ev.target).attr('pos');
+        var nR = form['yike' + pos]["nR"];
+        form['yike' + pos]['checks']['' + nR] = {
+            'label': "Checkbox" + nR,
+        };
+        form['yike' + pos]['nR'] += 1;
+        node.setAttribute('group', val1);
+        node.innerHTML = node.innerHTML + generate_new_checkButton(val1, nR)
+        ev.target.appendChild(node);
+    }
+    else {
+        ild = 1;
+        if (jQuery(ev.target).attr('group')) {
+            var val1 = jQuery(ev.target).attr('group')
+            var pos = jQuery('#checkgroup' + val1).attr('pos');
+            var nR = form['yike' + pos]["nR"];
+            form['yike' + pos]['checks']['' + nR] = {
+                'label': "Checkbox" + nR,
             };
-            ev.target.appendChild(node);
-            yikef += 1;
-            form["nE"] = yikef;
-        }
-        else if (data == "drag6") {
-            node.setAttribute('id', "divmobile" + yikem);
-            node.setAttribute('onclick', 'editor(\'mobile' + yikem + '\')');
-            node.innerHTML = node.innerHTML + generate_new_mobilefield();
-            yiketa += 1;
-            form["yike" + yikef] = {
-                "type": "mobile",
-                "label": "Mobile Number",
-                "helper_enabled": false,
-                "helper_text": "",
-                "is_req": true,
-            };
-            ev.target.appendChild(node);
-            convert2li('dropdown' + yikem);
-            yikem += 1;
-            yikef += 1;
-            form["nE"] = yikef;
-        }
-
-
-        else if (data == "drag4") {
-            node.innerHTML = node.innerHTML + bt;
-            ev.target.appendChild(node);
-        }
-
-
-        else if (data == "drag5") {
-            node.innerHTML = node.innerHTML + generate_new_datefield();
-            node.setAttribute('id', "divdatepicker" + yikedtp);
-            node.setAttribute('onclick', 'editor(\'datepicker' + yikedtp + '\')');
-            form["yike" + yikef] = {
-                "type": "datepicker",
-                "label": "label",
-                "format": "dd/mm/yy",
-                "maxDate_enabled": false,
-                "minDate_enabled": false,
-            };
-            yikef += 1;
-            ev.target.appendChild(node);
-            form["nE"] = yikef;
-        }
-        else if (data == "drag7")
-            node.innerHTML = node.innerHTML + cb;
-
-        else if (data == "drag10") {
-            node.innerHTML = node.innerHTML + generate_new_RadioGroup();
-            yikerb += 1;
-
-        }
-
-
-        window.mdc.autoInit();
-        addNode_at_pos(1)
-        if (data == "drag5") {
-
-            $('#datepicker' + yikedtp).datepicker({ dateFormat: 'dd/mm/yy' });
-            $('#datepicker' + yikedtp).datepicker({ Format: 'mm/mm/mm' });
-            yikedtp += 1;
+            form['yike' + pos]['nR'] += 1;
+            node.setAttribute('group', val1);
+            console.log(val1)
+            node.innerHTML = node.innerHTML + generate_new_checkButton(val1, nR)
+            document.getElementById('checkgroup' + val1).appendChild(node);
         }
     }
 
+}
 
-    function addNode_at_pos(pos) {
-        var parent = document.getElementById("dropzone");
-        var children = parent.childNodes;
+
+function drop5(ev) {
+    ild = 1
+
+}
+
+function drop4(ev) {
+    console.log("ohhh")
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    console.log("drop1")
+    var data = ev.dataTransfer.getData("text");
+    var node = document.createElement("div");
+    node.setAttribute('pos', yikef);
+
+    if (ild == 1) {
+        return;
     }
-    function getPos(id0) {
-        var parent = document.getElementById("dropzone");
-        var children = parent.childNodes;
-        for (var a = 0; a <= children.length; a += 1) {
-            if (children[a].id.includes(id0.id))
-                return a;
+    else if (data == "drag1") {
+        node.setAttribute('id', "divtextfield" + yiketf);
+        node.setAttribute('onclick', 'editor(\'textfield' + yiketf + '\')');
+        node.innerHTML = node.innerHTML + genrate_new_textField();
+        form["yike" + yikef] = {
+            "type": "textfield",
+            "label": "label",
+            "count_enabled": false,
+            "count_char": 0,
+            "helper_enabled": false,
+            "helper_text": "",
+            "is_req": true,
+        };
+        yiketf += 1;
+        yikef += 1;
+        form["nE"] = yikef;
+        ev.target.appendChild(node);
+
+
+    }
+    else if (data == "drag2") {
+
+        node.setAttribute('id', "divtextarea" + yiketa);
+        node.setAttribute('onclick', 'editor(\'textarea' + yiketa + '\')');
+        node.setAttribute('ondragover', '');
+        node.setAttribute('ondrop', 'drop4(event)')
+        node.innerHTML = node.innerHTML + genrate_new_textArea();
+        yiketa += 1;
+        form["yike" + yikef] = {
+            "type": "textarea",
+            "label": "label",
+            "count_enabled": false,
+            "count_char": 25,
+            "helper_enabled": false,
+            "helper_text": "Helper Text",
+            "is_req": true,
+        };
+        ev.target.appendChild(node);
+        yikef += 1;
+        form["nE"] = yikef;
+    }
+    else if (data == "drag6") {
+        node.setAttribute('id', "divmobile" + yikem);
+        node.setAttribute('onclick', 'editor(\'mobile' + yikem + '\')');
+        node.innerHTML = node.innerHTML + generate_new_mobilefield();
+        yiketa += 1;
+        form["yike" + yikef] = {
+            "type": "mobile",
+            "label": "Mobile Number",
+            "helper_enabled": false,
+            "helper_text": "Helper Text",
+            "is_req": true,
+        };
+        ev.target.appendChild(node);
+        convert2li('dropdown' + yikem);
+        yikem += 1;
+        yikef += 1;
+        form["nE"] = yikef;
+    }
+
+
+    else if (data == "drag4") {
+        node.innerHTML = node.innerHTML + generate_new_Text();
+        node.setAttribute('id', "divtextarea" + yiket);
+        node.setAttribute('onclick', 'editor(\'Text' + yiket + '\')');
+        form["yike" + yikef] = {
+            "type": "text",
+            "size": 12,
+            "color": "rgba(0,0,0,0.37)",
+            "content": "Text"
         }
-        return -1;
-    }
-    function moveUp(id0) {
-        var index = getPos(id0);
-        var parent = document.getElementById("dropzone");
-        var children = parent.childNodes;
-        if (index > 0 && index < children.length) {
-            div1 = jQuery('#' + children[index].id);
-            div2 = jQuery('#' + children[index - 1].id);
+        yikef += 1;
+        ev.target.appendChild(node);
+        yiket += 1;
+        form["nE"] = yikef;
 
-            tdiv1 = div1.clone();
-            tdiv2 = div2.clone();
-            if (!div2.is(':empty')) {
-                div1.replaceWith(tdiv2);
-                div2.replaceWith(tdiv1);
-                window.mdc.autoInit();
-            }
+    }
+
+
+    else if (data == "drag8") {
+        node.innerHTML = node.innerHTML + generate_new_ImageUpload();
+        node.setAttribute('id', "divimageU" + yikeiu);
+        node.setAttribute('onclick', 'editor(\'imageU' + yikeiu + '\')');
+        ev.target.appendChild(node);
+        form["yike" + yikef] = {
+            "type": "image_Upload",
+            "label": "label",
+            "helper_text": "Helper Text",
+            "helper_enabled": false,
+        };
+        yikef += 1;
+        ev.target.appendChild(node);
+        form["nE"] = yikef;
+        yikeiu += 1;
+    }
+    else if (data == "drag9") {
+        node.innerHTML = node.innerHTML + generate_new_FileUpload();
+        node.setAttribute('id', "divfileU" + yikefu);
+        node.setAttribute('onclick', 'editor(\'fileU' + yikefu + '\')');
+        ev.target.appendChild(node);
+        form["yike" + yikef] = {
+            "type": "file_Upload",
+            "label": "label",
+            "helper_text": "Helper Text",
+            "helper_enabled": false,
+        };
+        yikef += 1;
+        ev.target.appendChild(node);
+        form["nE"] = yikef;
+        yikeiu += 1;
+    }
+
+    else if (data == "drag5") {
+        node.innerHTML = node.innerHTML + generate_new_datefield();
+        node.setAttribute('id', "divdatepicker" + yikedtp);
+        node.setAttribute('onclick', 'editor(\'datepicker' + yikedtp + '\')');
+        form["yike" + yikef] = {
+            "type": "datepicker",
+            "label": "label",
+            "format": "dd/mm/yy",
+            "helper_text": "Helper Text",
+            "helper_enabled": false,
+            "maxDate_enabled": false,
+            "minDate_enabled": false,
+        };
+        yikef += 1;
+        ev.target.appendChild(node);
+        form["nE"] = yikef;
+    }
+    else if (data == "drag7")
+        node.innerHTML = node.innerHTML + cb;
+
+    else if (data == "drag10") {
+        node.innerHTML = node.innerHTML + generate_new_RadioGroup();
+        node.setAttribute('ondragover', '');
+        form["yike" + yikef] = {
+            "type": "radiogroup",
+            "label": "label for radiogroup",
+            "nR": 0,
+            "radios": {}
+        }
+        yikef += 1;
+        form["nE"] = yikef;
+        ev.target.appendChild(node);
+        yikerb += 1;
+
+    }
+
+    else if (data == "drag11") {
+        node.innerHTML = node.innerHTML + generate_new_checkGroup();
+        node.setAttribute('ondragover', '');
+        form["yike" + yikef] = {
+            "type": "checkgroup",
+            "label": "label for Checkgroup",
+            "nR": 0,
+            "checks": {}
+        }
+        yikef += 1;
+        form["nE"] = yikef;
+        ev.target.appendChild(node);
+        yikerb += 1;
+
+    }
+
+
+    addNode_at_pos(1)
+    if (data == "drag5") {
+
+        $('#datepicker' + yikedtp).datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#datepicker' + yikedtp).datepicker({ Format: 'mm/mm/mm' });
+        yikedtp += 1;
+    }
+
+    window.mdc.autoInit();
+}
+
+
+function addNode_at_pos(pos) {
+    var parent = document.getElementById("dropzone");
+    var children = parent.childNodes;
+}
+function getPos(id0) {
+    var parent = document.getElementById("dropzone");
+    var children = parent.childNodes;
+    for (var a = 0; a <= children.length; a += 1) {
+        if (children[a].id.includes(id0.id))
+            return a;
+    }
+    return -1;
+}
+function moveUp(id0) {
+    var index = getPos(id0);
+    var parent = document.getElementById("dropzone");
+    var children = parent.childNodes;
+    if (index > 0 && index < children.length) {
+        div1 = jQuery('#' + children[index].id);
+        div2 = jQuery('#' + children[index - 1].id);
+
+        pos1 = jQuery('#' + children[index].id).attr('pos');
+        pos2 = jQuery('#' + children[index - 1].id).attr('pos');
+
+        tdiv1 = div1.clone();
+        tdiv2 = div2.clone();
+        if (!div2.is(':empty')) {
+            div1.replaceWith(tdiv2);
+            div2.replaceWith(tdiv1);
+
+            tobj = form['yike' + pos1];
+            form['yike' + pos1] = form['yike' + pos2];
+            form['yike' + pos2] = tobj;
+            window.mdc.autoInit();
+        }
+
+    }
+}
+function moveDown(id0) {
+    var index = getPos(id0);
+    var parent = document.getElementById("dropzone");
+    var children = parent.childNodes;
+    if (index >= 0 && index < children.length - 1) {
+        div1 = jQuery('#' + children[index].id);
+        div2 = jQuery('#' + children[index + 1].id);
+
+        pos1 = jQuery('#' + children[index].id).attr('pos');
+        pos2 = jQuery('#' + children[index + 1].id).attr('pos');
+
+        tdiv1 = div1.clone();
+        tdiv2 = div2.clone();
+        if (!div2.is(':empty')) {
+            div1.replaceWith(tdiv2);
+            div2.replaceWith(tdiv1);
+            tobj = form['yike' + pos1];
+            form['yike' + pos1] = form['yike' + pos2];
+            form['yike' + pos2] = tobj;
+            window.mdc.autoInit();
         }
     }
-    function moveDown(id0) {
-        var index = getPos(id0);
-        var parent = document.getElementById("dropzone");
-        var children = parent.childNodes;
-        if (index >= 0 && index < children.length - 1) {
-            div1 = jQuery('#' + children[index].id);
-            div2 = jQuery('#' + children[index + 1].id);
+}
 
-            tdiv1 = div1.clone();
-            tdiv2 = div2.clone();
-            if (!div2.is(':empty')) {
-                div1.replaceWith(tdiv2);
-                div2.replaceWith(tdiv1);
-                window.mdc.autoInit();
-            }
-        }
-    }
-
-    var form = { "nE": 0 };
-
+var form = { "nE": 0 };
 </script>
 
 {% endblock %}
@@ -707,45 +899,7 @@
     </div>
 </div>
 
-<div class="container" style="height:100%;float:left;width:150%;">
-<!-- ################### Preview Pop up ###################### -->
-    <div class="popup" id="contain">
-      hhhhhh
-        <div class="close"><button class="mdc-button" onclick="togglec()">X</button>
-        </div>
-        <div class="form" id="pre_form"></div>
-    </div>
-    <div class="popup" id="shadder"></div>
-<!-- ######################################################### -->
-
-    <div class="div2" style="float:right;width:30%;">
-        <h3>Components</h3><br>
-
-        <div class="notice info" id="drag1" draggable="true" ondragstart="drag(event)"><p>Text Field</p></div>
-        <div class="notice info" id="drag2" draggable="true" ondragstart="drag(event)"><p>Text Area</p></div>
-        <div class="notice info" id="drag3" draggable="true" ondragstart="drag(event)"><p>Radio</p></div>
-        <div class="notice info" id="drag4" draggable="true" ondragstart="drag(event)"><p>Button</p></div>
-        <div class="notice info" id="drag5" draggable="true" ondragstart="drag(event)"><p>Date Picker</p></div>
-        <div class="notice info" id="drag6" draggable="true" ondragstart="drag(event)"><p>Mobile Number</p></div>
-        <div class="notice info" id="drag7" draggable="true" ondragstart="drag(event)"><p>Check box</p></div>
-        <div class="notice info" id="drag8" draggable="true" ondragstart="drag(event)"><p>Image</p></div>
-        <div class="notice info" id="drag9" draggable="true" ondragstart="drag(event)"><p>Location</p></div>
-        <div class="notice info" id="drag10" draggable="true" ondragstart="drag(event)"><p>Radio Group</p></div>
-
-    </div>
-<!-- ################### Peach ###################### -->
-    <div class="div1" id="div1" style="height:110%;width:49%">
-      <!-- gggggg -->
-        <button class="mdc-button mdc-button--raised previewButton" onclick="preview()">
-          <span class="mdc-button__ripple"></span>Preview
-        </button>
-        <div id="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)" style="width:70%;height:92%;"></div>
-    </div>
-<!-- ######################################################### -->
-    <div class="div3" id="div3" style="width:21%;float:right;right-padding:6%;padding:2%;">
-      <br><br><br><br>
-      <!-- ffffff -->
-    </div>
+<iframe src ="/form/main" style="width: 81%;height: 115%;border: 0;"></iframe>
 
 
 </div>
@@ -756,428 +910,799 @@
 {% block script %}
 
 
-    var cb = "<div class=\"mdc-form-field object_of_form\"><div class=\"mdc-checkbox\"><input type=\"checkbox\"class=\"mdc-checkbox__native-control\"id=\"checkbox-1\"/><div class=\"mdc-checkbox__background\">"
-        + "<svg class=\"mdc-checkbox__checkmark\"viewBox=\"0 0 24 24\"><path class=\"mdc-checkbox__checkmark-path\"fill=\"none\"d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>"
-        + "</svg><div class=\"mdc-checkbox__mixedmark\"></div></div></div><label for=\"checkbox-1\">Checkbox 1</label></div>";
-    var bt = "<div class=\"object_of_form button0\"><button c=lass=\"mdc-button mdc-button--raised \">Button</button></div>";
+var addSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/form/add/');
+addSocket.onopen = function (e) {
+    console.log('open', e)
+}
+addSocket.onmessage = function (e) {
+    console.log('open', e)
+}
+addSocket.onclose = function (e) {
+console.log('close', e)
+}
+addSocket.onerror = function (e) {
+    console.log('error', e)
+}
 
 
-    function generate_new_datefield() {
-        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  onclick=\"editor('datepicker" + yikedtp + "')\"  data-mdc-auto-init=\"MDCTextField\"><input  disabled class=\"mdc-text-field__input\" id=\"datepicker" + yikedtp + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\"><label for=\"datepicker" + yikedtp + "\" class=\"mdc-floating-label\" id=\"labeldatepicker" + yikedtp + "\">Label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helperdatepicker" + yikedtp + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+var cb = "<div class=\"mdc-form-field object_of_form\"><div class=\"mdc-checkbox\"><input type=\"checkbox\"class=\"mdc-checkbox__native-control\"id=\"checkbox-1\"/><div class=\"mdc-checkbox__background\">"
+    + "<svg class=\"mdc-checkbox__checkmark\"viewBox=\"0 0 24 24\"><path class=\"mdc-checkbox__checkmark-path\"fill=\"none\"d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>"
+    + "</svg><div class=\"mdc-checkbox__mixedmark\"></div></div></div><label for=\"checkbox-1\">Checkbox 1</label></div>";
+var bt = "<div class=\"object_of_form button0\"><button c=lass=\"mdc-button mdc-button--raised \">Button</button></div>";
+
+
+function generate_new_datefield() {
+    return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\"  data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"posdatepicker" + yikedtp + "\">" + yikef + "</span><input  disabled class=\"mdc-text-field__input\" id=\"datepicker" + yikedtp + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"datepicker" + yikedtp + "\" class=\"mdc-floating-label\" id=\"labeldatepicker" + yikedtp + "\">Label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helperdatepicker" + yikedtp + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+}
+
+var rb = "<div class=\"mdc-form-field\"><div class=\"mdc-radio\"><input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio-1\" name=\"radios\" checked><div class=\"mdc-radio__background\"><div class=\"mdc-radio__outer-circle\"></div><div class=\"mdc-radio__inner-circle\"></div></div></div><label for=\"radio-1\">Radio 1</label></div>";
+
+function generate_new_RadioGroup() {
+    return "<div  ondrop=\"drop5(event)\" class =\"object_of_form\"><h4 id=\"labelradiogroup" + yikerb + "\" onclick=\"editor(\'labelradiogroup" + yikerb + "\')\" class=\"radiolabel demo-title mdc-typography--headline9\" >Label for Radio Group </h4>" +
+        "<div class=\"radiodrop\" id=\"radiogroup" + yikerb + "\"ondrop=\"drop2(event)\" pos=\"" + yikef + "\" ondragover=\"allowDrop(event)\"></div></div>";
+}
+
+function generate_new_RadioButton(g_no, nR) {
+    return "<div group = \"" + g_no + "\" class=\"mdc-form-field\">" +
+        "<div group = \"" + g_no + "\" class=\"mdc-radio\">" +
+        "<input disabled class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio_" + g_no + "_" + nR + "\" name=\"radiogroup_" + g_no + "\">" +
+        "<div class=\"mdc-radio__background\">" +
+        "<div class=\"mdc-radio__outer-circle\"></div>" +
+        "<div class=\"mdc-radio__inner-circle\"></div>" +
+        "</div>" +
+        "<div group = \"" + g_no + "\" class=\"mdc-radio__ripple\"></div>" +
+        "</div>" +
+        "<label group = \"" + g_no + "\" style= \"color:rgba(0,0,0,0.37)\" class=\"c_r\" pos=\"" + nR + "\" onclick=\" editor('radio" + g_no + "_" + nR + "') \" id=\"radio" + g_no + "_" + nR + "\" for=\"radio" + nR + "\">Radio 1</label>" +
+        "</div>"
+}
+
+
+function generate_new_checkGroup() {
+    return "<div  ondrop=\"drop5(event)\" class =\"object_of_form\"><h4 id=\"labelcheckgroup" + yikerb + "\" onclick=\"editor(\'labelcheckgroup" + yikerb + "\')\" class=\"checklabel demo-title mdc-typography--headline9\" >Label for check Group </h4>" +
+        "<div class=\"checkdrop\" id=\"checkgroup" + yikerb + "\"ondrop=\"drop3(event)\" pos=\"" + yikef + "\" ondragover=\"allowDrop(event)\"></div></div>";
+}
+
+function generate_new_checkButton(g_no, nR) {
+    return "<div group = \"" + g_no + "\" class=\"mdc-form-field\">" +
+        "<div group = \"" + g_no + "\" class=\"mdc-checkbox\">" +
+        "<input disabled group = \"" + g_no + "\" type=\"checkbox\"" +
+        "class=\"mdc-checkbox__native-control\"" +
+        "id=\"check_" + g_no + "_" + nR + "\">" +
+        "<div group = \"" + g_no + "\" class=\"mdc-checkbox__background\">" +
+        "<svg class=\"mdc-checkbox__checkmark\"" +
+        "viewBox=\"0 0 24 24\">" +
+        "<path class=\"mdc-checkbox__checkmark-path\"" +
+        "fill=\"none\"" +
+        "d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>" +
+        "</svg>" +
+        "<div group = \"" + g_no + "\" class=\"mdc-checkbox__mixedmark\"></div>" +
+        "</div>" +
+        "<div  group = \"" + g_no + "\"class=\"mdc-checkbox__ripple\"></div>" +
+        "</div>" +
+        "<label group = \"" + g_no + "\" class= "\" style= \"color:rgba(0,0,0,0.37)\" pos=\"" + nR + "\" onclick=\" editor('check" + g_no + "_" + nR + "') \" id=\"check" + g_no + "_" + nR + "\" for=\"checkbox-1\">Checkbox" + nR + "</label>" +
+        "</div>"
+}
+
+
+
+
+function generate_new_Text() {
+    return "<div class=\"object_of_form\"><div class=\"mdc-text-field-helper-line helpertext \"><span class=\"posteller\" id = \"posText" + yiket + "\">" + yikef + "</span><p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+        "id=\"Text" + yiket + "\">Text</p></div></div>";
+}
+
+function generate_new_ImageUpload() {
+    return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span class=\"posteller\" id = \"posimageU" + yikeiu + "\">" + yikef + "</span><span id=\"labelimageU" + yikeiu + "\">Image Label</span></div></div><div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button disabled class=\"yike_button_icon mdc-button mdc-button--raised \">  <span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>" +
+        "<div class=\"imgfile_name\">No image selected</div>" +
+        "</div><div id=\"helperimageU" + yikeiu + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+}
+
+function generate_new_FileUpload() {
+    return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span class=\"posteller\" id = \"posfileU" + yikefu + "\">" + yikef + "</span><span id=\"labelfileU" + yikefu + "\">File Label</span></div></div><div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button disabled class=\"yike_button_icon mdc-button mdc-button--raised \">  <span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">attach_file</i></button></div>" +
+        "<div class=\"imgfile_name\">No file selected</div>" +
+        "</div><div id=\"helperfileU" + yikefu + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+}
+
+function genrate_new_textField() {
+    return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\" data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"postextfield" + yiketf + "\">" + yikef + "</span>" +
+        "<input disabled class=\"mdc-text-field__input\"   id=\"textfield" + yiketf + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"textfield" + yiketf + "\" class=\"mdc-floating-label\" id=\"labeltextfield" + yiketf + "\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helpertextfield" + yiketf + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+}
+
+function genrate_new_textArea() {
+    return "<div pos=\"" + yikef + "\" class=\"mdc-text-field mdc-text-field--textarea object_of_form\" data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"postextarea" + yiketa + "\">" + yikef + "</span><textarea disabled id=\"textarea" + yiketa + "\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"textarea" + yiketa + "\" id=\"labeltextarea" + yiketa + "\" class=\"mdc-floating-label\">Textarea Label</label></div><div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"helpertextarea" + yiketa + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+}
+
+function generate_new_HelperText(id0) {
+
+    return " <p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+        "id=\"helperText" + id0 + "\">Helper Text</p>";
+}
+
+function generate_new_Count(id0) {
+    return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / 25</div>";
+}
+
+
+function editor(id) {
+    console.log("clicked")
+    var div4editor = document.getElementById('div3');
+
+
+    if (id.includes("textfield") || id.includes("textarea")) {
+        div4editor.innerHTML = "";
+        var pos = document.getElementById('pos' + id).innerHTML;
+        var obj = form['yike' + pos];
+        var labelText = obj["label"]; //document.getElementById('label'+id).innerHTML;
+        var isCount = obj["count_enabled"];
+        var ishelper = obj["helper_enabled"];
+        var count = isCount ? obj["count_char"] : "";
+        var helper = ishelper ? obj["helper_text"] : "";
+        var cchecked = isCount ? 'checked' : '';
+        var cdisabled = isCount ? '' : 'disabled';
+        var hchecked = ishelper ? 'checked' : '';
+        var hdisabled = ishelper ? '' : 'disabled';
+
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+            "<tr><td>Character Count</td><td><input type='checkbox' id=\"countCheck\" " + cchecked + " onclick=\"addCount(helper" + id + "," + pos + ")\"></td></tr>" +
+            "<tr><td>Number Characters</td><td><input type='Number' id=\"numtf\" onkeyup=\"updateCount('counthelper" + id + "','numtf'," + pos + ")\" " + cdisabled + " value=" + count + "  ></td></tr>" +
+            "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper(helper" + id + "," + pos + ")\"></td></tr>" +
+            "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\" >Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
+
+    }
+    else if (id.includes('datepicker')) {
+        div4editor.innerHTML = "";
+        var pos = document.getElementById('pos' + id).innerHTML;
+        var obj = form['yike' + pos];
+        var labelText = obj['label'];
+        var ishelper = obj["helper_enabled"];
+        var helper = ishelper ? obj["helper_text"] : "";
+        var hchecked = ishelper ? 'checked' : '';
+        var hdisabled = ishelper ? '' : 'disabled';
+        var options = "<option value=\"dd mm y\">dd mm yy</option>" +
+            "<option value=\"dd mm yy\">dd mm yyyy</option>" +
+            "<option value=\"mm dd y\">mm dd yy</option>" +
+            "<option value=\"dd mm yy\">mm dd yyyy</option>";
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+            "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + "," + pos + ")\"></td></tr>" +
+            "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+            "<tr><td>Format</td><td><select id=\"format\" onchange=\"changeFormat(" + id + ",this,this.selectedIndex)\">" + options + "</select></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
+
+
+    }
+    else if (id.includes('mobile')) {
+        div4editor.innerHTML = "";
+        var pos = document.getElementById('pos' + id).innerHTML;
+        var obj = form['yike' + pos];
+        var labelText = obj['label'];
+        var ishelper = obj["helper_enabled"];
+        var helper = ishelper ? obj["helper_text"] : "";
+        var hchecked = ishelper ? 'checked' : '';
+        var hdisabled = ishelper ? '' : 'disabled';
+
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+            "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + "," + pos + ")\"></td></tr>" +
+            "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
+
+    }
+    else if (id.includes('Text')) {
+        div4editor.innerHTML = "";
+        var pos = document.getElementById('pos' + id).innerHTML;
+        var obj = form['yike' + pos];
+        var size = obj['size'];
+        var color = obj['color'];
+        var content = obj["content"];
+
+        div4editor.innerHTML = "<Table style='width:100%'><tr>" +
+            "<td>Content</td><td><textarea id = \"content\" onkeyup=\"updateContent('" + id + "','content'," + pos + ")\">" + content + "</textarea></td></tr>" +
+            "<tr> <td>Font size</td><td><input type='Text'   id=\"sizetf\" value=\"" + size + "\" onkeyup=\"updateFont('" + id + "','sizetf'," + pos + ")\"></td></tr>" +
+            "<tr> <td>Text Color</td><td><input type='Color' id=\"colorp\" value=\"" + color + "\" onchange=\"updateColor('" + id + "','colorp'," + pos + ")\"></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</table>";
+    }
+    else if (id.includes("image") || id.includes("file")) {
+        div4editor.innerHTML = "";
+        var pos = document.getElementById('pos' + id).innerHTML;
+        var obj = form['yike' + pos];
+        var labelText = obj['label'];
+        var isHelperEnabled = obj["helper_enabled"]
+        var helper_text = isHelperEnabled ? obj["helper_text"] : "";
+        var hdisabled = isHelperEnabled ? "" : 'disabled';
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
+            "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + "," + pos + ")\"></td></tr>" +
+            "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper_text + "\" onkeyup=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
+
+    }
+    else if (id.includes('group')) {
+        div4editor.innerHTML = "";
+        var pos = jQuery('#' + id.replace('label', '')).attr("pos");
+        var obj = form['yike' + pos];
+        var labelText = obj['label'];
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel('" + id + "','label'," + pos + ")\"> </td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
     }
 
-    var rb = "<div class=\"mdc-form-field\"><div class=\"mdc-radio\"><input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radio-1\" name=\"radios\" checked><div class=\"mdc-radio__background\"><div class=\"mdc-radio__outer-circle\"></div><div class=\"mdc-radio__inner-circle\"></div></div></div><label for=\"radio-1\">Radio 1</label></div>";
-
-    function generate_new_RadioGroup() {
-        return "<div class =\"object_of_form\"><h4 class=\" demo-title mdc-typography--headline9\" >Label for Radio Group </h2>" +
-            "<div class=\"radiodrop\" id=\"radiogroup" + yikerb + "\"ondrop=\"drop2(event)\"  ondragover=\"allowDrop(event)\"></div></div>";
+    else if (id.includes('radio')) {
+        div4editor.innerHTML = "";
+        var pos = jQuery('#' + id.replace('label', '')).attr("pos");
+        var g_no = jQuery('#' + id.replace('label', '')).attr("group");
+        var g_pos = jQuery('#radiogroup' + g_no).attr("pos");
+        console.log(form['yike' + g_pos]["radios"])
+        var obj = form['yike' + g_pos]["radios"]['' + pos];
+        var labelText = obj['label'];
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel4('" + id + "','label'," + pos + "," + g_pos + ")\"> </td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
     }
 
-    function genrate_new_textField() {
-        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form\" data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"postextfield" + yiketf + "\">" + yikef + "</span>" +
-            "<input disabled class=\"mdc-text-field__input\"   id=\"textfield" + yiketf + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\"><label for=\"textfield" + yiketf + "\" class=\"mdc-floating-label\" id=\"labeltextfield" + yiketf + "\">label</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"helpertextfield" + yiketf + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    else if (id.includes('check')) {
+        div4editor.innerHTML = "";
+        var pos = jQuery('#' + id.replace('label', '')).attr("pos");
+        var g_no = jQuery('#' + id.replace('label', '')).attr("group");
+        var g_pos = jQuery('#checkgroup' + g_no).attr("pos");
+        console.log(form['yike' + g_pos]["checks"])
+        var obj = form['yike' + g_pos]["checks"]['' + pos];
+        var labelText = obj['label'];
+        div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
+            "\" type=\"text\" onkeyup=\"updatelabel5('" + id + "','label'," + pos + "," + g_pos + ")\"> </td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
+            "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move Down</Button></td></tr>" +
+            "</Table>"
+    }
+}
+
+
+function updatelabel4(id1, id2, pos, g_no) {
+    var b = document.getElementById(id2).value;
+    document.getElementById(id1).innerHTML = b;
+    form['yike' + g_no]['radios']['' + pos]['label'] = b;
+
+}
+
+function updatelabel5(id1, id2, pos, g_no) {
+    var b = document.getElementById(id2).value;
+    document.getElementById(id1).innerHTML = b;
+    form['yike' + g_no]['checks']['' + pos]['label'] = b;
+
+}
+
+function updatelabel(id1, id2, pos) {
+    var b = document.getElementById(id2).value;
+    document.getElementById(id1).innerHTML = b;
+    form['yike' + pos]['label'] = b;
+}
+
+function updateColor(id1, id2, pos) {
+    var color = document.getElementById(id2).value;
+    document.getElementById(id1).style.color = color;
+    form['yike' + pos]['color'] = color;
+}
+
+function updateFont(id1, id2, pos) {
+    var fs = document.getElementById(id2).value;
+    document.getElementById(id1).style.fontSize = fs+"px";
+    form['yike' + pos]['size'] = fs;
+}
+
+function updateContent(id1, id2, pos) {
+    var cont = document.getElementById(id2).value;
+    document.getElementById(id1).innerHTML = cont;
+    form['yike' + pos]['content'] = cont;
+}
+
+
+function updatehelper(id1, id2, pos) {
+    var b = document.getElementById(id2).value;
+    document.getElementById(id1).innerHTML = b;
+    form['yike' + pos]['helper_text'] = b;
+}
+
+
+function changeFormat(id0, sel, index) {
+    id0.value = sel[index].innerHTML;
+    $(id0.id).datepicker({ dateFormat: sel[index].value });
+}
+
+function updateCount(id1, id2, pos) {
+    var b = document.getElementById(id2).value;
+    document.getElementById(id1).innerHTML = '0 / ' + b;
+    form['yike' + pos]['count_char'] = b;
+
+}
+
+function addHelper(id0, pos) {
+
+    var count = "";
+
+    if (document.getElementById('countCheck').checked) {
+        count = document.getElementById('count' + id0.id);
     }
 
-    function genrate_new_textArea() {
-        return "<div pos=\"" + yikef + "\" class=\"mdc-text-field mdc-text-field--textarea object_of_form\" data-mdc-auto-init=\"MDCTextField\"><span class=\"posteller\" id = \"postextarea" + yiketa + "\">" + yikef + "</span><textarea disabled id=\"textarea" + yiketa + "\" class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\"><label for=\"textarea" + yiketa + "\" id=\"labeltextarea" + yiketa + "\" class=\"mdc-floating-label\">Textarea Label</label></div><div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"helpertextarea" + yiketa + "\"class=\"mdc-text-field-helper-line helpertext\"></div>";
+    if (document.getElementById('helpCheck').checked) {
+        document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
+
+        document.getElementById('helpertf').disabled = false;
+        document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
+        form['yike' + pos]['helper_enabled'] = true;
+
+    }
+    else {
+
+        document.getElementById(id0.id).innerHTML = "";
+        document.getElementById('helpertf').disabled = true;
+        document.getElementById('helpertf').value = "";
+        form['yike' + pos]['helper_enabled'] = false;
+    }
+    if (count != "")
+        document.getElementById(id0.id).appendChild(count);
+
+}
+
+function addHelper2(id0, pos) {
+    if (document.getElementById('helpCheck').checked) {
+        document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
+        document.getElementById('helpertf').disabled = false;
+        document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
+        form['yike' + pos]['helper_enabled'] = true;
+    }
+    else {
+        document.getElementById(id0.id).innerHTML = "";
+        document.getElementById('helpertf').disabled = true;
+        document.getElementById('helpertf').value = "";
+        form['yike' + pos]['helper_enabled'] = false;
     }
 
-    function generate_new_HelperText(id0) {
+}
 
-        return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
-            "id=\"helperText" + id0 + "\">Helper Text</p>";
+
+function addCount(id0, pos) {
+
+
+    if (document.getElementById('helpCheck').checked) {
+        htext = document.getElementById('helperText' + id0.id);
+        document.getElementById(id0.id).innerHTML = "";
+        document.getElementById(id0.id).appendChild(htext);
+    }
+    else {
+        document.getElementById(id0.id).innerHTML = "";
+    }
+    if (document.getElementById('countCheck').checked) {
+        form['yike' + pos]['count_enabled'] = true;
+        document.getElementById(id0.id).innerHTML += generate_new_Count(id0.id);
+        document.getElementById('numtf').disabled = false;
+        document.getElementById('numtf').value = document.getElementById('count' + id0.id).innerHTML.replace('0 / ', '');
+
+    }
+    else {
+        document.getElementById(id0.id).innerHTML += "";
+        document.getElementById('numtf').disabled = true;
+        document.getElementById('numtf').value = "";
+        form['yike' + pos]['count_enabled'] = false;
+
     }
 
-    function generate_new_Count(id0) {
-        return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / 25</div>";
+    var tfid = id0.id.replace('helper', '')
+    document.getElementById(tfid).maxLength = 25;
+}
+
+function DeleteItem(id0, pos) {
+    var parent = document.getElementById("dropzone");
+    var element = document.getElementById('div' + id0.id);
+    pos = jQuery('#div' + id0.id).attr("pos");
+    form['yike' + pos] = {
+        "type": "em"
     }
+    parent.removeChild(element);
+    document.getElementById('div3').innerHTML="";
+}
 
-
-    function editor(id) {
-        var div4editor = document.getElementById('div3');
-
-
-        if (id.includes("textfield") || id.includes("textarea")) {
-            div4editor.innerHTML = "";
-            var pos = document.getElementById('pos' + id).innerHTML;
-            var obj = form['yike' + pos];
-            var labelText = obj["label"]; //document.getElementById('label'+id).innerHTML;
-            var isCount = obj["count_enabled"];
-            var ishelper = obj["helper_enabled"];
-            var count = isCount ? obj["count_char"] : "";
-            var helper = ishelper ? obj["helper_text"] : "";
-            var cchecked = isCount ? 'checked' : '';
-            var cdisabled = isCount ? '' : 'disabled';
-            var hchecked = ishelper ? 'checked' : '';
-            var hdisabled = ishelper ? '' : 'disabled';
-
-            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
-                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label'," + pos + ")\"> </td></tr>" +
-                "<tr><td>Character Count</td><td><input type='checkbox' id=\"countCheck\" " + cchecked + " onclick=\"addCount(helper" + id + "," + pos + ")\"></td></tr>" +
-                "<tr><td>Number Characters</td><td><input type='Number' id=\"numtf\" onfocusout=\"updateCount('counthelper" + id + "','numtf'," + pos + ")\" " + cdisabled + " value=" + count + "  ></td></tr>" +
-                "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper(helper" + id + "," + pos + ")\"></td></tr>" +
-                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatehelper('helperTexthelper" + id + "','helpertf'," + pos + ")\"></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\" >Move up</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
-                "</Table>"
-            }
-
-        else if (id.includes('datepicker')) {
-            div4editor.innerHTML = "";
-
-            var labelText = document.getElementById('label' + id).innerHTML;
-            var ishelper = document.getElementById('helperTexthelper' + id) != null ? true : false;
-            var helper = ishelper ? document.getElementById('helperTexthelper' + id).innerHTML : "";
-            var hchecked = ishelper ? 'checked' : '';
-            var hdisabled = ishelper ? '' : 'disabled';
-            var options = "<option value=\"dd mm y\">dd mm yy</option>" +
-                "<option value=\"dd mm yy\">dd mm yyyy</option>" +
-                "<option value=\"mm dd y\">mm dd yy</option>" +
-                "<option value=\"dd mm yy\">mm dd yyyy</option>";
-
-            div4editor.innerHTML = "<Table style='width:100%'><tr><td>Label : </td><td><input name='label' id=\"label\" value=\"" + labelText +
-                "\" type=\"text\" onfocusout=\"updatelabel('label" + id + "','label')\"> </td></tr>" +
-                "<tr><td>Helper Enable</td><td><input type='Checkbox' id=\"helpCheck\" " + hchecked + " onclick=\"addHelper2(helper" + id + ")\"></td></tr>" +
-                "<tr> <td>Helper Text</td><td><input type='Text' " + hdisabled + " id=\"helpertf\" value=\"" + helper + "\" onfocusout=\"updatelabel('helperTexthelper" + id + "','helpertf')\"></td></tr>" +
-                "<tr><td>Format</td><td><select id=\"format\" onchange=\"changeFormat(" + id + ",this,this.selectedIndex)\">" + options + "</select></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"DeleteItem(" + id + ")\">Delete</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveUp(" + id + ")\">Move up</Button></td></tr>" +
-                "<tr><td colspan='2'><Button class='button1' onclick=\"moveDown(" + id + ")\">Move</Button></td></tr>" +
-                "</Table>"
-
-
+function preview() {
+    togglec();
+    console.log(form)
+    var preForm = document.getElementById('pre_form');
+    preForm.innerHTML = "";
+    for (var i = 0; i < form["nE"]; i++) {
+        var widget0 = form['yike' + i];
+        var widget_type = widget0["type"]
+        console.log(widget_type);
+        if (widget_type == "textfield") {
+            var node = document.createElement("div");
+            node.innerHTML = genrate_new_textField2(widget0, i);
+            preForm.appendChild(node);
+            window.mdc.autoInit()
         }
-    }
-
-    function updatelabel(id1, id2, pos) {
-
-        var b = document.getElementById(id2).value;
-        document.getElementById(id1).innerHTML = b;
-        form['yike' + pos]['label'] = b;
-    }
-
-    function updatehelper(id1, id2, pos) {
-        var b = document.getElementById(id2).value;
-        document.getElementById(id1).innerHTML = b;
-        form['yike' + pos]['helper_text'] = b;
-    }
-
-
-    function changeFormat(id0, sel, index) {
-        id0.value = sel[index].innerHTML;
-        $(id0.id).datepicker({ dateFormat: sel[index].value });
-    }
-
-    function updateCount(id1, id2, pos) {
-        var b = document.getElementById(id2).value;
-        document.getElementById(id1).innerHTML = '0 / ' + b;
-        form['yike' + pos]['count_char'] = b;
-
-    }
-
-    function addHelper(id0, pos) {
-
-        var count = "";
-
-        if (document.getElementById('countCheck').checked) {
-            count = document.getElementById('count' + id0.id);
+        else if (widget_type == "textarea") {
+            var node = document.createElement("div");
+            node.innerHTML = genrate_new_textArea2(widget0, i);
+            preForm.appendChild(node);
+            window.mdc.autoInit()
         }
-
-        if (document.getElementById('helpCheck').checked) {
-            document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
-
-            document.getElementById('helpertf').disabled = false;
-            document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
-            form['yike' + pos]['helper_enabled'] = true;
-
+        else if (widget_type == "image_Upload") {
+            var node = document.createElement("div");
+            node.innerHTML = generate_new_ImageUpload2(widget0, i);
+            preForm.appendChild(node);
+            window.mdc.autoInit()
         }
-        else {
-
-            document.getElementById(id0.id).innerHTML = "";
-            document.getElementById('helpertf').disabled = true;
-            document.getElementById('helpertf').value = "";
-            form['yike' + pos]['helper_enabled'] = false;
+        else if (widget_type == "file_Upload") {
+            var node = document.createElement("div");
+            node.innerHTML = generate_new_FileUpload2(widget0, i);
+            preForm.appendChild(node);
+            window.mdc.autoInit()
         }
-        if (count != "")
-            document.getElementById(id0.id).appendChild(count);
-
-    }
-
-    function addHelper2(id0) {
-        if (document.getElementById('helpCheck').checked) {
-            document.getElementById(id0.id).innerHTML = generate_new_HelperText(id0.id);
-            document.getElementById('helpertf').disabled = false;
-            document.getElementById('helpertf').value = document.getElementById('helperText' + id0.id).innerHTML;
-
+        else if (widget_type == "mobile") {
+            var node = document.createElement("div");
+            node.innerHTML = generate_new_mobilefield2(i);
+            preForm.appendChild(node);
+            window.mdc.autoInit();
+            convert2li('predropdown' + i)
         }
-        else {
-            document.getElementById(id0.id).innerHTML = "";
-            document.getElementById('helpertf').disabled = true;
-            document.getElementById('helpertf').value = "";
+        else if (widget_type == "datepicker") {
+            var node = document.createElement("div");
+            node.innerHTML = generate_new_datefield2(widget0, i);
+            preForm.appendChild(node);
+            $('#predatepicker' + i).datepicker({ dateFormat: 'dd/mm/yy' });
+            window.mdc.autoInit();
+        }
+        else if (widget_type == 'text') {
+            var node = document.createElement("div");
+            node.innerHTML = generate_new_Text2(widget0, i);
+            preForm.appendChild(node);
+        }
+        else if (widget_type == "radiogroup") {
+            var node = document.createElement("div");
+            console.log("previewRadio")
+            node.innerHTML = generate_new_radioGroup2(widget0, i);
+            preForm.appendChild(node);
+        }
+        else if (widget_type == "checkgroup") {
+            var node = document.createElement("div");
+            console.log("previewcheck")
+            node.innerHTML = generate_new_checkGroup2(widget0, i);
+            preForm.appendChild(node);
         }
 
     }
+    var node = document.createElement("div");
+    node.innerHTML = "<br><br><br>" + generate_new_button() + "<br><br><br>";
+    preForm.appendChild(node);
 
+}
 
-    function addCount(id0, pos) {
+function updateCountNum(id0) {
 
+}
 
-        if (document.getElementById('helpCheck').checked) {
-            htext = document.getElementById('helperText' + id0.id);
-            document.getElementById(id0.id).innerHTML = "";
-            document.getElementById(id0.id).appendChild(htext);
+function genrate_new_textField2(widget0, formyike) {
+    var label = widget0["label"];
+    var isCountEnabled = widget0["count_enabled"]
+    var isHelperEnabled = widget0["helper_enabled"]
+    var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextfield' + formyike, widget0["helper_text"]) : "";
+    var count = isCountEnabled ? generate_new_Count2('prehelpertextfield' + formyike, widget0["count_char"]) : "";
+    var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
+    return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  data-mdc-auto-init=\"MDCTextField\">" +
+        "<input  class=\"mdc-text-field__input\" " + ml + " id=\"pretextfield" + formyike + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextfield" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeltextfield" + formyike + "\">" + label + "</label></div>" +
+        "<div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelpertextfield" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
+}
+
+function genrate_new_textArea2(widget0, formyike) {
+    var label = widget0["label"];
+    var isCountEnabled = widget0["count_enabled"]
+    var isHelperEnabled = widget0["helper_enabled"]
+    var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextarea' + formyike, widget0["helper_text"]) : "";
+    var count = isCountEnabled ? generate_new_Count2('prehelpertextarea' + formyike, widget0["count_char"]) : "";
+    var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
+    return "<div  class=\"mdc-text-field mdc-text-field--textarea object_of_form2\" data-mdc-auto-init=\"MDCTextField\">" +
+        "<textarea  id=\"pretextarea" + formyike + "\" " + ml + " class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\">" +
+        "<div class=\"mdc-notched-outline__leading\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextarea" + formyike + "\" id=\"prelabeltextarea" + formyike + "\" class=\"mdc-floating-label\">" + label + "</label></div>" +
+        "<div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"prehelpertextarea" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
+
+}
+
+function generate_new_ImageUpload2(widget0, formyike) {
+    var label = widget0["label"];
+    var isHelperEnabled = widget0["helper_enabled"]
+    var helper = isHelperEnabled ? generate_new_HelperText2('prehelperimageU' + formyike, widget0["helper_text"]) : "";
+    return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span>" + label + "</span></div></div>" +
+        "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('preimageU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+        "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>" +
+        "<div class=\"imgfile_name\" id=\"fnpreimageU" + formyike + "\">No image selected</div><input onchange=\"readURL(this)\" type='file' id=\"preimageU" + formyike + "\" style=\"display:none\"/>" +
+        "</div><div id=\"helperimageU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div><div id=\"divimgpreimageU" + formyike + "\" style=\"width:100px;margin-left:10%;height:100px;padding:10px;overflow:hidden;border:1px solid blue;display:none;\">" +
+        "<img style=\"width:100px\"id=\"imgpreimageU" + formyike + "\" src=\"#\" alt=\".\" /></div>";
+}
+
+function generate_new_FileUpload2(widget0, formyike) {
+    var label = widget0["label"];
+    var isHelperEnabled = widget0["helper_enabled"]
+    var helper = isHelperEnabled ? generate_new_HelperText2('prehelperfileU' + formyike, widget0["helper_text"]) : "";
+    return "<div class=\"object_of_form2\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span style=\"text-align:left\">" + label + "</span></div></div>" +
+        "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('prefileU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+        "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">attach_file</i></button></div>" +
+        "<div class=\"imgfile_name\" id=\"fnprefileU" + formyike + "\">No file selected</div><input onchange=\"readURL2(this)\" type='file' id=\"prefileU" + formyike + "\" style=\"display:none\"/>" +
+        "</div><div id=\"helperfileU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
+}
+
+function generate_new_button() {
+    return "<button class=\"mdc-button mdc-button--raised\">  <span class=\"mdc-button__ripple\"></span> Submit</button>";
+}
+
+function generate_new_radioGroup2(widget0, formyike) {
+    var label = widget0["label"];
+    var nR = widget0["nR"];
+    var rbs = "";
+
+    var radios = widget0["radios"]
+    console.log(radios)
+    for (var i = 0; i < nR; ++i) {
+        rbs += generate_new_RadioButton2(radios, i, formyike)
+    }
+    return "<div style= \"text-align:left;margin-left:10%\" class=\"object_of_form2\"><h4 class=\"radiolabel demo-title mdc-typography--headline9\">" + label + "</h4>" +
+        "<div class=\"radiodrop\">" + rbs + "</div><div>";
+}
+
+function generate_new_checkGroup2(widget0, formyike) {
+    var label = widget0["label"];
+    var nR = widget0["nR"];
+    var rbs = "";
+
+    var checks = widget0["checks"]
+    console.log(checks)
+    for (var i = 0; i < nR; ++i) {
+        rbs += generate_new_checkButton2(checks, i, formyike)
+    }
+    return "<div style= \"text-align:left;margin-left:10%\" class=\"object_of_form2\"><h4 class=\"checklabel demo-title mdc-typography--headline9\">" + label + "</h4>" +
+        "<div class=\"checkdrop\">" + rbs + "</div><div>";
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        document.getElementById('fn' + input.id).innerHTML = input.files[0].name
+        reader.onload = function (e) {
+            $('#divimg' + input.id).css('display', 'block');
+            $('#img' + input.id).attr('src', e.target.result);
         }
-        else {
-            document.getElementById(id0.id).innerHTML = "";
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function readURL2(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById('fn' + input.id).innerHTML = input.files[0].name
+    }
+}
+
+function generate_new_HelperText2(id0, val) {
+    return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+        "id=\"helperText" + id0 + "\">" + val + "</p>";
+}
+
+function generate_new_RadioButton2(radio, index, pos) {
+    var labelText = radio['' + index]['label'];
+
+    return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
+        "<div  class=\"mdc-radio\">" +
+        "<input class=\"mdc-radio__native-control\" type=\"radio\" id=\"radiogroup_" + pos + "_" + index + "\" name=\"radiogroup_" + pos + "\">" +
+        "<div class=\"mdc-radio__background\">" +
+        "<div class=\"mdc-radio__outer-circle\"></div>" +
+        "<div class=\"mdc-radio__inner-circle\"></div>" +
+        "</div>" +
+        "<div class=\"mdc-radio__ripple\"></div>" +
+        "</div>" +
+        "<label class=\"c_r\" for=\"radio-1\">" + labelText + "</label>" +
+        "</div>"
+}
+
+function generate_new_checkButton2(check, index, pos) {
+    var labelText = check['' + index]['label'];
+
+    return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
+        "<div class=\"mdc-checkbox\">" +
+        "<input type=\"checkbox\" id=\"checkgroup_" + pos + "_" + index + "\"" +
+        "class=\"mdc-checkbox__native-control\"" +
+        "id=\"checkbox-1\"/>" +
+        "<div class=\"mdc-checkbox__background\">" +
+        "<svg class=\"mdc-checkbox__checkmark\"" +
+        "viewBox=\"0 0 24 24\">" +
+        "<path class=\"mdc-checkbox__checkmark-path\"" +
+        "fill=\"none\"" +
+        "d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>" +
+        "</svg>" +
+        "<div class=\"mdc-checkbox__mixedmark\"></div>" +
+        "</div>" +
+        "<div class=\"mdc-checkbox__ripple\"></div>" +
+        "</div>" +
+        "<label class= \"c_r\" for=\"checkbox-1\">" + labelText + "</label>" +
+        "</div>";
+}
+
+function generate_new_Count2(id0, val) {
+    return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / " + val + "</div>";
+}
+
+function generate_new_datefield2(widget0, formyike) {
+    var label = widget0["label"];
+    var isHelperEnabled = widget0["helper_enabled"];
+    var helper_text = widget0["helper_text"];
+    var helper = isHelperEnabled ? generate_new_HelperText2('prehelperdatepicker' + formyike, helper_text) : "";
+    console.log(widget0)
+    return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  onclick=\"editor('predatepicker" + formyike + "')\"  data-mdc-auto-init=\"MDCTextField\"><input  class=\"mdc-text-field__input\" id=\"predatepicker" + formyike + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\"><label for=\"predatepicker" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeldatepicker" + formyike + "\">" + label + "</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelperdatepicker" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
+}
+
+function generate_new_Text2(widget0, formyike) {
+    var tcolor = widget0["color"];
+    var fs = widget0['size'];
+    var text0 = widget0["content"];
+    return "<div class\"object_of_form\"><div class=\"mdc-text-field-helper-line helpertext \"><p style = \"color:" + tcolor + " ; font-size:" + fs + "\"class=\"mdc-text-field-helper-text  mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+        ">" + text0 + "</p></div></div>";
+}
+
+
+function togglec() {
+    var popup = document.getElementById("contain");
+    var f = document.getElementById("shadder");
+    popup.classList.toggle("show");
+    f.classList.toggle("show");
+}
+
+
+
+
+function generate_new_mobilefield() {
+    return "<div style=\"color:rgba(0,0,0,0.37)\" class=\" labelmobile\" id=\"labelmobile" + yikem + "\">Mobile Number</div><div bis_skin_checked=\"1\">" +
+        "<div bis_skin_checked=\"1\" id=\"dropdown" + yikem + "\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel mdc-text-field--disabled object_of_form \">" +
+        "<select disabled id=\"codemobile" + yikem + "\"  name=\"options\" class=\" selmobile\">" +
+        "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
+        "</select>" +
+        "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
+        "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
+        "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
+        "</div>" +
+        "</div>" +
+        "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form mdc-text-field--disabled\"" +
+        " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
+        "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + yikem + "\">" + yikef + "</span>" +
+        "<input disabled=\"\" id=\"mobile" + yikem + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
+        "</div><div id=\"helpermobile" + yikem + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
+}
+
+function generate_new_mobilefield2(yikeform) {
+    return "<div style=\"color:rgba(0,0,0,0.37);margin-left:2px\" class=\" labelmobile\" id=\"prelabelmobile" + yikeform + "\">Mobile Number</div><div bis_skin_checked=\"1\">" +
+        "<div bis_skin_checked=\"1\" id=\"predropdown" + yikeform + "\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel  object_of_form \">" +
+        "<select id=\"precodemobile" + yikeform + "\"  name=\"options\" class=\" selmobile\">" +
+        "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
+        "<option class=\"AFG\" style=\"background-image:url('https://www.countryflags.io/af/flat/32.png');\" value=\"+93\">+93</option>" +
+        "<option class=\"ALB\" style=\"background-image:url('https://www.countryflags.io/al/flat/32.png');\" value=\"+355\">+355</option>" +
+        "<option class=\"DZA	\" style=\"background-image:url('https://www.countryflags.io/dz/flat/32.png');\" value=\"+213\">+213</option>" +
+        "<option class=\"AD	\" style=\"background-image:url('https://www.countryflags.io/ad/flat/32.png');\" value=\"+376\">+376</option>" +
+        "<option class=\"AO	\" style=\"background-image:url('https://www.countryflags.io/ao/flat/32.png');\" value=\"+244\">+244</option>" +
+        "<option class=\"ATA\" style=\"background-image:url('https://www.countryflags.io/at/flat/32.png');\" value=\"+672\">+672</option>" +
+        "<option class=\"ARG\" style=\"background-image:url('https://www.countryflags.io/ar/flat/32.png');\" value=\"+54\">+54</option>" +
+        "<option class=\"BH\" style=\"background-image:url('https://www.countryflags.io/bh/flat/32.png');\" value=\"+973\">+973</option>" +
+        "<option class=\"BAN\" style=\"background-image:url('https://www.countryflags.io/bd/flat/32.png');\" value=\"+880\">+880</option>" +
+        "<option class=\"BY\" style=\"background-image:url('https://www.countryflags.io/by/flat/32.png');\" value=\"+375\">+375</option>" +
+        "<option class=\"BE\" style=\"background-image:url('https://www.countryflags.io/be/flat/32.png');\" value=\"+32\">+32</option>" +
+        "<option class=\"BZ\" style=\"background-image:url('https://www.countryflags.io/bz/flat/32.png');\" value=\"+501\">+501</option>" +
+        "<option class=\"CAN\" style=\"background-image:url('https://www.countryflags.io/ca/flat/32.png');\" value=\"+1\">+1</option>" +
+        "<option class=\"CF\" style=\"background-image:url('https://www.countryflags.io/cf/flat/32.png');\" value=\"+236\">+236</option>" +
+        "<option class=\"DNK\" style=\"background-image:url('https://www.countryflags.io/dk/flat/32.png');\" value=\"+45\">+45</option>" +
+        "<option class=\"DJ\" style=\"background-image:url('https://www.countryflags.io/dj/flat/32.png');\" value=\"+253\">+253</option>" +
+        "<option class=\"DEU\" style=\"background-image:url('https://www.countryflags.io/cn/flat/32.png');\" value=\"+49\">+86</option>" +
+        "<option class=\"ID	\" style=\"background-image:url('https://www.countryflags.io/id/flat/32.png');\" value=\"+62\">+62</option>" +
+        "<option class=\"IR\" style=\"background-image:url('https://www.countryflags.io/ir/flat/32.png');\" value=\"+98\">+98</option>" +
+        "<option class=\"ISR\" style=\"background-image:url('https://www.countryflags.io/il/flat/32.png');\" value=\"+972\">+972</option>" +
+        "<option class=\"GAB\" style=\"background-image:url('https://www.countryflags.io/ga/flat/32.png');\" value=\"+241\">+241</option>" +
+        "<option class=\"GM\" style=\"background-image:url('https://www.countryflags.io/gm/flat/32.png');\" value=\"+220\">+220</option>" +
+        "<option class=\"GE\" style=\"background-image:url('https://www.countryflags.io/ge/flat/32.png');\" value=\"+995\">+995</option>" +
+        "<option class=\"DE\" style=\"background-image:url('https://www.countryflags.io/de/flat/32.png');\" value=\"+49\">+49</option>" +
+        "<option class=\"HU\" style=\"background-image:url('https://www.countryflags.io/hu/flat/32.png');\" value=\"+36\">+36</option>" +
+        "<option class=\"IS\" style=\"background-image:url('https://www.countryflags.io/is/flat/32.png');\" value=\"+354\">+354</option>" +
+        "<option class=\"IT\" style=\"background-image:url('https://www.countryflags.io/it/flat/32.png');\" value=\"+39\">+39</option>" +
+        "<option class=\"JP\" style=\"background-image:url('https://www.countryflags.io/jp/flat/32.png');\" value=\"+81\">+81</option>" +
+        "<option class=\"JO\" style=\"background-image:url('https://www.countryflags.io/jo/flat/32.png');\" value=\"+962\">+962</option>" +
+        "<option class=\"KZ\" style=\"background-image:url('https://www.countryflags.io/kz/flat/32.png');\" value=\"+7\">+7</option>" +
+        "<option class=\"KE\" style=\"background-image:url('https://www.countryflags.io/ke/flat/32.png');\" value=\"+254\">+254</option>" +
+        "<option class=\"KI\" style=\"background-image:url('https://www.countryflags.io/ki/flat/32.png');\" value=\"+686\">+686</option>" +
+        "<option class=\"KR\" style=\"background-image:url('https://www.countryflags.io/kr/flat/32.png');\" value=\"+82\">+82</option>" +
+        "<option class=\"TW\" style=\"background-image:url('https://www.countryflags.io/tw/flat/32.png');\" value=\"886\">886</option>" +
+        "<option class=\"TJ\" style=\"background-image:url('https://www.countryflags.io/tj/flat/32.png');\" value=\"+992\">+992</option>" +
+        "<option class=\"TZ\" style=\"background-image:url('https://www.countryflags.io/tz/flat/32.png');\" value=\"+255\">+255</option>" +
+        "<option class=\"TH\" style=\"background-image:url('https://www.countryflags.io/th/flat/32.png');\" value=\"+66\">+66</option>" +
+        "<option class=\"UA\" style=\"background-image:url('https://www.countryflags.io/ua/flat/32.png');\" value=\"+380\">+380</option>" +
+        "<option class=\"AE\" style=\"background-image:url('https://www.countryflags.io/ae/flat/32.png');\" value=\"+971\">+971</option>" +
+        "<option class=\"GB\" style=\"background-image:url('https://www.countryflags.io/gb/flat/32.png');\" value=\"+44\">+44</option>" +
+        "<option class=\"US\" style=\"background-image:url('https://www.countryflags.io/us/flat/32.png');\" value=\"+1\">+1</option>" +
+        "<option class=\"VN\" style=\"background-image:url('https://www.countryflags.io/vn/flat/32.png');\" value=\"+84\">+84</option>" +
+        "<option class=\"WF\" style=\"background-image:url('https://www.countryflags.io/wf/flat/32.png');\" value=\"+681\">+681</option>" +
+        "<option class=\"EH\" style=\"background-image:url('https://www.countryflags.io/eh/flat/32.png');\" value=\"+212\">+212</option>" +
+        "<option class=\"+YE\" style=\"background-image:url('https://www.countryflags.io/ye/flat/32.png');\" value=\"+967\">+967</option>" +
+        "<option class=\"ZM\" style=\"background-image:url('https://www.countryflags.io/zm/flat/32.png');\" value=\"+260\">+260</option>" +
+        "<option class=\"ZW\" style=\"background-image:url('https://www.countryflags.io/zw/flat/32.png');\" value=\"+263\">+263</option>" +
+        "</select>" +
+        "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
+        "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
+        "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
+        "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
+        "</div>" +
+        "</div>" +
+        "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form \"" +
+        " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
+        "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + yikem + "\">" + yikef + "</span>" +
+        "<input maxlength='10' type=\"tel\" id=\"mobile" + yikem + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
+        "</div><div id=\"helpermobile" + yikem + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
+}
+
+function convert2li(id0) {
+    jQuery('#' + id0).append('<div class="button"></div>');
+    jQuery('#' + id0).append('<ul class="select-list"></ul>');
+    jQuery('#' + id0 + ' select option').each(function () {
+        var bg = jQuery(this).css('background-image');
+        jQuery('.select-list').append('<li class="clsAnchor"><table><tr><td value="' + jQuery(this).val() + '" class="' + jQuery(this).attr('class') + '" style=width:31px;height:32px;background-image:' + bg + '></td><td>' + jQuery(this).text() + '</td></li></td></tr></table>');
+    });
+    jQuery('#' + id0 + ' .button').html('<table style=\'height:100%;width:100%;vertical-align:middle\'><tr><td><img src=' + jQuery('#' + id0 + ' select').find(':selected').css('background-image').replace('url(', '').replace(')', '') + '></td>' + '<td style=\"color:rgba(0,0,0,0.37)\"' + '>' + jQuery('#' + id0 + ' select').find(':selected').text() + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+    jQuery('#' + id0 + ' ul li').each(function () {
+        if (jQuery(this).find('span').text() == jQuery('#' + id0 + ' select').find(':selected').text()) {
+            jQuery(this).addClass('active');
         }
-        if (document.getElementById('countCheck').checked) {
-            form['yike' + pos]['count_enabled'] = true;
-            document.getElementById(id0.id).innerHTML += generate_new_Count(id0.id);
-            document.getElementById('numtf').disabled = false;
-            document.getElementById('numtf').value = document.getElementById('count' + id0.id).innerHTML.replace('0 / ', '');
-
+    });
+    jQuery('#' + id0 + ' .select-list table').on('click', function () {
+        var dd_text = jQuery(this).text();
+        var dd_v1 = this.childNodes[0].childNodes[0].childNodes[0];
+        var dd_img = jQuery(dd_v1).css('background-image').replace('url(', '').replace(')', '');
+        var dd_val = jQuery(this).attr('value');
+        jQuery('#' + id0 + ' .button').html('<table><tr><td><img src=' + dd_img + '></td><td style="color:rgba(0,0,0,0.37)">' + dd_text + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+        jQuery('#' + id0 + ' .select-list table').parent().removeClass('active');
+        jQuery(this).parent().addClass('active');
+        $('#' + id0 + ' select[name=options]').val(dd_val);
+        $('#' + id0 + ' .select-list li').slideUp();
+        jQuery('#' + id0 + ' .select-list').height(0);
+    });
+    jQuery('#' + id0 + ' .button').on('click', 'a.select-list-link', function () {
+        jQuery('#' + id0 + ' ul li').slideToggle();
+        if (jQuery('#' + id0 + ' .select-list').height() == 0) {
+            jQuery('#' + id0 + ' .select-list').height(150);
         }
-        else {
-            document.getElementById(id0.id).innerHTML += "";
-            document.getElementById('numtf').disabled = true;
-            document.getElementById('numtf').value = "";
-            form['yike' + pos]['count_enabled'] = false;
-
-        }
-
-        var tfid = id0.id.replace('helper', '')
-        document.getElementById(tfid).maxLength = 25;
-    }
-
-    function DeleteItem(id0, pos) {
-        var parent = document.getElementById("dropzone");
-        var element = document.getElementById('div' + id0.id);
-        parent.removeChild(element);
-    }
-
-    function preview() {
-        togglec();
-        console.log(form)
-        var preForm = document.getElementById('pre_form');
-        preForm.innerHTML = "";
-        for (var i = 0; i < form["nE"]; i++) {
-            var widget0 = form['yike' + i];
-            var widget_type = widget0["type"]
-            console.log(widget_type);
-            if (widget_type == "textfield") {
-                var node = document.createElement("div");
-                node.innerHTML = genrate_new_textField2(widget0, i);
-                preForm.appendChild(node);
-                window.mdc.autoInit()
-            }
-            else if (widget_type == "textarea") {
-                var node = document.createElement("div");
-                node.innerHTML = genrate_new_textArea2(widget0, i);
-                preForm.appendChild(node);
-                window.mdc.autoInit()
-            }
-
-            else if (widget_type == "mobile") {
-                var node = document.createElement("div");
-                node.innerHTML = generate_new_mobilefield2(i);
-                preForm.appendChild(node);
-                window.mdc.autoInit();
-                convert2li('predropdown' + i)
-            }
-            else if (widget_type == "datepicker") {
-                var node = document.createElement("div");
-                node.innerHTML = generate_new_datefield2(widget0, i);
-                preForm.appendChild(node);
-                $('#predatepicker' + i).datepicker({ dateFormat: 'dd/mm/yy' });
-                window.mdc.autoInit();
-            }
-
-        }
-    }
-
-    function updateCountNum(id0) {
-
-    }
-
-    function genrate_new_textField2(widget0, formyike) {
-        var label = widget0["label"];
-        var isCountEnabled = widget0["count_enabled"]
-        var isHelperEnabled = widget0["helper_enabled"]
-        var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextfield' + formyike, widget0["helper_text"]) : "";
-        var count = isCountEnabled ? generate_new_Count2('prehelpertextfield' + formyike, widget0["count_char"]) : "";
-        var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
-        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  data-mdc-auto-init=\"MDCTextField\">" +
-            "<input  class=\"mdc-text-field__input\" " + ml + " id=\"pretextfield" + formyike + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextfield" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeltextfield" + formyike + "\">" + label + "</label></div>" +
-            "<div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelpertextfield" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
-    }
-
-    function genrate_new_textArea2(widget0, formyike) {
-        var label = widget0["label"];
-        var isCountEnabled = widget0["count_enabled"]
-        var isHelperEnabled = widget0["helper_enabled"]
-        var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextarea' + formyike, widget0["helper_text"]) : "";
-        var count = isCountEnabled ? generate_new_Count2('prehelpertextarea' + formyike, widget0["count_char"]) : "";
-        var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
-        return "<div  class=\"mdc-text-field mdc-text-field--textarea object_of_form2\" data-mdc-auto-init=\"MDCTextField\">" +
-            "<textarea  id=\"pretextarea" + formyike + "\" " + ml + " class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\">" +
-            "<div class=\"mdc-notched-outline__leading\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextarea" + formyike + "\" id=\"prelabeltextarea" + formyike + "\" class=\"mdc-floating-label\">" + label + "</label></div>" +
-            "<div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"prehelpertextarea" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
-
-    }
-
-    function generate_new_HelperText2(id0, val) {
-        return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
-            "id=\"helperText" + id0 + "\">" + val + "</p>";
-    }
-
-    function generate_new_Count2(id0, val) {
-        return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / " + val + "</div>";
-    }
-
-    function generate_new_datefield2(widget0, formyike) {
-        var label= widget0["label"];
-        var isHelperEnabled = widget0["helper_enabled"];
-        var helper_text = widget0["helper_text"];
-        var helper = isHelperEnabled ? generate_new_HelperText2('prehelperdatepicker' + formyike, helper_text) : "";
-        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  onclick=\"editor('predatepicker" + formyike + "')\"  data-mdc-auto-init=\"MDCTextField\"><input  class=\"mdc-text-field__input\" id=\"predatepicker" + formyike + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\"><label for=\"predatepicker" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeldatepicker" + formyike + "\">"+label+"</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelperdatepicker" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">"+helper+"</div>";
-    }
-
-    function togglec() {
-        var popup = document.getElementById("contain");
-        var f = document.getElementById("shadder");
-        popup.classList.toggle("show");
-        f.classList.toggle("show");
-    }
+        else
+            jQuery('#' + id0 + ' .select-list').height(0);
 
 
+    });
+}
 
-    function generate_new_mobilefield() {
-        return "<div style=\"color:rgba(0,0,0,0.37)\" class=\" labelmobile\" id=\"labelmobile" + yikem + "\">Mobile Number</div><div bis_skin_checked=\"1\">" +
-            "<div bis_skin_checked=\"1\" id=\"dropdown" + yikem + "\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel mdc-text-field--disabled object_of_form \">" +
-            "<select disabled id=\"codemobile" + yikem + "\"  name=\"options\" class=\" selmobile\">" +
-            "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
-            "</select>" +
-            "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
-            "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
-            "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
-            "</div>" +
-            "</div>" +
-            "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form mdc-text-field--disabled\"" +
-            " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
-            "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + yikem + "\">" + yikef + "</span>" +
-            "<input disabled=\"\" id=\"mobile" + yikem + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
-            "</div><div id=\"helpermobile" + yikem + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
-    }
-
-    function generate_new_mobilefield2(yikeform) {
-        return "<div style=\"color:rgba(0,0,0,0.37);margin-left:2px\" class=\" labelmobile\" id=\"prelabelmobile" + yikeform + "\">Mobile Number</div><div bis_skin_checked=\"1\">" +
-            "<div bis_skin_checked=\"1\" id=\"predropdown" + yikeform + "\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel  object_of_form \">" +
-            "<select id=\"precodemobile" + yikeform + "\"  name=\"options\" class=\" selmobile\">" +
-            "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
-            "<option class=\"AFG\" style=\"background-image:url('https://www.countryflags.io/af/flat/32.png');\" value=\"+93\">+93</option>" +
-            "<option class=\"ALB\" style=\"background-image:url('https://www.countryflags.io/al/flat/32.png');\" value=\"+355\">+355</option>" +
-            "<option class=\"DZA	\" style=\"background-image:url('https://www.countryflags.io/dz/flat/32.png');\" value=\"+213\">+213</option>" +
-            "<option class=\"AD	\" style=\"background-image:url('https://www.countryflags.io/ad/flat/32.png');\" value=\"+376\">+376</option>" +
-            "<option class=\"AO	\" style=\"background-image:url('https://www.countryflags.io/ao/flat/32.png');\" value=\"+244\">+244</option>" +
-            "<option class=\"ATA\" style=\"background-image:url('https://www.countryflags.io/at/flat/32.png');\" value=\"+672\">+672</option>" +
-            "<option class=\"ARG\" style=\"background-image:url('https://www.countryflags.io/ar/flat/32.png');\" value=\"+54\">+54</option>" +
-            "<option class=\"BH\" style=\"background-image:url('https://www.countryflags.io/bh/flat/32.png');\" value=\"+973\">+973</option>" +
-            "<option class=\"BAN\" style=\"background-image:url('https://www.countryflags.io/bd/flat/32.png');\" value=\"+880\">+880</option>" +
-            "<option class=\"BY\" style=\"background-image:url('https://www.countryflags.io/by/flat/32.png');\" value=\"+375\">+375</option>" +
-            "<option class=\"BE\" style=\"background-image:url('https://www.countryflags.io/be/flat/32.png');\" value=\"+32\">+32</option>" +
-            "<option class=\"BZ\" style=\"background-image:url('https://www.countryflags.io/bz/flat/32.png');\" value=\"+501\">+501</option>" +
-            "<option class=\"CAN\" style=\"background-image:url('https://www.countryflags.io/ca/flat/32.png');\" value=\"+1\">+1</option>" +
-            "<option class=\"CF\" style=\"background-image:url('https://www.countryflags.io/cf/flat/32.png');\" value=\"+236\">+236</option>" +
-            "<option class=\"DNK\" style=\"background-image:url('https://www.countryflags.io/dk/flat/32.png');\" value=\"+45\">+45</option>" +
-            "<option class=\"DJ\" style=\"background-image:url('https://www.countryflags.io/dj/flat/32.png');\" value=\"+253\">+253</option>" +
-            "<option class=\"DEU\" style=\"background-image:url('https://www.countryflags.io/cn/flat/32.png');\" value=\"+49\">+86</option>" +
-            "<option class=\"ID	\" style=\"background-image:url('https://www.countryflags.io/id/flat/32.png');\" value=\"+62\">+62</option>" +
-            "<option class=\"IR\" style=\"background-image:url('https://www.countryflags.io/ir/flat/32.png');\" value=\"+98\">+98</option>" +
-            "<option class=\"ISR\" style=\"background-image:url('https://www.countryflags.io/il/flat/32.png');\" value=\"+972\">+972</option>" +
-            "<option class=\"GAB\" style=\"background-image:url('https://www.countryflags.io/ga/flat/32.png');\" value=\"+241\">+241</option>" +
-            "<option class=\"GM\" style=\"background-image:url('https://www.countryflags.io/gm/flat/32.png');\" value=\"+220\">+220</option>" +
-            "<option class=\"GE\" style=\"background-image:url('https://www.countryflags.io/ge/flat/32.png');\" value=\"+995\">+995</option>" +
-            "<option class=\"DE\" style=\"background-image:url('https://www.countryflags.io/de/flat/32.png');\" value=\"+49\">+49</option>" +
-            "<option class=\"HU\" style=\"background-image:url('https://www.countryflags.io/hu/flat/32.png');\" value=\"+36\">+36</option>" +
-            "<option class=\"IS\" style=\"background-image:url('https://www.countryflags.io/is/flat/32.png');\" value=\"+354\">+354</option>" +
-            "<option class=\"IT\" style=\"background-image:url('https://www.countryflags.io/it/flat/32.png');\" value=\"+39\">+39</option>" +
-            "<option class=\"JP\" style=\"background-image:url('https://www.countryflags.io/jp/flat/32.png');\" value=\"+81\">+81</option>" +
-            "<option class=\"JO\" style=\"background-image:url('https://www.countryflags.io/jo/flat/32.png');\" value=\"+962\">+962</option>" +
-            "<option class=\"KZ\" style=\"background-image:url('https://www.countryflags.io/kz/flat/32.png');\" value=\"+7\">+7</option>" +
-            "<option class=\"KE\" style=\"background-image:url('https://www.countryflags.io/ke/flat/32.png');\" value=\"+254\">+254</option>" +
-            "<option class=\"KI\" style=\"background-image:url('https://www.countryflags.io/ki/flat/32.png');\" value=\"+686\">+686</option>" +
-            "<option class=\"KR\" style=\"background-image:url('https://www.countryflags.io/kr/flat/32.png');\" value=\"+82\">+82</option>" +
-            "<option class=\"TW\" style=\"background-image:url('https://www.countryflags.io/tw/flat/32.png');\" value=\"886\">886</option>" +
-            "<option class=\"TJ\" style=\"background-image:url('https://www.countryflags.io/tj/flat/32.png');\" value=\"+992\">+992</option>" +
-            "<option class=\"TZ\" style=\"background-image:url('https://www.countryflags.io/tz/flat/32.png');\" value=\"+255\">+255</option>" +
-            "<option class=\"TH\" style=\"background-image:url('https://www.countryflags.io/th/flat/32.png');\" value=\"+66\">+66</option>" +
-            "<option class=\"UA\" style=\"background-image:url('https://www.countryflags.io/ua/flat/32.png');\" value=\"+380\">+380</option>" +
-            "<option class=\"AE\" style=\"background-image:url('https://www.countryflags.io/ae/flat/32.png');\" value=\"+971\">+971</option>" +
-            "<option class=\"GB\" style=\"background-image:url('https://www.countryflags.io/gb/flat/32.png');\" value=\"+44\">+44</option>" +
-            "<option class=\"US\" style=\"background-image:url('https://www.countryflags.io/us/flat/32.png');\" value=\"+1\">+1</option>" +
-            "<option class=\"VN\" style=\"background-image:url('https://www.countryflags.io/vn/flat/32.png');\" value=\"+84\">+84</option>" +
-            "<option class=\"WF\" style=\"background-image:url('https://www.countryflags.io/wf/flat/32.png');\" value=\"+681\">+681</option>" +
-            "<option class=\"EH\" style=\"background-image:url('https://www.countryflags.io/eh/flat/32.png');\" value=\"+212\">+212</option>" +
-            "<option class=\"+YE\" style=\"background-image:url('https://www.countryflags.io/ye/flat/32.png');\" value=\"+967\">+967</option>" +
-            "<option class=\"ZM\" style=\"background-image:url('https://www.countryflags.io/zm/flat/32.png');\" value=\"+260\">+260</option>" +
-            "<option class=\"ZW\" style=\"background-image:url('https://www.countryflags.io/zw/flat/32.png');\" value=\"+263\">+263</option>" +
-            "</select>" +
-            "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
-            "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
-            "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
-            "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
-            "</div>" +
-            "</div>" +
-            "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form \"" +
-            " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
-            "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + yikem + "\">" + yikef + "</span>" +
-            "<input maxlength='10' type=\"tel\" id=\"mobile" + yikem + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
-            "</div><div id=\"helpermobile" + yikem + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
-    }
-
-    function convert2li(id0) {
-        jQuery('#' + id0).append('<div class="button"></div>');
-        jQuery('#' + id0).append('<ul class="select-list"></ul>');
-        jQuery('#' + id0 + ' select option').each(function () {
-            var bg = jQuery(this).css('background-image');
-            jQuery('.select-list').append('<li class="clsAnchor"><table><tr><td value="' + jQuery(this).val() + '" class="' + jQuery(this).attr('class') + '" style=width:31px;height:32px;background-image:' + bg + '></td><td>' + jQuery(this).text() + '</td></li></td></tr></table>');
-        });
-        jQuery('#' + id0 + ' .button').html('<table style=\'height:100%;width:100%;vertical-align:middle\'><tr><td><img src=' + jQuery('#' + id0 + ' select').find(':selected').css('background-image').replace('url(', '').replace(')', '') + '></td>' + '<td style=\"color:rgba(0,0,0,0.37)\"' + '>' + jQuery('#' + id0 + ' select').find(':selected').text() + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
-        jQuery('#' + id0 + ' ul li').each(function () {
-            if (jQuery(this).find('span').text() == jQuery('#' + id0 + ' select').find(':selected').text()) {
-                jQuery(this).addClass('active');
-            }
-        });
-        jQuery('#' + id0 + ' .select-list table').on('click', function () {
-            var dd_text = jQuery(this).text();
-            var dd_v1=this.childNodes[0].childNodes[0].childNodes[0];
-            var dd_img = jQuery(dd_v1).css('background-image').replace('url(', '').replace(')', '');
-            var dd_val = jQuery(this).attr('value');
-            jQuery('#' + id0 + ' .button').html('<table><tr><td><img src=' + dd_img + '></td><td style="color:rgba(0,0,0,0.37)">' + dd_text + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
-            jQuery('#' + id0 + ' .select-list table').parent().removeClass('active');
-            jQuery(this).parent().addClass('active');
-            $('#' + id0 + ' select[name=options]').val(dd_val);
-            $('#' + id0 + ' .select-list li').slideUp();
-            jQuery('#'+id0+' .select-list').height(0);
-        });
-        jQuery('#' + id0 + ' .button').on('click', 'a.select-list-link', function () {
-            jQuery('#' + id0 + ' ul li').slideToggle();
-            if(jQuery('#'+id0+' .select-list').height()==0){
-                jQuery('#'+id0+' .select-list').height(150);
-            }
-            else
-                jQuery('#'+id0+' .select-list').height(0);
-
-
-        });
-    }
 
 {% endblock %}

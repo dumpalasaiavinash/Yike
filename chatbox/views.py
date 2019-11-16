@@ -10,8 +10,9 @@ from .forms import msgForm
 
 def MessageBox(req):
     if 'email' in req.session:
-        send(req.session['email'],'a1@a1.a1',"this is a dummy message2")
+        req.session["rec"]="anirudhambati@gmail.com"
     return HttpResponse("<h1>Message has been sent</h1>")
+
 # Create your views here.
 
 
