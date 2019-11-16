@@ -8,7 +8,8 @@
 <html>
 
 <head>
-
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css"
         rel="stylesheet">
     <style>
@@ -127,7 +128,7 @@
             padding: 0 0 0 15px;
             width: 88%;
         }
-        
+
         .chat_ib_active {
             float: left;
             padding: 0 0 0 15px;
@@ -249,33 +250,73 @@
             height: 516px;
             overflow-y: auto;
         }
-        
     </style>
 
 </head>
+
 <body>
-        <div class="msg_history">
-                {% for msg in mesgs  %}
-                {% if msg.sender == rec %}
-                <div class="incoming_msg">
-                  <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                  <div class="received_msg">
-                    <div class="received_withd_msg">
-                      <p>{{msg.messages}}</p>
-                      <span class="time_date"> {{msg.date_time}}</span></div>
-                  </div>
-                </div>
-
-                {% else %}
-               
-
-                <div class="outgoing_msg">
-                  <div class="sent_msg">
+    <div class="msg_history" id="msgContainer">
+        {% for msg in mesgs  %}
+        {% if msg.sender == rec %}
+        <div class="incoming_msg">
+            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+            </div>
+            <div class="received_msg">
+                <div class="received_withd_msg">
                     <p>{{msg.messages}}</p>
-                    <span class="time_date"> {{msg.date_time}}</span> </div>
+                    <span class="time_date"> {{msg.date_time}}</span>
                 </div>
+            </div>
+        </div>
 
-                {% endif %}
-                {% endfor %}
-              </div>
+        {% else %}
+
+
+        <div class="outgoing_msg">
+            <div class="sent_msg">
+                <p>{{msg.messages}}</p>
+                <span class="time_date"> {{msg.date_time}}</span>
+            </div>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+        <a name="fcus"></a>
+        <a id="cl" href="#fcus"></a>
+    </div>
 </body>
+<script>
+    document.getElementById('cl').click();
+    var chatSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/chat/chat/');
+    chatSocket.onmessage = function (e) {
+        var msgData = JSON.parse(e.data)
+        if (msgData.message) {
+            var uid = '{{rec}}'
+            var container = document.getElementById("msgContainer");
+            if (uid != msgData.reciver) {
+                var htdata = "<div class=\"incoming_msg\">" +
+                    "<div class=\"incoming_msg_img\"> <img src=\"https://ptetutorials.com/images/user-profile.png\" alt=\"sunil\"></div><div class=\"received_msg\">" +
+                    "<div class=\"received_withd_msg\"><p>"+msgData.message+"</p><span class=\"time_date\"> "+msgData.date_time+"</span></div></div></div>"
+                container.innerHTML  += htdata
+            }
+            else {
+                var htdata = "<div class=\"outgoing_msg\"><div class=\"sent_msg\"><p>"+msgData.message+"</p><span class=\"time_date\">"+msgData.date_time+"</span></div></div>";
+                container.innerHTML += htdata
+            }
+        }
+        document.getElementById('cl').click();
+
+    }
+    chatSocket.onopen = function (e) {
+        console.log('open', e)
+    }
+    chatSocket.onclose = function (e) {
+        console.log('close', e)
+    }
+    chatSocket.onerror = function (e) {
+        console.log('error', e)
+    }
+
+</script>
+
+</html>

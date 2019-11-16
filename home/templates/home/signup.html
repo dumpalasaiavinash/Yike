@@ -12,6 +12,20 @@
 	<div class="limiter" style="font-family:Raleway">
 		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+
+				{% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <div class="w3-panel w3-grey w3-display-container">
+
+              <h4 class="{{ message.tags }}" style="font-family:avenir Black ;"> {{ message }}</h4>
+
+            </div>
+            {% endfor %}
+          </ul>
+        {% endif %}
+<br>
+
 				<form class="login100-form validate-form" action="{% url 'home:home_reg' %}" method='post'>
           {% csrf_token %}
           <span class="login100-form-title p-b-49">
@@ -20,7 +34,7 @@
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is reauired">
 						<span class="label-input100">Username</span>
-						<input class="input100" type="text" name="username" placeholder="Type your username" required>
+						<input class="input100" type="text" name="username" maxlength="20" placeholder="Type your username" required>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
@@ -30,12 +44,12 @@
 
           <div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
 						<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="pass" placeholder="Type your password" required>
+						<input class="input100" type="password" name="pass" maxlength="20" placeholder="Type your password" required>
 					</div>
 
           <div class="wrap-input100 validate-input m-b-33" data-validate="Password is required">
 						<span class="label-input100">Retype Password</span>
-						<input class="input100" type="password" name="re_pass" placeholder="Retype your password" required>
+						<input class="input100" type="password" name="re_pass" maxlength="20" placeholder="Retype your password" required>
 					</div>
 
 

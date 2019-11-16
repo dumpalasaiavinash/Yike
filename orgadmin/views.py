@@ -677,8 +677,8 @@ def created(request):
 
 
                 return render(request, 'orgadmin/dummy.html', data)
-    
-                    
+
+
 
 
 
@@ -703,7 +703,7 @@ def join(request):
                 print("#####################")
 
                 #request.session['org_created']=request.session['org_created']+[ID]
-                
+
                 org_joined = request.session['org_joined']
                 print(org_joined)
                 print(response_join['Items'][0]['org_id'])
@@ -713,8 +713,8 @@ def join(request):
                     print("@@@@")
                     if ([int(response_join['Items'][0]['org_id'])] not in request.session['org_joined']):
                         request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]
-                
-                
+
+
                 email=request.session['email']
                 print(org_joined)
                 print(email)
