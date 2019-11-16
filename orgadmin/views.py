@@ -34,6 +34,9 @@ import string
 #Hashing password
 import hashlib
 
+#For storing images
+from django.core.files.storage import FileSystemStorage
+
 
 
 # Create your views here.
@@ -45,7 +48,9 @@ def dashboard(request,j):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     departments_table=dynamodb.Table('departments')
+    org_table=dynamodb.Table('organization')
 
+    org_response=org_table.scan()
     dep_response=departments_table.scan()
     response2=table.scan()
     #Getting departments from departments table
@@ -57,8 +62,25 @@ def dashboard(request,j):
     no_complaints=[]
     emp_id=[]
 
+    no_of_departments=0
+    no_of_employees=0
+    no_of_complaints=0
+    
+    #Getting Organisation Name
+    for org in org_response['Items']:
+        if(org['org_id']==org_id):
+            organisation_name=org['organization_name']
+
+    # Checking for no_of_complaintsand no_of_employees
+    for emp_dic in response2['Items']:
+        if(emp_dic['org_id']==org_id):
+            no_of_employees=no_of_employees+1
+            no_of_complaints=no_of_complaints+emp_dic['no_complaints']
+
+    #Used for storing employeees in list and counting no of departments in organisation
     for de in dep_response['Items']:
         if(de['organization_id']==org_id):
+            no_of_departments=no_of_departments+1
             dep.append(de['department_name'])
 
     for dic in response2['Items']:
@@ -75,7 +97,11 @@ def dashboard(request,j):
         'info_list':info_list,
         'org_id':org_id,
         'dep':dep,
-        'present':present
+        'present':present,
+        'no_of_departments':no_of_departments,
+        'no_of_employees':no_of_employees,
+        'no_of_complaints':no_of_complaints,
+        'organisation_name':organisation_name
     }
 
     if request.method=='POST':
@@ -84,8 +110,6 @@ def dashboard(request,j):
         hierarchy=request.POST.get('hierarchy')
         no_comp=request.POST.get('no_complaints')
         email=request.POST.get('emp_email')
-
-        print(department)
 
         dynamodb=boto3.resource('dynamodb')
         table=dynamodb.Table('employees')
@@ -198,7 +222,11 @@ def dashboard(request,j):
             #Database call for getting updated table(After registered user is added)
             table2=dynamodb.Table('employees')
             user_table=dynamodb.Table('users')
+            dept_table=dynamodb.Table('departments')
+            org_table=dynamodb.Table('organization')
 
+            org_response=org_table.scan()
+            dept_response=dept_table.scan()
             user_response=user_table.scan()
             response3=table2.scan()
 
@@ -220,6 +248,29 @@ def dashboard(request,j):
             no_complaints=[]
             emp_id=[]
 
+            dep=[]
+
+            no_of_departments=0
+            no_of_employees=0
+            no_of_complaints=0
+
+            #Getting Organisation Name
+            for org in org_response['Items']:
+                if(org['org_id']==org_id):
+                    organisation_name=org['organization_name']
+
+            #Used for getting department list and no of departments
+            for de in dept_response['Items']:
+                if(de['organization_id']==org_id):
+                    no_of_departments=no_of_departments+1
+                    dep.append(de['department_name'])
+
+            # Checking for no_of_complaintsand no_of_employees
+            for emp_dic in response3['Items']:
+                if(emp_dic['org_id']==org_id):
+                    no_of_employees=no_of_employees+1
+                    no_of_complaints=no_of_complaints+emp_dic['no_complaints']
+
             for dic in response3['Items']:
                 if dic['active']==True and dic['org_id']==int(org_id):
                     name.append(dic['emp_name'])
@@ -229,13 +280,17 @@ def dashboard(request,j):
                     emp_id.append(dic['emp_id'])
 
             info_list=zip(name,department,hierarchy,no_complaints,emp_id)
-            print(name)
 
             context={
                 'info_list':info_list,
                 'org_id':org_id,
                 'dep':dep,
-                'present':present
+                'present':present,
+                'no_of_departments':no_of_departments,
+                'no_of_employees':no_of_employees,
+                'no_of_complaints':no_of_complaints,
+                'organisation_name':organisation_name
+
             }
 
             return render(request, 'dashboard/index.html',context)
@@ -302,9 +357,24 @@ def delete_employee(request,org_id,emp_id):
 
 def about(request,org_id):
     dynamodb=boto3.resource('dynamodb')
-    orga_table=dynamodb.Table('eorganization')
+    orga_table=dynamodb.Table('organization')
 
-    return render(request,'dashboard/about.html')            
+    for org in orga_table['Items']:
+        if(org['org_id']==org_id):
+            org_name=org['organization_name']
+            org_info=org['orga_info']
+            org_img=org['orga_img']
+
+    
+    context={
+        'org_name':org_name,
+        'org_info':org_info,
+        'org_img':org_img,
+        'org_id':org_id
+    }
+
+
+    return render(request,'dashboard/about.html',context)            
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
@@ -418,7 +488,27 @@ def create(request):
 def created(request):
     organization_name = request.POST.get('name')
     code=request.POST.get('code')
-    #print("name:"+ organization_name + "code:" + code)
+    orga_info=request.POST.get('orga_info')
+    myfile = request.FILES
+    print(myfile)
+
+    print(orga_info)
+
+    fs = FileSystemStorage()
+    filename = fs.save(myfile.name, myfile)
+    f="./media/"+str(myfile)
+    s3 = boto3.client('s3')
+    bucket = 'yike'
+
+    file_name = str(f)
+    key_name = str(myfile)
+
+    s3.upload_file(file_name, bucket, key_name)
+
+    bucket_location = boto3.client('s3').get_bucket_location(Bucket=bucket)
+    link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
+            bucket,
+            key_name)
 
     if (organization_name!='' and code!='' ):
             dynamodb = boto3.resource('dynamodb')
@@ -438,6 +528,8 @@ def created(request):
                     'org_id': len(response_sno['Items'])+101,
                     'organization_name': organization_name,
                     'code':code,
+                    'orga_info':orga_info,
+                    'img':link
                     }
                 )
                 email=request.session['email']

@@ -182,9 +182,9 @@ z-index: 0;
       <td style="width: 50%;">
         <h2 style="margin-left:7%;font-family : Avenir Black;" >Organization's Joined</h2>
       </td>
-      <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-          <button id="myBtn" class="button" onclick="openForm()">Create</button>
-      </td>
+      <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+                  <button id="join_btn" class="button" onclick="openForm()">Join</button>
+              </td>
     </tr>
   </table> <br>
     {% if topics_created_size > 0 %}
@@ -223,11 +223,9 @@ z-index: 0;
               <td style="width: 50%;"><br>
                   <h2 style="margin-left:7%;font-family : Avenir Black;" >Organization's Created</h2>
               </td>
-              <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-                  <button id="join_btn" class="button" onclick="openForm()">Join</button>
-
-                  </div>
-              </td>
+              <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
+               <button id="myBtn" class="button" onclick="openForm()">Create</button>
+              </td> 
             </tr>
           </table> <br>
      
@@ -264,17 +262,32 @@ z-index: 0;
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" >
+    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" id="create_form">
         {% csrf_token %}
         <h1 style="font-family : Avenir Black;">Create Organization</h1>
   
            <!-- <label ><b>Organization Name:</b></label> -->
+        <div style="padding-top:10%">
+        <span style="font-size:25px">Organisation Name</span>   
         <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Organization Name" name="name" required>
-        <hr class="line">
+        </div>
+        <div style="padding-top:10%">
+        <span style="font-size:25px">Enter Code</span>
         <input style="font-family : Avenir Black;" class="input" type="text" placeholder="Enter Code" name="code" required>
-        <hr class="line">
+        </div>
+        <div style="padding-top:10%">
+        <span style="font-size:25px">Select Image</span>
+        <input style="font-family : Avenir Black;" class="input" type="file"  name="image"  accept="image/*"required><br>
+        </div>
+        <div>
+        <textarea name="orga_info" rows="10" cols="30">Enter Company Info Here..</textarea>
+        </div>
+        <div style="padding-top:10%">
         <button type="submit" class="button" style="font-family : Avenir Black;width:18%;border-radius:13%;color:rgb(10, 10, 10);margin-left:5% ;text-align:center ;">Create</button> <br><br><br><br><br>  
+        </div>
     </form>
+    
+
   </div>
 </div>
 
