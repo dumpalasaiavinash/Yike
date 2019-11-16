@@ -12,5 +12,6 @@ urlpatterns = [
     path('signin/',views.client_signin,name='client_signin'),
     path('login/',views.client_login,name='client_login'),
     path('loggedin/',views.client_loggedin,name='client_loggedin'),
-    path('email_verification/',views.email_verification,name='email_verification')
+    path('email_verification/',views.email_verification,name='email_verification'),
+    path('home/',views.client_home,name='client_home'),
 ]

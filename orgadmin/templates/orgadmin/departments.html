@@ -63,7 +63,7 @@ font-family: Helvetica;
 }
 #tree{
 width:100%;
-height:80%;
+height:100%;
 padding: 1px;
 
 }
@@ -78,14 +78,14 @@ padding: 1px;
 
 
 
-<div style="float:left; width:86%;height:80%;margin-top:3%">
+<div style="float:left; width:84%;height:89%;margin-top:3%">
   <div id="tree" style="margin-top:2%;position:fixed">
 
   </div>
 </div>
 
 
-<div style="float:left; width:13%;height:100%;margin-left:1%; margin-top:5%">
+<div style="float:left; width:15%;height:89%;margin-left:1%; margin-top:5%">
 
   <!-- <br>  <br> <br>  <br> -->
 
@@ -101,6 +101,24 @@ padding: 1px;
   <!-- <button class="button button4">Gray</button> -->
   <button onclick="save()" class="button">Save</button>
   <br>
+  <br>
+
+  <div class="w3-container">
+      <h2>Instructions below</h2>
+
+
+      <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%;cursor:zoom-in;height:10%"
+      onclick="document.getElementById('modal01').style.display='block'">
+
+      <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+        <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+        <div class="w3-modal-content w3-animate-zoom">
+          <img src="{% static 'orgadmin/images/instruct_hierarchy.png' %}" style="width:100%">
+        </div>
+      </div>
+    </div>
+
+
 
 
 </div>

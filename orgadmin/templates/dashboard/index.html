@@ -409,7 +409,7 @@ z-index: 0;
                                     {% csrf_token %}
                                     <input class="input" type="text" name="emp_name" placeholder="Enter Name" required><br>
                                     <input class="input" type="email" name="emp_email" placeholder="Enter Email ID" required><br>
-                                    <select class="input"><br>
+                                    <select class="input" name="department"><br>
                                         {% for dep in dep %}
                                         <option value="{{dep}}">{{dep}}</option>
                                         {% endfor %}

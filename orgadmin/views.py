@@ -38,7 +38,6 @@ import hashlib
 
 # Create your views here.
 def dashboard(request,j):
-    print("-------------HI-------------\n")
 
     present=0 #User already present in organisation
 

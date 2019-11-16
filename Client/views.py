@@ -78,7 +78,13 @@ def complaint(request):
         return render(request,'Client/second.html')
 
 def client_signup(request):
-    return render(request,'Client/client_signup.html')
+    print('lsenfselnflenglsenglsengl')
+    return render(request,'Client/new_home/signup.html')
+
+#client homepage
+def client_home(request):
+    return render(request,'Client/new_home/signup.html')
+
 
 def client_signin(request):
     #form validation
@@ -87,10 +93,10 @@ def client_signin(request):
         table=dynamodb.Table('clients')
         response = table.scan()
         context = response['Items']
-        username = request.POST.get('Username')
+        username = request.POST.get('username')
         email    = request.POST.get('email')
-        password = request.POST.get('psw')
-        repassword = request.POST.get('psw-repeat')
+        password = request.POST.get('pass')
+        repassword = request.POST.get('re_pass')
         print(username,email,password,repassword)
 
         #mail validation
@@ -178,7 +184,7 @@ def client_signin(request):
                         )
                         email.send()
                         return render(request,'Client/client_signed.html')
-    return render(request,'Client/client_signup.html')
+    return render(request,'Client/new_home/signup.html')
 
 def activate(request,token,email,username,client_id):
     dynamodb=boto3.resource('dynamodb')
@@ -203,7 +209,7 @@ def activate(request,token,email,username,client_id):
 
 
 def client_login(request):
-    return render(request,'Client/client_login.html')
+    return render(request,'Client/new_home/login.html')
 
 def client_loggedin(request):
     if request.method=="POST":
@@ -212,14 +218,14 @@ def client_loggedin(request):
         response = table.scan()
         context = response['Items']
         email   = request.POST.get('email')
-        password = request.POST.get('psw')
+        password = request.POST.get('pass')
         password_hashed = hashlib.sha256(password.encode())
         password_hashed = password_hashed.hexdigest()
         for passw in context:
             print(passw['password'],password_hashed)
             if(passw['password'] == password_hashed):
-                return render(request,'Client/client_loggedin.html')
-    return render(request,'Client/client_login.html')
+                return render(request,'Client/first.html')
+    return render(request,'Client/new_home/login.html')
 
 def email_verification(request):
     return render(request,'Client/client_verify.html')
