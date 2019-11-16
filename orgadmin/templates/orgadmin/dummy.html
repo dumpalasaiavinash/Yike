@@ -178,7 +178,7 @@ z-index: 0;
         <h2 style="margin-left:7%;font-family: 'Raleway';color: gray;font-size:24px ;" >Organization's Joined</h2>
       </td>
       <td  align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
-          
+
           <button id="join_btn" class="button button2" onclick="openForm()">Join</button>
       </td>
     </tr>
@@ -188,19 +188,19 @@ z-index: 0;
         {% for i,j in topics_created %}
         <div class="main" style="margin-left:2%;" >
           <a href = "{% url 'employee:dashboard'  %}">
-            
+
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
-                
+
               <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
-                  
+
           <br>{{i}}<br><br>
               </div>
-          
+
               <div class="middle" >
                   <img class=image src="{% static 'orgadmin/images/bill.jpg' %}" alt="Avatar" >
                 
               </div>
-          
+
               <div class="bottom">
                 <p style="font-family: raleway;margin: 5%;"> Enter your Organization</p>
               </div>
@@ -209,7 +209,7 @@ z-index: 0;
           </div>
 
 
-               
+
         {% endfor %}
         {% endif %}<br><br><br><br>
 
@@ -222,7 +222,7 @@ z-index: 0;
               </td>
               <td align="right" style="width:49%;margin-right:10%;padding-right: 10%;">
                 <button id="myBtn" class=" button button2" onclick="openForm()">Create</button>
-                 
+
                   </div>
               </td>
             </tr>
@@ -233,14 +233,14 @@ z-index: 0;
             {% for i, j in topics %}
             <div class="main" style="margin-left:2%;" >
                 <a href = "{% url 'orgadmin:dashboard' j %}">
-                  
 
-                
+
+
                   <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
                     <div class="w3-container w3-blu" style="height:50%;background-color: powderblue;">
                 <br>{{i}}<br><br>
                     </div>
-                
+
                     <div class="middle" >
                         <img class=image src="{% static 'orgadmin/images/tata.jpg' %}" alt="Avatar" >
                      
@@ -261,17 +261,19 @@ z-index: 0;
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" >
+    <form class="form-container" action="{% url 'orgadmin:created' %}" method="post" id="create_form">
         {% csrf_token %}
         <h1 style="font-family: 'Raleway';font-size: 24px;">Create Organization</h1>
-  
+
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Organization Name" name="name" required>
         <hr class="line">
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code" name="code" required>
         <hr class="line">
-       <div style="margin-left: 24px;"> <button  type="submit" class="button button2" >Create</button> </div><br><br><br><br><br>  
+       <div style="margin-left: 24px;"> <button  type="submit" class="button button2" >Create</button> </div><br><br><br><br><br>
     </form>
+
+
   </div>
 </div>
 
@@ -282,30 +284,30 @@ z-index: 0;
     <form class="form-container" action="{% url 'orgadmin:join' %}" method="post" >
       {% csrf_token %}
         <h1 style="font-family: 'Raleway';font-size: 24px;">Join Organization</h1>
-  
+
            <!-- <label ><b>Organization Name:</b></label> -->
         <input style="font-family: 'Raleway';" class="input" type="text" placeholder="Enter Code to Join" name="join_code" required>
         <hr class="line">
-        <div style="margin-left: 25px; "><button type="submit" class="button button2" >Join</button> </div><br><br><br><br><br>  
+        <div style="margin-left: 25px; "><button type="submit" class="button button2" >Join</button> </div><br><br><br><br><br>
     </form>
   </div>
 </div>
 
-  
+
   {% block scripts %}
-    
+
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
- 
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }
@@ -345,6 +347,6 @@ window.onclick = function(event) {
 
 
   {% endblock %}
-  
+
 
 {% endblock %}

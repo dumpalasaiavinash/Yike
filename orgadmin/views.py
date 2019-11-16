@@ -10,7 +10,7 @@ import json
 from django.views.decorators.csrf import requires_csrf_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status   
+from rest_framework import status
 
 #For sending activation function
 from django.http import HttpResponse
@@ -34,6 +34,9 @@ import string
 #Hashing password
 import hashlib
 
+#For storing images
+from django.core.files.storage import FileSystemStorage
+
 
 
 # Create your views here.
@@ -46,7 +49,9 @@ def dashboard(request,j):
     dynamodb=boto3.resource('dynamodb')
     table=dynamodb.Table('employees')
     departments_table=dynamodb.Table('departments')
+    org_table=dynamodb.Table('organization')
 
+    org_response=org_table.scan()
     dep_response=departments_table.scan()
     response2=table.scan()
     #Getting departments from departments table
@@ -58,8 +63,26 @@ def dashboard(request,j):
     no_complaints=[]
     emp_id=[]
 
+    no_of_departments=0
+    no_of_employees=0
+    no_of_complaints=0
+
+    #Getting Organisation Name
+    for org in org_response['Items']:
+        if(org['org_id']==org_id):
+            organisation_name=org['organization_name']
+
+    # Checking for no_of_complaintsand no_of_employees
+    for emp_dic in response2['Items']:
+        if(emp_dic['org_id']==org_id):
+            print(type(emp_dic['no_complaints']))
+            no_of_employees=no_of_employees+1
+            no_of_complaints=no_of_complaints+int(emp_dic['no_complaints'])
+
+    #Used for storing employeees in list and counting no of departments in organisation
     for de in dep_response['Items']:
         if(de['organization_id']==org_id):
+            no_of_departments=no_of_departments+1
             dep.append(de['department_name'])
 
     for dic in response2['Items']:
@@ -76,7 +99,11 @@ def dashboard(request,j):
         'info_list':info_list,
         'org_id':org_id,
         'dep':dep,
-        'present':present
+        'present':present,
+        'no_of_departments':no_of_departments,
+        'no_of_employees':no_of_employees,
+        'no_of_complaints':no_of_complaints,
+        'organisation_name':organisation_name
     }
 
     if request.method=='POST':
@@ -85,8 +112,6 @@ def dashboard(request,j):
         hierarchy=request.POST.get('hierarchy')
         no_comp=request.POST.get('no_complaints')
         email=request.POST.get('emp_email')
-
-        print(department)
 
         dynamodb=boto3.resource('dynamodb')
         table=dynamodb.Table('employees')
@@ -199,7 +224,11 @@ def dashboard(request,j):
             #Database call for getting updated table(After registered user is added)
             table2=dynamodb.Table('employees')
             user_table=dynamodb.Table('users')
+            dept_table=dynamodb.Table('departments')
+            org_table=dynamodb.Table('organization')
 
+            org_response=org_table.scan()
+            dept_response=dept_table.scan()
             user_response=user_table.scan()
             response3=table2.scan()
 
@@ -221,6 +250,29 @@ def dashboard(request,j):
             no_complaints=[]
             emp_id=[]
 
+            dep=[]
+
+            no_of_departments=0
+            no_of_employees=0
+            no_of_complaints=0
+
+            #Getting Organisation Name
+            for org in org_response['Items']:
+                if(org['org_id']==org_id):
+                    organisation_name=org['organization_name']
+
+            #Used for getting department list and no of departments
+            for de in dept_response['Items']:
+                if(de['organization_id']==org_id):
+                    no_of_departments=no_of_departments+1
+                    dep.append(de['department_name'])
+
+            # Checking for no_of_complaintsand no_of_employees
+            for emp_dic in response3['Items']:
+                if(emp_dic['org_id']==org_id):
+                    no_of_employees=no_of_employees+1
+                    no_of_complaints=no_of_complaints+int(emp_dic['no_complaints'])
+
             for dic in response3['Items']:
                 if dic['active']==True and dic['org_id']==int(org_id):
                     name.append(dic['emp_name'])
@@ -230,13 +282,17 @@ def dashboard(request,j):
                     emp_id.append(dic['emp_id'])
 
             info_list=zip(name,department,hierarchy,no_complaints,emp_id)
-            print(name)
 
             context={
                 'info_list':info_list,
                 'org_id':org_id,
                 'dep':dep,
-                'present':present
+                'present':present,
+                'no_of_departments':no_of_departments,
+                'no_of_employees':no_of_employees,
+                'no_of_complaints':no_of_complaints,
+                'organisation_name':organisation_name
+
             }
 
             return render(request, 'dashboard/index.html',context)
@@ -268,7 +324,7 @@ def activate(request, uidb64, token, user_id, password,org_id):
 
             password=hashlib.sha256(password.encode())
             password=password.hexdigest()
-            
+
             users_table.put_item(
             Item={
                 'username':dic['emp_name'],
@@ -302,11 +358,25 @@ def delete_employee(request,org_id,emp_id):
 
 
 def about(request,org_id):
+    dynamodb=boto3.resource('dynamodb')
+    orga_table=dynamodb.Table('organization')
+
+    for org in orga_table['Items']:
+        if(org['org_id']==org_id):
+            org_name=org['organization_name']
+            org_info=org['orga_info']
+            org_img=org['orga_img']
+
+
     context={
+        'org_name':org_name,
+        'org_info':org_info,
+        'org_img':org_img,
         'org_id':org_id
     }
 
-    return render(request,'dashboard/about.html',context)            
+
+    return render(request,'dashboard/about.html',context)
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
@@ -420,7 +490,27 @@ def create(request):
 def created(request):
     organization_name = request.POST.get('name')
     code=request.POST.get('code')
-    #print("name:"+ organization_name + "code:" + code)
+    orga_info=request.POST.get('orga_info')
+    myfile = request.FILES
+    print(myfile)
+
+    print(orga_info)
+
+    fs = FileSystemStorage()
+    filename = fs.save(myfile.name, myfile)
+    f="./media/"+str(myfile)
+    s3 = boto3.client('s3')
+    bucket = 'yike'
+
+    file_name = str(f)
+    key_name = str(myfile)
+
+    s3.upload_file(file_name, bucket, key_name)
+
+    bucket_location = boto3.client('s3').get_bucket_location(Bucket=bucket)
+    link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
+            bucket,
+            key_name)
 
     if (organization_name!='' and code!='' ):
             dynamodb = boto3.resource('dynamodb')
@@ -440,6 +530,8 @@ def created(request):
                     'org_id': len(response_sno['Items'])+101,
                     'organization_name': organization_name,
                     'code':code,
+                    'orga_info':orga_info,
+                    'img':link
                     }
                 )
                 email=request.session['email']
@@ -620,11 +712,11 @@ def join(request):
             try:
                 print("********************")
                 print(response_join)
-                
+
                 print("#####################")
 
                 #request.session['org_created']=request.session['org_created']+[ID]
-                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]       
+                request.session['org_joined']=request.session['org_joined']+[int(response_join['Items'][0]['org_id'])]
                 org_joined = request.session['org_joined']
                 print(org_joined)
                 print(response_join['Items'][0]['org_id'])
@@ -843,20 +935,20 @@ def index(request):
 
 
 class complaintrest(APIView):
-        
+
     def get(self,request):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('complaint')
             response_complaint = table.scan(
             ProjectionExpression="complaint",
-            
+
             )
-            
+
             complaint_list=[]
             # print(response_complaint['Items'][0])
             for i in range(0,len(response_complaint['Items'])):
                 complaint_list.append(response_complaint['Items'][i]['complaint'])
-            
+
             print(complaint_list)
             # print(len(complaint_list))
             list1=[]
@@ -870,10 +962,10 @@ class complaintrest(APIView):
 
 
 
-        
 
 
-        
+
+
 def create_department(request):
     depname = request.POST.get('depname')
     print(depname)
@@ -906,4 +998,52 @@ def create_department(request):
         messages.success(request, 'The new department has been created successfully.')
     else:
         messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+    return redirect('../departments')
+
+
+
+
+
+def remove_department(request):
+    depname = request.POST.get('depname')
+    print(depname)
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('departments')
+    print(type(request.session['org_id']))
+    x=request.session['org_id']
+    response1 = dynamoTable.scan(ProjectionExpression="department_id")
+    response = dynamoTable.scan(
+        ProjectionExpression="department_name,department_id",
+        FilterExpression=Attr('organization_id').eq(int(x)) & Attr('department_name').eq(depname)
+    )
+    # print(response1['Items'])
+    lengt=0
+    for i in response1['Items']:
+        if lengt< int(i['department_id']):
+            lengt = int(i['department_id'])
+        else:
+            continue
+    print(response['Items'])
+    # print(lengt)
+    if(len(response['Items'])==0):
+
+        messages.success(request, 'Please check again as the given department is not there in your organization.')
+
+    else:
+        print(response['Items'])
+        dynamoTable.delete_item(
+        Key={
+            'department_id': response['Items'][0]['department_id'] ,
+        },
+        )
+
+        dynamoTable=dynamoDB.Table('hierarchy')
+
+        dynamoTable.delete_item(
+        Key={
+            'dep_id': response['Items'][0]['department_id'] ,
+        },
+        )
+
+        messages.success(request, 'The department has been removed successfully.')
     return redirect('../departments')

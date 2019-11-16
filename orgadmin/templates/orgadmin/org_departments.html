@@ -302,6 +302,11 @@ z-index: 0;
                                 </a>
                             </li>
                             <li class="mm-active" style="padding-top:5%;font-size:20px;font-family: Raleway;">
+                                <a href="{% url 'form:form_test'%}">
+                                    Complaint_form
+                                </a>
+                            </li>
+                            <li class="mm-active" style="padding-top:5%;font-size:20px;font-family: Raleway;">
                                     <a href="{% url 'orgadmin:about' org_id %}">
                                     About
                                 </a>
@@ -366,7 +371,7 @@ z-index: 0;
                         <h3  style="font-family: 'Raleway';"> Please create departments for your organization to organize the hierarchy.  </h3>
                       {% endif %}
 
-                        <br><br><br>
+                        <br>
                         <!-- <br><br><br><br><br><br><br><br> -->
 
                         <h2  style="font-family: 'Raleway';"> Click here to create new department in your organization  </h2>
@@ -396,6 +401,36 @@ z-index: 0;
                             </div>
                           </div>
                         </div>
+
+                        <br>
+                        <h2  style="font-family: 'Raleway';"> Click here to remove a department in your organization  </h2>
+                        <br>
+
+                        <div class="w3-container">
+                          <button onclick="document.getElementById('id02').style.display='block'" class="btn btn-outline-danger btn-lg">Remove department</button>
+
+                          <div id="id02" class="w3-modal">
+                            <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+                              <div class="w3-center"><br>
+                              </div>
+                              <form class="w3-container" action="{% url 'orgadmin:remove_department' %}" method="post">
+                                {% csrf_token %}
+                                <div class="w3-section">
+                                  <label><b>Removing Department name</b></label>
+                                  <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Department name" name="depname" required>
+                                  <button class="btn btn-outline-danger btn-lg" style="margin-left: 40%;" type="submit">Remove</button>
+
+                                </div>
+                              </form>
+
+                              <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+                                <button onclick="document.getElementById('id02').style.display='none'" style="margin-left: 85%;" type="button" class="btn btn-outline-danger btn-lg">Cancel</button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
 
 
                     </div>
