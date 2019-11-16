@@ -75,8 +75,9 @@ def dashboard(request,j):
     # Checking for no_of_complaintsand no_of_employees
     for emp_dic in response2['Items']:
         if(emp_dic['org_id']==org_id):
+            print(type(emp_dic['no_complaints']))
             no_of_employees=no_of_employees+1
-            no_of_complaints=no_of_complaints+emp_dic['no_complaints']
+            no_of_complaints=no_of_complaints+int(emp_dic['no_complaints'])
 
     #Used for storing employeees in list and counting no of departments in organisation
     for de in dep_response['Items']:
@@ -270,7 +271,7 @@ def dashboard(request,j):
             for emp_dic in response3['Items']:
                 if(emp_dic['org_id']==org_id):
                     no_of_employees=no_of_employees+1
-                    no_of_complaints=no_of_complaints+emp_dic['no_complaints']
+                    no_of_complaints=no_of_complaints+int(emp_dic['no_complaints'])
 
             for dic in response3['Items']:
                 if dic['active']==True and dic['org_id']==int(org_id):
