@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'chatbox',
     'channels',
-    
+    'rest_framework.authtoken',
+    'android_app_api'
 
 ]
 
@@ -68,6 +69,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'yike.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 ASGI_APPLICATION = 'yike.routing.application'
 
