@@ -5,20 +5,25 @@ import 'package:yike_mobile_app/Widgets/Buttons/raised_gradient_button.dart';
 import 'package:yike_mobile_app/Widgets/Buttons/signup_button.dart';
 import 'package:yike_mobile_app/Widgets/TextFields/custom_tff.dart';
 import 'package:yike_mobile_app/Widgets/TextFields/password.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  
+  tryLogin(){
+    print( emailController.text );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          //Container(child: Row(children: <Widget>[
-          //Image.asset("assets/yikelogo.png",width:120,height: 120),],mainAxisAlignment: MainAxisAlignment.center,),
-          //margin: EdgeInsets.only(top:40),),
           Container(
               margin: EdgeInsets.fromLTRB(16, 50, 16, 4),
               child: Text(
-                "Welcome",
+                "Welcome Back",
                 style: TextStyle(
                     fontSize: 36,
                     color: Color.fromRGBO(70, 70, 255, 1),
@@ -36,6 +41,7 @@ class LoginPage extends StatelessWidget {
               hint: "Enter your Email Address",
               label: "Email Address",
               val: "",
+              controlleR: emailController,
             ),
           ),
           Padding(
@@ -61,10 +67,7 @@ class LoginPage extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              onPressed: () {
-                
-                Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => ComplaintPage()));
-              },
+              onPressed: () => tryLogin(),
             ),
           ),
           Row(
