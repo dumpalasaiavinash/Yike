@@ -43,7 +43,6 @@ from django.core.files.storage import FileSystemStorage
 def dashboard(request,j):
 
     present=0 #User already present in organisation
-
     org_id=j
     request.session['org_id']=org_id
     dynamodb=boto3.resource('dynamodb')
