@@ -1,4 +1,4 @@
-package com.example.yike
+package com.example.yike_mobile_app
 
 import android.os.Bundle
 
