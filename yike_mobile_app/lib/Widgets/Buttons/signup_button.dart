@@ -34,8 +34,8 @@ class SignupButton extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: <Color>[
-                 Color.fromRGBO(70, 70, 255, 1),
-                Color.fromRGBO(70, 70, 255, 1)
+                 Colors.indigoAccent,
+                Colors.indigo
                 
         ]),
         borderRadius: BorderRadius.circular(40.0),

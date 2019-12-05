@@ -1,0 +1,731 @@
+<html>
+
+<head>
+
+
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/material-datetime-picker/2.4.0/material-datetime-picker.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        .notice {
+            position: relative;
+            margin: 0.6em;
+            background: #F9F9F9;
+            border-left: 4px solid #DDD;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
+        }
+
+        .notice:before {
+            position: absolute;
+            top: 50%;
+            margin-top: -17px;
+            left: -17px;
+            background-color: #DDD;
+            color: #FFF;
+            width: 30px;
+            height: 20px;
+            border-radius: 100%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-family: Georgia;
+            text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+        }
+
+        .button1 {
+            width: 90%;
+            background-color: purple;
+            color: white;
+            height: 50px;
+            margin: 10px;
+        }
+
+        .div1 {
+            width: 60%;
+            background-color: whitesmoke;
+            float: left;
+            height: 100%;
+        }
+
+        .div2 {
+            border: 1px solid grey;
+            width: 19.85%;
+            background-color: white;
+            float: right;
+            height: 100%;
+        }
+
+        .div3 {
+            width: 18%;
+            float: right;
+            height: 100%;
+            background-color: white;
+        }
+
+        #dropzone {
+            background-color: white;
+            width: 50%;
+            height: 90%;
+            margin-left: 25%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 20px 20px 20px 20px;
+            overflow-x: hidden;
+            overflow-x: auto;
+        }
+
+        .object_of_form {
+            width: 80%;
+            margin-left: 10%;
+            margin-top: 16px;
+        }
+
+        .comp_heading {
+            margin-left: 16px;
+            margin-bottom: 0px;
+        }
+
+        .botton0 {
+            text-align: center;
+        }
+
+        .ui-widget.ui-widget-content {
+            background-color: white;
+            width: 77%;
+        }
+
+        .ui-datepicker .ui-datepicker-header {
+            position: relative;
+            padding: .4em 0;
+        }
+
+        .ui-widget-header {
+            border: 1px solid #aaaaaa;
+            background: #2222dd;
+            color: rgba(255, 255, 255);
+        }
+
+
+        .ui-state-default,
+        .ui-widget-content .ui-state-default {
+            border: 0px;
+            color: black;
+            background: white;
+        }
+
+        .ui-state-active,
+        .ui-widget-content .ui-state-active {
+            background: blue;
+            color: wheat;
+        }
+
+        .ui-state-hover,
+        .ui-widget-content .ui-state-hover {
+            background: blue;
+            color: white;
+        }
+
+
+        .ui-datepicker td a {
+            display: block;
+            padding: .8em;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .radiodrop {
+            background-color: wheat;
+            width: 100%;
+            overflow: hidden;
+            min-height: 80px;
+        }
+
+        .checkdrop {
+            background-color: wheat;
+            width: 100%;
+            overflow: hidden;
+            min-height: 80px;
+        }
+
+
+        .helpertext {
+            width: 80%;
+            padding-left: 0px;
+            padding-right: 0px;
+            margin-left: 10%;
+        }
+
+        .posteller {
+            display: none;
+        }
+
+        .previewButton {
+            margin: 10px;
+            float: left;
+        }
+
+        .saveButton {
+            margin: 10px;
+            float: right;
+        }
+
+        .container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: 98%;
+        }
+
+        .container .popup {
+            visibility: hidden;
+            width: 50%;
+            background-color: #FFF;
+            height: 90%;
+            top: 20px;
+            border-radius: 6px;
+            padding: 8px 0;
+            position: absolute;
+            z-index: 3;
+            left: 25%;
+        }
+
+        .container .popup .close {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .container .popup .form {
+            width: 60%;
+            height: 90%;
+            background-color: whitesmoke;
+            margin-left: 20%;
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px 20px 20px 20px;
+            overflow-x: hidden;
+            overflow-x: auto;
+
+        }
+
+        #contain {
+            background-color: wheat;
+        }
+
+        #shadder {
+            width: 100%;
+            height: 100%;
+            background-color: #000000d0;
+            margin: 0px;
+            left: 0px;
+            top: 0px;
+            z-index: 1;
+        }
+
+        .container .show {
+            visibility: visible;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s;
+        }
+
+        .object_of_form2 {
+            width: 80%;
+            margin-left: 10%;
+            margin-top: 16px;
+        }
+
+        .mobilinp {
+            width: 60%;
+        }
+
+        .mobilesel {
+            width: 18%;
+            margin-top: 4px;
+            margin-right: 1%;
+
+        }
+
+        .labelmobile {
+            margin-left: 10%;
+            width: 40%;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .drop-down {
+            position: relative;
+            margin-top: 0;
+            width: 25%;
+            float: left;
+            font-family: verdana;
+        }
+
+        .drop-down select {
+            display: none;
+        }
+
+        .drop-down .select-list {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            margin-top: 40px;
+            padding: 0;
+            width: 100%;
+            height: 0;
+            overflow-x: auto;
+            background-color: wheat;
+        }
+
+        .drop-down .select-list li {
+            display: none;
+        }
+
+        .drop-down .select-list li span {
+            display: inline-block;
+            min-height: 40px;
+            min-width: 280px;
+            width: 100%;
+            padding: 5px 15px 5px 35px;
+            background-color: wheat;
+            background-position: left 10px center;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            text-align: left;
+            color: #FFF;
+            opacity: 0.7;
+            box-sizing: border-box;
+        }
+
+        .drop-down .select-list li span:hover,
+        .drop-down .select-list li span:focus {
+            opacity: 1;
+        }
+
+        .yike_button_icon {
+            width: 10%;
+            height: 80%;
+            margin-top: 10%;
+            margin-left: 5%;
+            text-align: center;
+        }
+
+        .selmobile {
+            display: none;
+            padding: 12px 16px 14px;
+            border: none;
+            background-color: transparent;
+            z-index: 1;
+        }
+
+        .button {
+            width: 100%;
+        }
+
+        .imgfile_name {
+            margin-top: 16px;
+            margin-left: 16px;
+            color: rgba(0, 0, 0, 0.37);
+        }
+
+        .radiolabel {
+            color: rgba(0, 0, 0, 0.37);
+            font-weight: initial;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .checklabel {
+            color: rgba(0, 0, 0, 0.37);
+            font-weight: initial;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form action="" method="post" enctype="multipart/form-data" id="CFC">
+            {% csrf_token %}
+
+        </form>
+        <span id="hiddenspan" style="display:none;">{{form}}</span>
+    </div>
+</body>
+
+</html>
+<script>
+
+
+
+
+
+
+
+
+
+
+
+    formView();
+
+    function ObjectLength(object) {
+        var length = 0;
+        for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+                ++length;
+            }
+        }
+        return length;
+    };
+
+
+    function formView() {
+        var preForm = document.getElementById('CFC');
+        var form = jQuery.parseJSON(document.getElementById('hiddenspan').innerHTML);
+        var len = ObjectLength(form)
+        for (var i = 0; i < len - 1; i++) {
+            var widget0 = jQuery.parseJSON(form['field' + i]);
+            var widget_type = widget0["type"]
+            if (widget_type == "textfield") {
+                var node = document.createElement("div");
+                node.innerHTML = genrate_new_textField2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+            else if (widget_type == "textarea") {
+                var node = document.createElement("div");
+                node.innerHTML = genrate_new_textArea2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+            else if (widget_type == "image_Upload") {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_ImageUpload2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+            else if (widget_type == "file_Upload") {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_FileUpload2(widget0, i);
+                preForm.appendChild(node);
+                window.mdc.autoInit()
+            }
+            else if (widget_type == "mobile") {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_mobilefield2(i);
+                preForm.appendChild(node);
+                window.mdc.autoInit();
+                convert2li('predropdown' + i)
+            }
+            else if (widget_type == "datepicker") {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_datefield2(widget0, i);
+                preForm.appendChild(node);
+                $('#predatepicker' + i).datepicker({ dateFormat: 'dd/mm/yy' });
+                window.mdc.autoInit();
+            }
+            else if (widget_type == 'text') {
+                var node = document.createElement("div");
+                node.innerHTML = generate_new_Text2(widget0, i);
+                preForm.appendChild(node);
+            }
+            else if (widget_type == "radiogroup") {
+                var node = document.createElement("div");
+                console.log("previewRadio")
+                node.innerHTML = generate_new_radioGroup2(widget0, i);
+                preForm.appendChild(node);
+            }
+            else if (widget_type == "checkgroup") {
+                var node = document.createElement("div");
+                console.log("previewcheck")
+                node.innerHTML = generate_new_checkGroup2(widget0, i);
+                preForm.appendChild(node);
+            }
+
+        }
+        var node = document.createElement("div");
+        node.setAttribute("style", "text-align : center")
+        node.innerHTML = "<br><br><br>" + generate_new_button() + "<br><br><br>" + form_id_keeper(form["form_id"]);
+
+        preForm.appendChild(node);
+
+    }
+
+
+
+    function genrate_new_textField2(widget0, formyike) {
+        var label = widget0["label"];
+        var isCountEnabled = widget0["count_enabled"]
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextfield' + formyike, widget0["helper_text"]) : "";
+        var count = isCountEnabled ? generate_new_Count2('prehelpertextfield' + formyike, widget0["count_char"]) : "";
+        var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
+        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  data-mdc-auto-init=\"MDCTextField\">" +
+            "<input name = \"field" + formyike + "\" class=\"mdc-text-field__input\" " + ml + " id=\"pretextfield" + formyike + "\"><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextfield" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeltextfield" + formyike + "\">" + label + "</label></div>" +
+            "<div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelpertextfield" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
+    }
+
+    function genrate_new_textArea2(widget0, formyike) {
+        var label = widget0["label"];
+        var isCountEnabled = widget0["count_enabled"]
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelpertextarea' + formyike, widget0["helper_text"]) : "";
+        var count = isCountEnabled ? generate_new_Count2('prehelpertextarea' + formyike, widget0["count_char"]) : "";
+        var ml = isCountEnabled ? "maxLength = " + widget0["count_char"] : "";
+        return "<div  class=\"mdc-text-field mdc-text-field--textarea object_of_form2\" data-mdc-auto-init=\"MDCTextField\">" +
+            "<textarea name = \"field" + formyike + "\" id=\"pretextarea" + formyike + "\" " + ml + " class=\"mdc-text-field__input\" rows=\"8\" cols=\"40\"></textarea><div class=\"mdc-notched-outline\">" +
+            "<div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"pretextarea" + formyike + "\" id=\"prelabeltextarea" + formyike + "\" class=\"mdc-floating-label\">" + label + "</label></div>" +
+            "<div class=\"mdc-notched-outline__trailing\"></div></div></div><div id=\"prehelpertextarea" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + count + "</div>";
+
+    }
+
+    function generate_new_ImageUpload2(widget0, formyike) {
+        var label = widget0["label"];
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelperimageU' + formyike, widget0["helper_text"]) : "";
+        return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span>" + label + "</span></div></div>" +
+            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('preimageU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+            "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>" +
+            "<div class=\"imgfile_name\" id=\"fnpreimageU" + formyike + "\">No image selected</div><input name = \"field" + formyike + "\" onchange=\"readURL(this)\" type='file' id=\"preimageU" + formyike + "\" style=\"display:none\"/>" +
+            "</div><div id=\"helperimageU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div><div id=\"divimgpreimageU" + formyike + "\" style=\"width:100px;margin-left:10%;height:100px;padding:10px;overflow:hidden;border:1px solid blue;display:none;\">" +
+            "<img style=\"width:100px\"id=\"imgpreimageU" + formyike + "\" src=\"#\" alt=\".\" /></div>";
+    }
+
+    function generate_new_FileUpload2(widget0, formyike) {
+        var label = widget0["label"];
+        var isHelperEnabled = widget0["helper_enabled"]
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelperfileU' + formyike, widget0["helper_text"]) : "";
+        return "<div class=\"object_of_form2\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span style=\"text-align:left\">" + label + "</span></div></div>" +
+            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('prefileU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+            "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">attach_file</i></button></div>" +
+            "<div class=\"imgfile_name\" id=\"fnprefileU" + formyike + "\">No file selected</div><input onchange=\"readURL2(this)\" type='file' name = \"field" + formyike + "\" id=\"prefileU" + formyike + "\" style=\"display:none\"/>" +
+            "</div><div id=\"helperfileU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
+    }
+
+    function generate_new_button() {
+        return "<button class=\"mdc-button mdc-button--raised\">  <span class=\"mdc-button__ripple\"></span> Submit</button>";
+    }
+
+    function form_id_keeper(id0) {
+        return "<input name = \"form_id\" style = \"display:none\" value = \"" + id0 + "\">"
+    }
+
+    function generate_new_radioGroup2(widget0, formyike) {
+        var label = widget0["label"];
+        var nR = widget0["nR"];
+        var rbs = "";
+
+        var radios = widget0["radios"]
+        console.log(radios)
+        for (var i = 0; i < nR; ++i) {
+            rbs += generate_new_RadioButton2(radios, i, formyike)
+        }
+        return "<div style= \"text-align:left;margin-left:10%\" class=\"object_of_form2\"><h4 class=\"radiolabel demo-title mdc-typography--headline9\">" + label + "</h4>" +
+            "<div class=\"radiodrop\">" + rbs + "</div><div>";
+    }
+
+    function generate_new_checkGroup2(widget0, formyike) {
+        var label = widget0["label"];
+        var nR = widget0["nR"];
+        var rbs = "";
+
+        var checks = widget0["checks"]
+        console.log(checks)
+        for (var i = 0; i < nR; ++i) {
+            rbs += generate_new_checkButton2(checks, i, formyike)
+        }
+        return "<div style= \"text-align:left;margin-left:10%\" class=\"object_of_form2\"><h4 class=\"checklabel demo-title mdc-typography--headline9\">" + label + "</h4>" +
+            "<div class=\"checkdrop\">" + rbs + "</div><div>";
+    }
+
+
+
+    function readURL2(input) {
+        if (input.files && input.files[0]) {
+            document.getElementById('fn' + input.id).innerHTML = input.files[0].name
+        }
+    }
+
+    function generate_new_HelperText2(id0, val) {
+        return "<p class=\"mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+            "id=\"helperText" + id0 + "\">" + val + "</p>";
+    }
+
+    function generate_new_RadioButton2(radio, index, pos) {
+        var labelText = radio['' + index]['label'];
+
+        return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
+            "<div  class=\"mdc-radio\">" +
+            "<input name = \"field" + formyike + "\" class=\"mdc-radio__native-control\" type=\"radio\" id=\"radiogroup_" + pos + "_" + index + "\">" +
+            "<div class=\"mdc-radio__background\">" +
+            "<div class=\"mdc-radio__outer-circle\"></div>" +
+            "<div class=\"mdc-radio__inner-circle\"></div>" +
+            "</div>" +
+            "<div class=\"mdc-radio__ripple\"></div>" +
+            "</div>" +
+            "<label  for=\"radio-1\">" + labelText + "</label>" +
+            "</div>"
+    }
+
+    function generate_new_checkButton2(check, index, pos) {
+        var labelText = check['' + index]['label'];
+
+        return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
+            "<div class=\"mdc-checkbox\">" +
+            "<input name = \"field" + formyike + "_" + index + "\" type=\"checkbox\" id=\"checkgroup_" + pos + "_" + index + "\"" +
+            "class=\"mdc-checkbox__native-control\"" +
+            "id=\"checkbox-1\"/>" +
+            "<div class=\"mdc-checkbox__background\">" +
+            "<svg class=\"mdc-checkbox__checkmark\"" +
+            "viewBox=\"0 0 24 24\">" +
+            "<path class=\"mdc-checkbox__checkmark-path\"" +
+            "fill=\"none\"" +
+            "d=\"M1.73,12.91 8.1,19.28 22.79,4.59\"/>" +
+            "</svg>" +
+            "<div class=\"mdc-checkbox__mixedmark\"></div>" +
+            "</div>" +
+            "<div class=\"mdc-checkbox__ripple\"></div>" +
+            "</div>" +
+            "<label for=\"checkbox-1\">" + labelText + "</label>" +
+            "</div>";
+    }
+
+    function generate_new_Count2(id0, val) {
+        return "<div class=\"mdc-text-field-character-counter\" id=\"count" + id0 + "\">0 / " + val + "</div>";
+    }
+
+    function generate_new_datefield2(widget0, formyike) {
+        var label = widget0["label"];
+        var isHelperEnabled = widget0["helper_enabled"];
+        var helper_text = widget0["helper_text"];
+        var helper = isHelperEnabled ? generate_new_HelperText2('prehelperdatepicker' + formyike, helper_text) : "";
+        console.log(widget0)
+        return "<div class=\"mdc-text-field mdc-text-field--outlined object_of_form2\"  data-mdc-auto-init=\"MDCTextField\"><input name = \"field" + formyike + "\" class=\"mdc-text-field__input\" id=\"predatepicker" + formyike + "\" value=\"dd/mm/yyyy\" ><div class=\"mdc-notched-outline\"><div class=\"mdc-notched-outline__leading\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\"><label for=\"predatepicker" + formyike + "\" class=\"mdc-floating-label\" id=\"prelabeldatepicker" + formyike + "\">" + label + "</label></div><div class=\"mdc-notched-outline__trailing\"></div\></div></div><div id=\"prehelperdatepicker" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
+    }
+
+    function generate_new_Text2(widget0, formyike) {
+        var tcolor = widget0["color"];
+        var fs = widget0['size'];
+        var text0 = widget0["content"];
+        return "<div class\"object_of_form\"><div class=\"mdc-text-field-helper-line helpertext \"><p style = \"color:" + tcolor + " ; font-size:" + fs + "\"class=\"mdc-text-field-helper-text  mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg\"" +
+            ">" + text0 + "</p></div></div>";
+    }
+
+
+
+
+
+    function generate_new_mobilefield2(formyike) {
+        return "<div style=\"color:rgba(0,0,0,0.37);margin-left:10%\" class=\" labelmobile\" id=\"prelabelmobile" + formyike + "\">Mobile Number</div><div bis_skin_checked=\"1\">" +
+            "<div bis_skin_checked=\"1\" id=\"predropdown" + formyike + "\" class=\"drop-down mdc-text-field mdc-text-field--outlined mobilesel  object_of_form \">" +
+            "<select id=\"precodemobile" + formyike + "\"  name = \"field" + formyike + "_0\" class=\" selmobile\">" +
+            "<option class=\"in\" style=\"background-image:url('https://www.countryflags.io/in/flat/32.png');\" value=\"+91\">+91</option>" +
+            "<option class=\"AFG\" style=\"background-image:url('https://www.countryflags.io/af/flat/32.png');\" value=\"+93\">+93</option>" +
+            "<option class=\"ALB\" style=\"background-image:url('https://www.countryflags.io/al/flat/32.png');\" value=\"+355\">+355</option>" +
+            "<option class=\"DZA	\" style=\"background-image:url('https://www.countryflags.io/dz/flat/32.png');\" value=\"+213\">+213</option>" +
+            "<option class=\"AD	\" style=\"background-image:url('https://www.countryflags.io/ad/flat/32.png');\" value=\"+376\">+376</option>" +
+            "<option class=\"AO	\" style=\"background-image:url('https://www.countryflags.io/ao/flat/32.png');\" value=\"+244\">+244</option>" +
+            "<option class=\"ATA\" style=\"background-image:url('https://www.countryflags.io/at/flat/32.png');\" value=\"+672\">+672</option>" +
+            "<option class=\"ARG\" style=\"background-image:url('https://www.countryflags.io/ar/flat/32.png');\" value=\"+54\">+54</option>" +
+            "<option class=\"BH\" style=\"background-image:url('https://www.countryflags.io/bh/flat/32.png');\" value=\"+973\">+973</option>" +
+            "<option class=\"BAN\" style=\"background-image:url('https://www.countryflags.io/bd/flat/32.png');\" value=\"+880\">+880</option>" +
+            "<option class=\"BY\" style=\"background-image:url('https://www.countryflags.io/by/flat/32.png');\" value=\"+375\">+375</option>" +
+            "<option class=\"BE\" style=\"background-image:url('https://www.countryflags.io/be/flat/32.png');\" value=\"+32\">+32</option>" +
+            "<option class=\"BZ\" style=\"background-image:url('https://www.countryflags.io/bz/flat/32.png');\" value=\"+501\">+501</option>" +
+            "<option class=\"CAN\" style=\"background-image:url('https://www.countryflags.io/ca/flat/32.png');\" value=\"+1\">+1</option>" +
+            "<option class=\"CF\" style=\"background-image:url('https://www.countryflags.io/cf/flat/32.png');\" value=\"+236\">+236</option>" +
+            "<option class=\"DNK\" style=\"background-image:url('https://www.countryflags.io/dk/flat/32.png');\" value=\"+45\">+45</option>" +
+            "<option class=\"DJ\" style=\"background-image:url('https://www.countryflags.io/dj/flat/32.png');\" value=\"+253\">+253</option>" +
+            "<option class=\"DEU\" style=\"background-image:url('https://www.countryflags.io/cn/flat/32.png');\" value=\"+49\">+86</option>" +
+            "<option class=\"ID	\" style=\"background-image:url('https://www.countryflags.io/id/flat/32.png');\" value=\"+62\">+62</option>" +
+            "<option class=\"IR\" style=\"background-image:url('https://www.countryflags.io/ir/flat/32.png');\" value=\"+98\">+98</option>" +
+            "<option class=\"ISR\" style=\"background-image:url('https://www.countryflags.io/il/flat/32.png');\" value=\"+972\">+972</option>" +
+            "<option class=\"GAB\" style=\"background-image:url('https://www.countryflags.io/ga/flat/32.png');\" value=\"+241\">+241</option>" +
+            "<option class=\"GM\" style=\"background-image:url('https://www.countryflags.io/gm/flat/32.png');\" value=\"+220\">+220</option>" +
+            "<option class=\"GE\" style=\"background-image:url('https://www.countryflags.io/ge/flat/32.png');\" value=\"+995\">+995</option>" +
+            "<option class=\"DE\" style=\"background-image:url('https://www.countryflags.io/de/flat/32.png');\" value=\"+49\">+49</option>" +
+            "<option class=\"HU\" style=\"background-image:url('https://www.countryflags.io/hu/flat/32.png');\" value=\"+36\">+36</option>" +
+            "<option class=\"IS\" style=\"background-image:url('https://www.countryflags.io/is/flat/32.png');\" value=\"+354\">+354</option>" +
+            "<option class=\"IT\" style=\"background-image:url('https://www.countryflags.io/it/flat/32.png');\" value=\"+39\">+39</option>" +
+            "<option class=\"JP\" style=\"background-image:url('https://www.countryflags.io/jp/flat/32.png');\" value=\"+81\">+81</option>" +
+            "<option class=\"JO\" style=\"background-image:url('https://www.countryflags.io/jo/flat/32.png');\" value=\"+962\">+962</option>" +
+            "<option class=\"KZ\" style=\"background-image:url('https://www.countryflags.io/kz/flat/32.png');\" value=\"+7\">+7</option>" +
+            "<option class=\"KE\" style=\"background-image:url('https://www.countryflags.io/ke/flat/32.png');\" value=\"+254\">+254</option>" +
+            "<option class=\"KI\" style=\"background-image:url('https://www.countryflags.io/ki/flat/32.png');\" value=\"+686\">+686</option>" +
+            "<option class=\"KR\" style=\"background-image:url('https://www.countryflags.io/kr/flat/32.png');\" value=\"+82\">+82</option>" +
+            "<option class=\"TW\" style=\"background-image:url('https://www.countryflags.io/tw/flat/32.png');\" value=\"886\">886</option>" +
+            "<option class=\"TJ\" style=\"background-image:url('https://www.countryflags.io/tj/flat/32.png');\" value=\"+992\">+992</option>" +
+            "<option class=\"TZ\" style=\"background-image:url('https://www.countryflags.io/tz/flat/32.png');\" value=\"+255\">+255</option>" +
+            "<option class=\"TH\" style=\"background-image:url('https://www.countryflags.io/th/flat/32.png');\" value=\"+66\">+66</option>" +
+            "<option class=\"UA\" style=\"background-image:url('https://www.countryflags.io/ua/flat/32.png');\" value=\"+380\">+380</option>" +
+            "<option class=\"AE\" style=\"background-image:url('https://www.countryflags.io/ae/flat/32.png');\" value=\"+971\">+971</option>" +
+            "<option class=\"GB\" style=\"background-image:url('https://www.countryflags.io/gb/flat/32.png');\" value=\"+44\">+44</option>" +
+            "<option class=\"US\" style=\"background-image:url('https://www.countryflags.io/us/flat/32.png');\" value=\"+1\">+1</option>" +
+            "<option class=\"VN\" style=\"background-image:url('https://www.countryflags.io/vn/flat/32.png');\" value=\"+84\">+84</option>" +
+            "<option class=\"WF\" style=\"background-image:url('https://www.countryflags.io/wf/flat/32.png');\" value=\"+681\">+681</option>" +
+            "<option class=\"EH\" style=\"background-image:url('https://www.countryflags.io/eh/flat/32.png');\" value=\"+212\">+212</option>" +
+            "<option class=\"+YE\" style=\"background-image:url('https://www.countryflags.io/ye/flat/32.png');\" value=\"+967\">+967</option>" +
+            "<option class=\"ZM\" style=\"background-image:url('https://www.countryflags.io/zm/flat/32.png');\" value=\"+260\">+260</option>" +
+            "<option class=\"ZW\" style=\"background-image:url('https://www.countryflags.io/zw/flat/32.png');\" value=\"+263\">+263</option>" +
+            "</select>" +
+            "<div class=\"mdc-notched-outline mdc-notched-outline--upgraded\">" +
+            "<div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div>" +
+            "<div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div>" +
+            "<div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div>" +
+            "</div>" +
+            "</div>" +
+            "<div class=\"mdc-text-field mdc-text-field--outlined mobileinp object_of_form \"" +
+            " data-mdc-auto-init=\"MDCTextField\" data-mdc-auto-init-state=\"initialized\" bis_skin_checked=\"1\"" +
+            "style=\"width: 54%;margin-left: 0%; float:left; margin-top:-1px\"><span class=\"posteller\" id=\"posmobile" + formyike + "\">" + formyike + "</span>" +
+            "<input name = \"field" + formyike + "_1\" maxlength='10' type=\"tel\" id=\"mobile" + formyike + "\" class=\"mdc-text-field__input\"><div class=\"mdc-notched-outline mdc-notched-outline--upgraded\" bis_skin_checked=\"1\"><div class=\"mdc-notched-outline__leading\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__notch\" bis_skin_checked=\"1\"></div><div class=\"mdc-notched-outline__trailing\" bis_skin_checked=\"1\"></div></div>" +
+            "</div><div id=\"helpermobile" + formyike + "\" class=\"mdc-text-field-helper-line helpertext\" bis_skin_checked=\"1\"></div><div bis_skin_checked=\"1\"></div></div>";
+    }
+
+    function convert2li(id0) {
+        jQuery('#' + id0).append('<div class="button"></div>');
+        jQuery('#' + id0).append('<ul class="select-list"></ul>');
+        jQuery('#' + id0 + ' select option').each(function () {
+            var bg = jQuery(this).css('background-image');
+            jQuery('.select-list').append('<li class="clsAnchor"><table><tr><td value="' + jQuery(this).val() + '" class="' + jQuery(this).attr('class') + '" style=width:31px;height:32px;background-image:' + bg + '></td><td>' + jQuery(this).text() + '</td></li></td></tr></table>');
+        });
+        jQuery('#' + id0 + ' .button').html('<table style=\'height:100%;width:100%;vertical-align:middle\'><tr><td><img src=' + jQuery('#' + id0 + ' select').find(':selected').css('background-image').replace('url(', '').replace(')', '') + '></td>' + '<td style=\"color:rgba(0,0,0,0.37)\"' + '>' + jQuery('#' + id0 + ' select').find(':selected').text() + '</td>' + '<td><a   style="position: relative;right: 16px;" class="select-list-link"><button onclick = \"preventDefualt();\" class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+        jQuery('#' + id0 + ' ul li').each(function () {
+            if (jQuery(this).find('span').text() == jQuery('#' + id0 + ' select').find(':selected').text()) {
+                jQuery(this).addClass('active');
+            }
+        });
+        jQuery('#' + id0 + ' .select-list table').on('click', function () {
+            var dd_text = jQuery(this).text();
+            var dd_v1 = this.childNodes[0].childNodes[0].childNodes[0];
+            var dd_img = jQuery(dd_v1).css('background-image').replace('url(', '').replace(')', '');
+            var dd_val = jQuery(this).attr('value');
+            jQuery('#' + id0 + ' .button').html('<table><tr><td><img src=' + dd_img + '></td><td style="color:rgba(0,0,0,0.37)">' + dd_text + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+            jQuery('#' + id0 + ' .select-list table').parent().removeClass('active');
+            jQuery(this).parent().addClass('active');
+            $('#' + id0 + ' select[name=options]').val(dd_val);
+            $('#' + id0 + ' .select-list li').slideUp();
+            jQuery('#' + id0 + ' .select-list').height(0);
+        });
+        jQuery('#' + id0 + ' .button').on('click', 'a.select-list-link', function () {
+            jQuery('#' + id0 + ' ul li').slideToggle();
+            if (jQuery('#' + id0 + ' .select-list').height() == 0) {
+                jQuery('#' + id0 + ' .select-list').height(150);
+            }
+            else
+                jQuery('#' + id0 + ' .select-list').height(0);
+
+
+        });
+    }
+
+</script>

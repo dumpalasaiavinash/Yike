@@ -73,7 +73,7 @@ class _CustomTFFState extends State<CustomTextFormField> {
       },
       decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+            borderSide: BorderSide(color: Colors.indigo, width: 2.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black38, width: 1.0),

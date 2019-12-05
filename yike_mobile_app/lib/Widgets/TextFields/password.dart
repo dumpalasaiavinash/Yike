@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 
-class Password extends StatefulWidget{
-  
+class PasswordField extends StatefulWidget{
+  final TextEditingController controlleR;
+  PasswordField({
+    this.controlleR
+  });  
   @override
   State<StatefulWidget> createState() {
     return _PasswordState();
   }
 }
-class _PasswordState extends State<Password>{
+class _PasswordState extends State<PasswordField>{
   String _hint="Password",_label="Enter your Password",_password="";  
   FocusNode _node;
   bool _focused = false,_obscure=true;
   Icon _icon= Icon(Icons.visibility_off,color: Colors.black38,);
+  TextEditingController myController;
+
+  
   @override
   void initState() {
     super.initState();
+    myController = widget.controlleR;
     _node = FocusNode(debugLabel: 'Button');
     _node.addListener(_handleFocusChange);
   }
@@ -31,7 +38,7 @@ class _PasswordState extends State<Password>{
     if(_obscure){
       setState(() {
        _obscure=false;
-       _icon=Icon(Icons.visibility,color: Colors.blueAccent,);
+       _icon=Icon(Icons.visibility,color: Colors.indigo,);
       });
     }
     else{
@@ -51,7 +58,7 @@ class _PasswordState extends State<Password>{
     return Stack(children: <Widget>[
       TextFormField(
       obscureText: _obscure,
-
+      controller: myController,
       focusNode: _node,
       autofocus: false,
    onTap: () {
@@ -72,7 +79,7 @@ class _PasswordState extends State<Password>{
     
     decoration: InputDecoration(
      focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                  borderSide: BorderSide(color: Colors.indigo, width: 2.0),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black38, width: 1.0),

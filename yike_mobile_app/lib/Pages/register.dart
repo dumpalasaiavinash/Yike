@@ -41,7 +41,7 @@ class RegisterPage extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(top: 0, right: 16, left: 16, bottom: 16),
-          child: Password(),
+          child: PasswordField(),
         ),
         Container(
           margin: EdgeInsets.only(top: 0, right: 16, left: 12, bottom: 16),
