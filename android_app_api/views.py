@@ -67,10 +67,12 @@ def complaint_form_add(req):
         count = 0
         form0 = json.loads(req.data['data'])
         for element in form0:
-            if (form0[element] != "") and (element != "nE"):
+            if element == "org_id":
+                data.update({"org_id": form0[element] })
+
+            elif (form0[element] != "") and (element != "nE"):
                 data.update({'field'+str(count): json.dumps(form0[element])})
                 count += 1
-        print(data)
         table.put_item(
             Item=data
         )

@@ -352,7 +352,7 @@
 
 <body>
     <div class="container">
-        <form action="" method="post" enctype="multipart/form-data" id="CFC">
+        <form action="/form/complaint_form" method="post" enctype="multipart/form-data" id="CFC">
             {% csrf_token %}
 
         </form>
@@ -452,7 +452,7 @@
         }
         var node = document.createElement("div");
         node.setAttribute("style", "text-align : center")
-        node.innerHTML = "<br><br><br>" + generate_new_button() + "<br><br><br>" + form_id_keeper(form["form_id"]);
+        node.innerHTML = "<br><br><br>" + generate_new_button() + "<br><br><br>" + form_id_keeper(form["form_id"]) + org_id_keeper(form["org_id"]);
 
         preForm.appendChild(node);
 
@@ -493,7 +493,7 @@
         var isHelperEnabled = widget0["helper_enabled"]
         var helper = isHelperEnabled ? generate_new_HelperText2('prehelperimageU' + formyike, widget0["helper_text"]) : "";
         return "<div class=\"object_of_form\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span>" + label + "</span></div></div>" +
-            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('preimageU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button type=\"button\" onclick=\"document.getElementById('preimageU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
             "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">add_photo_alternate</i></button></div>" +
             "<div class=\"imgfile_name\" id=\"fnpreimageU" + formyike + "\">No image selected</div><input name = \"field" + formyike + "\" onchange=\"readURL(this)\" type='file' id=\"preimageU" + formyike + "\" style=\"display:none\"/>" +
             "</div><div id=\"helperimageU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div><div id=\"divimgpreimageU" + formyike + "\" style=\"width:100px;margin-left:10%;height:100px;padding:10px;overflow:hidden;border:1px solid blue;display:none;\">" +
@@ -505,7 +505,7 @@
         var isHelperEnabled = widget0["helper_enabled"]
         var helper = isHelperEnabled ? generate_new_HelperText2('prehelperfileU' + formyike, widget0["helper_text"]) : "";
         return "<div class=\"object_of_form2\" style=\"color : rgba(0,0,0,0.37);margin-bottom:-8px\"><span style=\"text-align:left\">" + label + "</span></div></div>" +
-            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button onclick=\"document.getElementById('prefileU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
+            "<div class=\"mdc-text-field object_of_form\" style=\"background-color:white\"><div bis_skin_checked=\"1\"><button type=\"button\" onclick=\"document.getElementById('prefileU" + formyike + "').click()\" class=\"yike_button_icon mdc-button mdc-button--raised \"> " +
             "<span class=\"mdc-button__ripple\" aria-hidden=\"true\"></span><i class=\"material-icons mdc-button__icon\" style=\"margin-left:0px;margin-right: 0px;font-size: 24px;height: 24px;width: 24px;\">attach_file</i></button></div>" +
             "<div class=\"imgfile_name\" id=\"fnprefileU" + formyike + "\">No file selected</div><input onchange=\"readURL2(this)\" type='file' name = \"field" + formyike + "\" id=\"prefileU" + formyike + "\" style=\"display:none\"/>" +
             "</div><div id=\"helperfileU" + formyike + "\"class=\"mdc-text-field-helper-line helpertext\">" + helper + "</div>";
@@ -517,6 +517,10 @@
 
     function form_id_keeper(id0) {
         return "<input name = \"form_id\" style = \"display:none\" value = \"" + id0 + "\">"
+    }
+
+    function org_id_keeper(id0) {
+        return "<input name = \"org_id\" style = \"display:none\" value = \"" + id0 + "\">"
     }
 
     function generate_new_radioGroup2(widget0, formyike) {
@@ -548,6 +552,17 @@
     }
 
 
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            document.getElementById('fn' + input.id).innerHTML = input.files[0].name
+            reader.onload = function (e) {
+                $('#divimg' + input.id).css('display', 'block');
+                $('#img' + input.id).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     function readURL2(input) {
         if (input.files && input.files[0]) {
@@ -698,7 +713,7 @@
             var bg = jQuery(this).css('background-image');
             jQuery('.select-list').append('<li class="clsAnchor"><table><tr><td value="' + jQuery(this).val() + '" class="' + jQuery(this).attr('class') + '" style=width:31px;height:32px;background-image:' + bg + '></td><td>' + jQuery(this).text() + '</td></li></td></tr></table>');
         });
-        jQuery('#' + id0 + ' .button').html('<table style=\'height:100%;width:100%;vertical-align:middle\'><tr><td><img src=' + jQuery('#' + id0 + ' select').find(':selected').css('background-image').replace('url(', '').replace(')', '') + '></td>' + '<td style=\"color:rgba(0,0,0,0.37)\"' + '>' + jQuery('#' + id0 + ' select').find(':selected').text() + '</td>' + '<td><a   style="position: relative;right: 16px;" class="select-list-link"><button onclick = \"preventDefualt();\" class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+        jQuery('#' + id0 + ' .button').html('<table style=\'height:100%;width:100%;vertical-align:middle\'><tr><td><img src=' + jQuery('#' + id0 + ' select').find(':selected').css('background-image').replace('url(', '').replace(')', '') + '></td>' + '<td style=\"color:rgba(0,0,0,0.37)\"' + '>' + jQuery('#' + id0 + ' select').find(':selected').text() + '</td>' + '<td><a   style="position: relative;right: 16px;" class="select-list-link"><button type=\"button\"  class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
         jQuery('#' + id0 + ' ul li').each(function () {
             if (jQuery(this).find('span').text() == jQuery('#' + id0 + ' select').find(':selected').text()) {
                 jQuery(this).addClass('active');
@@ -709,7 +724,7 @@
             var dd_v1 = this.childNodes[0].childNodes[0].childNodes[0];
             var dd_img = jQuery(dd_v1).css('background-image').replace('url(', '').replace(')', '');
             var dd_val = jQuery(this).attr('value');
-            jQuery('#' + id0 + ' .button').html('<table><tr><td><img src=' + dd_img + '></td><td style="color:rgba(0,0,0,0.37)">' + dd_text + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
+            jQuery('#' + id0 + ' .button').html('<table><tr><td><img src=' + dd_img + '></td><td style="color:rgba(0,0,0,0.37)">' + dd_text + '</td>' + '<td><a href="javascript:void(0);"  style="position: relative;right: 16px;" class="select-list-link"><button type=\"button\" class="mdc-icon-button material-icons" style="color:rgba(0,0,0,0.37)">arrow_drop_down</button></a></td></tr></table>');
             jQuery('#' + id0 + ' .select-list table').parent().removeClass('active');
             jQuery(this).parent().addClass('active');
             $('#' + id0 + ' select[name=options]').val(dd_val);
@@ -728,4 +743,5 @@
         });
     }
 
+  
 </script>
