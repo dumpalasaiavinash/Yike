@@ -28,6 +28,7 @@ def complaintIFrame(req):
 
             if response1["Count"] > 0 :
                 form =response1["Items"][0] 
+                print(form)
                 form0 = json.dumps(form)
                 return render(req,'formCreation/iframe0.html',{'form':form0})
                 
@@ -51,7 +52,7 @@ def complaintIFrame(req):
                         if field not in ["form_id" , "org_id" ] :
                             data00 = json.loads(form[field])
                             typE = data00["type"]
-                            if typE == "textfield" or typE == "datepicker" or typE == "textarea":
+                            if typE in ["textfield","datepicker","textarea","radiogroup"] :
                                 #if req.POST[field] == "" :
                                     #return render(req,'formCreation/iframe0.html',{'form':form0,"msg":"error"})
                                 Complaint00[data00["label"]] = req.POST[field]

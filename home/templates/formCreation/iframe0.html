@@ -389,9 +389,11 @@
     function formView() {
         var preForm = document.getElementById('CFC');
         var form = jQuery.parseJSON(document.getElementById('hiddenspan').innerHTML);
+        console.log(form)
         var len = ObjectLength(form)
-        for (var i = 0; i < len - 1; i++) {
+        for (var i = 0; i < len - 2; i++) {
             var widget0 = jQuery.parseJSON(form['field' + i]);
+
             var widget_type = widget0["type"]
             if (widget_type == "textfield") {
                 var node = document.createElement("div");
@@ -580,7 +582,7 @@
 
         return "<div style= \"width:90%\" class=\"mdc-form-field\">" +
             "<div  class=\"mdc-radio\">" +
-            "<input name = \"field" + formyike + "\" class=\"mdc-radio__native-control\" type=\"radio\" id=\"radiogroup_" + pos + "_" + index + "\">" +
+            "<input name = \"field" + pos + "\" class=\"mdc-radio__native-control\" value = \""+labelText+"\" type=\"radio\" id=\"radiogroup_" + pos + "_" + index + "\">" +
             "<div class=\"mdc-radio__background\">" +
             "<div class=\"mdc-radio__outer-circle\"></div>" +
             "<div class=\"mdc-radio__inner-circle\"></div>" +
