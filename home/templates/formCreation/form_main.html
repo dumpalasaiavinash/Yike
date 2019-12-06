@@ -698,6 +698,18 @@
 
         var form = { "nE": 0 };
 
+        function saveForm(){
+            form["org_id"] = ""+ {{org_id}} ;
+            console.log(form)
+
+            var req = new XMLHttpRequest();
+            req.open('POST',"http://"+window.location.host+"/api/new_complaint_form/")
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+            var a=JSON.stringify(form);
+            req.send("data="+a)
+
+        }
+
     </script>
 </head>
 
@@ -767,19 +779,7 @@
 
 
 
-    var addSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/form/add/');
-    addSocket.onopen = function (e) {
-        console.log('open', e)
-    }
-    addSocket.onmessage = function (e) {
-        console.log('open', e)
-    }
-    addSocket.onclose = function (e) {
-        console.log('close', e)
-    }
-    addSocket.onerror = function (e) {
-        console.log('error', e)
-    }
+   
 
 
     var cb = "<div class=\"mdc-form-field object_of_form\"><div class=\"mdc-checkbox\"><input type=\"checkbox\"class=\"mdc-checkbox__native-control\"id=\"checkbox-1\"/><div class=\"mdc-checkbox__background\">"
