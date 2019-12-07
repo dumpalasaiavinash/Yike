@@ -24,5 +24,6 @@ urlpatterns = [
     path('about_name_edit/<int:org_id>',views.about_name_edit,name='about_name_edit'),
     path('about_info_edit/<int:org_id>',views.about_info_edit,name='about_info_edit'),
     path('about_image_edit/<int:org_id>',views.about_image_edit,name='about_image_edit'),
-
+    path('test/123',views.test,name='test'),
+    
 ]

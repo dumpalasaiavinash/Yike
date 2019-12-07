@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import FileSystemStorage
+import ast
 
 #For sending activation function
 from django.http import HttpResponse
@@ -37,6 +38,95 @@ import hashlib
 
 #For storing images
 from django.core.files.storage import FileSystemStorage
+
+
+
+
+#Creating class for passing the problem
+class assignEmployee:
+
+    def __init__(self,cmp_id,org_id,dep_id=None):
+        self.cmp_id=cmp_id
+        self.org_id=org_id
+        self.dep_id=dep_id
+
+    def assign(self):
+        dynamodb=boto3.resource('dynamodb')
+        emp_table=dynamodb.Table('employees')
+        cmp_table=dynamodb.Table('ComplaintS')
+        dep_table=dynamodb.Table('departments')
+        hie_table=dynamodb.Table('hierarchy')
+
+        if(self.dep_id==None):
+            dep_response = dep_table.scan(
+                ProjectionExpression="department_id,department_name",
+                FilterExpression=Attr('organization_id').eq(self.org_id)
+            )
+
+        else:
+            dep_response = dep_table.scan(
+                ProjectionExpression="department_id,department_name",
+                FilterExpression=Attr('organization_id').eq(self.org_id) & Attr('department_id').eq(self.dep_id)
+            )
+
+            sel_dept=dep_response['Items'][0]['department_id']
+
+            hie_response = hie_table.scan(
+                ProjectionExpression="hierarchy",
+                FilterExpression=Attr('dep_id').eq(sel_dept)
+            )
+
+            hie_dict=hie_response["Items"][0]['hierarchy']
+            hie_updated=hie_dict[1:(len(hie_dict)-1)]
+            hie_updated_dict=ast.literal_eval(hie_updated)
+            
+            ind=[]
+
+            j=0
+            for i in range(len(hie_updated_dict)-2,0,-1):
+                if(hie_updated_dict[len(hie_updated_dict)-1]['pid']==hie_updated_dict[i]['pid']):
+                    if(j==0):
+                        ind.append(len(hie_updated_dict)-1)
+                        ind.append(i)
+                        j=j+1
+                    else:
+                        ind.append(i)
+
+
+            emp_id_retrieved=[]
+
+            for i in ind:
+                emp_response=emp_table.scan(
+                    ProjectionExpression="emp_id",
+                    FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
+                )          
+
+            
+                # emp_id_retrieved.append(emp_response["Items"][0]['emp_id'])
+            for em in emp_response["Items"]:
+                emp_id_retrieved.append(int(em['emp_id']))
+
+            cmp_response=cmp_table.scan(
+                    ProjectionExpression="emp_id",
+                    FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
+                )    
+
+
+
+
+def test(request):    
+    a=assignEmployee("cmp1",161,9)
+    a.assign()
+
+    url="../about/"+str(103)
+    return redirect(url)
+
+
+
+
+
+
+
 
 
 
@@ -396,9 +486,6 @@ def about(request,org_id):
             org_info=org['org_info'].strip()
             org_img=org['image']
 
-    print(org_img)
-    print(org_info)
-
     if(org_info=="" and org_img==" "):
         context={
             'org_name':org_name,
@@ -719,46 +806,9 @@ def created(request):
                         UpdateExpression="set organizations_created = :r",
                         ExpressionAttributeValues={
                             ':r': org_created,
-
-            if(len(response['Items'])==0):
-                ID=100
-                for i in response_sno['Items']:
-                    if(ID<int(i['org_id'])):
-                        ID=int(i['org_id'])
-
-                print(ID)
-                ID=ID+1
-                hash_code=organization_name+str(ID)
-                print(hash_code)
-
-                code=hash_code[:-1]
-                response = table.put_item(
-                Item={
-                    'org_id': ID,
-                    'organization_name': organization_name,
-                    'code':code,
-                    'image':" ",
-                    'org_info':" "
-
-                    }
-                )
-                email=request.session['email']
-                # print(response_sno)
-                # print("####################")
-
-                # sno=response_sno['Items'][0]['org_id']
-                # print(sno)
-                request.session['org_created']=request.session['org_created']+[ID]
-                org_created = request.session['org_created']
-                # print(org_created)
-                # print(ID)
-                # print(request.session['org_created'])
-                # print('\n\n\n')
-                # # request.session['org_created'].append(ID)
-                org_joined = request.session['org_joined']
-                },
-                ReturnValues="UPDATED_NEW"
-                )
+                        },
+                        ReturnValues="UPDATED_NEW"
+                        )
 
                     response1 = table.scan(
                         ProjectionExpression="organizations_created,organizations_joined",
