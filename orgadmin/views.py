@@ -11,6 +11,7 @@ from django.views.decorators.csrf import requires_csrf_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.files.storage import FileSystemStorage
 
 #For sending activation function
 from django.http import HttpResponse
@@ -387,22 +388,144 @@ def about(request,org_id):
     dynamodb=boto3.resource('dynamodb')
     orga_table=dynamodb.Table('organization')
 
-    for org in orga_table['Items']:
+    orga_response=orga_table.scan()
+
+    for org in orga_response['Items']:
         if(org['org_id']==org_id):
             org_name=org['organization_name']
+            org_info=org['org_info'].strip()
+            org_img=org['image']
 
+    print(org_img)
+    print(org_info)        
 
-
-    context={
+    if(org_info=="" and org_img==" "):
+        context={
+            'org_name':org_name,
+            'org_id':org_id,
+            'org_check':'0'
+        }
+    elif(org_img==" "):
+        context={
+            'org_name':org_name,
+            'org_info':org_info,
+            'org_id':org_id,
+            'org_check':'1'
+        }
+    elif(org_info==""):
+        context={
+            'org_name':org_name,
+            'org_img':org_img,
+            'org_id':org_id,
+            'org_check':'2'
+        }
+    else:
+        context={
         'org_name':org_name,
-        'org_info':org_info,
         'org_img':org_img,
-        'org_id':org_id
-    }
-
-
+        'org_info':org_info,
+        'org_id':org_id,
+        'org_check':'3'
+        }                  
+    print(context['org_check'])
     return render(request,'dashboard/about.html',context)
 
+
+def about_name_edit(request,org_id):
+
+    if request.method=="POST":
+        org_name=request.POST.get("cmp_name")
+
+        dynamodb=boto3.resource('dynamodb')
+        orga_table=dynamodb.Table('organization')
+
+        orga_table.update_item(
+        Key={
+            'org_id': org_id
+        },
+        UpdateExpression="set organization_name = :r",
+        ExpressionAttributeValues={
+            ':r': org_name,
+        },
+        ReturnValues="UPDATED_NEW"
+        )
+
+        url="../about/"+str(org_id)
+        return redirect(url)
+
+    url="../about/"+str(org_id)
+    return redirect(url)    
+
+
+
+def about_info_edit(request,org_id):
+
+    if request.method=="POST":
+        org_info=request.POST.get("info").strip()
+
+        if(org_info == ""):
+            org_info=" "
+
+        dynamodb=boto3.resource('dynamodb')
+        orga_table=dynamodb.Table('organization')
+
+        orga_table.update_item(
+        Key={
+            'org_id': org_id
+        },
+        UpdateExpression="set org_info = :r",
+        ExpressionAttributeValues={
+            ':r': org_info
+        },
+        ReturnValues="UPDATED_NEW"
+        )
+
+        url="../about/"+str(org_id)
+        print(url)
+        return redirect(url)
+
+    url="../about/"+str(org_id)
+    return redirect(url)
+
+
+def about_image_edit(request,org_id):
+
+    if request.method=="POST":
+        img_file=request.FILES['up_file']
+
+        fs = FileSystemStorage()
+        fs.save(img_file.name, img_file)
+        s3 = boto3.client('s3')
+        bucket = 'yike-s3'
+
+        file_name = str(img_file)
+        key_name = str(img_file)
+
+        s3.upload_file(file_name, bucket, key_name)
+
+        link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
+             bucket,
+             key_name)
+
+        dynamodb=boto3.resource('dynamodb')
+        orga_table=dynamodb.Table('organization')
+
+        orga_table.update_item(
+        Key={
+            'org_id': org_id
+        },
+        UpdateExpression="set image = :i",
+        ExpressionAttributeValues={
+            ':i':link
+        },
+        ReturnValues="UPDATED_NEW"
+        )
+
+        url="../about/"+str(org_id)
+        return redirect(url)
+
+    url="../about/"+str(org_id)
+    return redirect(url)    
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
@@ -503,7 +626,7 @@ def created(request):
             )
             
             if(len(response['Items'])==0):
-                ID=0
+                ID=100
                 for i in response_sno['Items']:
                     if(ID<int(i['org_id'])):
                         ID=int(i['org_id'])
@@ -519,6 +642,8 @@ def created(request):
                     'org_id': ID,
                     'organization_name': organization_name,
                     'code':code,
+                    'image':" ",
+                    'org_info':" "
 
                     }
                 )

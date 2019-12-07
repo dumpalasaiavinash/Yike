@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'chatbox',
     'channels',
     'rest_framework.authtoken',
-    'android_app_api'
+    'android_app_api',
+    'storages',
 
 ]
 
