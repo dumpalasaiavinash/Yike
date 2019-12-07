@@ -550,7 +550,7 @@ def create(request):
         organizations_joined=response['Items'][0]['organizations_joined']
         for i in organizations_joined:
             total_org_ids.append(i)
-            
+
         for i in range(0,len(response['Items'][0]['organizations_joined'])):
             response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
         org_join_id=response['Items'][0]['organizations_joined']
@@ -579,7 +579,7 @@ def create(request):
             else:
                 organizations_created_names.append(i)
             count=count+1
-      
+
         ids=str(organizations_created)
         print(ids)
         list1=[]
@@ -611,8 +611,8 @@ def created(request):
 
     organization_name = request.POST.get('name')
     # code=request.POST.get('code')
-    
-   
+
+
 
     if (organization_name!='' ):
             dynamodb = boto3.resource('dynamodb')
@@ -624,7 +624,7 @@ def created(request):
                 ProjectionExpression="organization_name",
                 FilterExpression=Attr('organization_name').eq(organization_name)
             )
-            
+
             if(len(response['Items'])==0):
                 ID=100
                 for i in response_sno['Items']:
@@ -635,7 +635,7 @@ def created(request):
                 ID=ID+1
                 hash_code=organization_name+str(ID)
                 print(hash_code)
-                
+
                 code=hash_code[:-1]
                 response = table.put_item(
                 Item={
@@ -815,10 +815,10 @@ def created(request):
 
 
                 return render(request, 'orgadmin/dummy.html', data)
-    
 
-                
-                    
+
+
+
 
 
 

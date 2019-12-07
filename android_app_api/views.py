@@ -67,10 +67,12 @@ def complaint_form_add(req):
         count = 0
         form0 = json.loads(req.data['data'])
         for element in form0:
-            if (form0[element] != "") and (element != "nE"):
+            if element == "org_id":
+                data.update({"org_id": str(form0[element]) })
+
+            elif (form0[element] != "") and (element != "nE"):
                 data.update({'field'+str(count): json.dumps(form0[element])})
                 count += 1
-        print(data)
         table.put_item(
             Item=data
         )
@@ -82,10 +84,11 @@ def complaint_form_add(req):
 @api_view(["POST"])
 def getTokenPair(req):
     table = dynamodb.Table('users')
+    print(req.data)
     print(req.POST)
-    if('email'  in req.POST  and  'password'  in req.POST):
-        email = req.POST['email']
-        pswd = req.POST['password']
+    if('email'  in req.data  and  'password'  in req.data):
+        email = req.data['email']
+        pswd = req.data['password']
         table = dynamodb.Table('users')
         pswd = hashlib.sha256(pswd.encode())
         pswd = pswd.hexdigest()
@@ -129,6 +132,11 @@ def getTokenPair(req):
                         "status": 200,
                         "message": "Successful",
                     })
+                
+                return Response({
+                    "status": 1,
+                    "message" : "Incorrect Password or UserName",
+                })
 
     return Response({
                     "message": "invalid inputs",

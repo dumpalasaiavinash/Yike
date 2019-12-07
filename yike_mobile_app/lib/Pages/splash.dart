@@ -1,51 +1,74 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yike_mobile_app/Pages/login_pge.dart';
 
+import 'complaits.dart';
 
 class Splash extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SplashState();
   }
 }
 
 class _SplashState extends State<Splash> {
-  Timer _timer;
+
+  
+  nextscreen() async {
+    
+    if(await getValuesSF("logged", "bool")){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ComplaintPage()));
+    }
+    else Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>LoginPage()));
+  }
+
+  var scaff = Scaffold(
+      body: Container(
+        color: Colors.indigo,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "YIKE",
+                  style: TextStyle(fontSize: 72, color: Colors.white),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+
+
   @override
-  void initState() {
+  initState() {
     super.initState();
-    /* _timer = new Timer(const Duration(milliseconds: 400), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
-    });
-*/
+    nextscreen();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color.fromRGBO(70, 70, 255, 1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "yIKE",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 48,
-                    color: Colors.white),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+    return scaff;
   }
 }
+
+
+getValuesSF(String key, String tYpe) async {
+    if (tYpe.toLowerCase() == "string") {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString(key);
+    } else if (tYpe.toLowerCase() == "integer") {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString(key);
+    }
+    else if (tYpe.toLowerCase() == "bool") {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if(prefs.getBool(key)!=null)
+       return prefs.getBool(key);
+       return false;
+    }
+  }

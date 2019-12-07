@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final String label, hint, val;
+  final TextEditingController controlleR;
   CustomTextFormField({
     this.label,
     this.hint,
     this.val,
+    this.controlleR
   });
 
   @override
@@ -19,10 +21,12 @@ class _CustomTFFState extends State<CustomTextFormField> {
   String _label, _hint,_val;
   FocusNode _node;
   bool _focused = false;
+  TextEditingController myController;
 
   @override
   void initState() {
     super.initState();
+    myController = widget.controlleR;
     _label = widget.label;
     _hint = widget.hint;
     _val = widget.val;
@@ -38,9 +42,18 @@ class _CustomTFFState extends State<CustomTextFormField> {
     }
   }
 
+  
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: myController,
       focusNode: _node,
       autofocus: false,
       onTap: () {
@@ -60,7 +73,7 @@ class _CustomTFFState extends State<CustomTextFormField> {
       },
       decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+            borderSide: BorderSide(color: Colors.indigo, width: 2.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black38, width: 1.0),
