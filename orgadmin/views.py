@@ -539,6 +539,10 @@ def pre_create(request):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('payments')
 
+    now = datetime.datetime.now()
+    dat = datetime.date(now.year, now.month, now.day)
+
+
     inv_response = table.scan(
         ProjectionExpression="invoice",
     )
@@ -554,6 +558,7 @@ def pre_create(request):
        Item={
         'invoice': invoice+1000,
         'email': email,
+        'date': dat,
         }
     )
     print(typ)

@@ -10,7 +10,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 from django.urls import reverse
-
+from datetime import date
 
 #For password hashing
 import hashlib
@@ -58,6 +58,32 @@ def home_log(request):
         print('\n\n\n')
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
+                dynamodb = boto3.resource('dynamodb')
+                table = dynamodb.Table('payments')
+
+                inv_response = table.scan(
+                    ProjectionExpression="dat",
+                    FilterExpression=Attr('email').eq(email),
+                )
+                if(len(inv_response['Items'])>0):
+                    f_date=inv_response['Items'][0]['dat']
+                    now = datetime.datetime.now()
+                    dat = datetime.date(now.year, now.month, now.day)
+                    delta = dat - f_date
+                    if(int(delta.days>30)):
+                        dynamoDB=boto3.resource('dynamodb')
+                        table=dynamoDB.Table('users')
+                        response1 = table.update_item(
+                            Key={
+                                'email':email
+                            },
+                            UpdateExpression="set typ = :r",
+                            ExpressionAttributeValues={
+                                ':r': int(1),
+                            },
+                        )
+                        request.session['type'] = 1
+                
                 for i in range(0,len(response['Items'][0]['organizations_created'])):
                     response['Items'][0]['organizations_created'][i] = int(response['Items'][0]['organizations_created'][i])
                 for i in range(0,len(response['Items'][0]['organizations_joined'])):
