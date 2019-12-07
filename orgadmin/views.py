@@ -478,7 +478,9 @@ def about(request,org_id):
     dynamodb=boto3.resource('dynamodb')
     orga_table=dynamodb.Table('organization')
 
-    for org in orga_table['Items']:
+    orga_response=orga_table.scan()
+
+    for org in orga_response['Items']:
         if(org['org_id']==org_id):
             org_name=org['organization_name']
             org_info=org['org_info'].strip()
@@ -512,7 +514,7 @@ def about(request,org_id):
         'org_id':org_id,
         'org_check':'3'
         }
-    print(context['org_check'])
+
     return render(request,'dashboard/about.html',context)
 
 
@@ -539,21 +541,79 @@ def about_name_edit(request,org_id):
         return redirect(url)
 
     url="../about/"+str(org_id)
+    return redirect(url)    
+
+
+
+def about_info_edit(request,org_id):
+
+    if request.method=="POST":
+        org_info=request.POST.get("info").strip()
+
+        if(org_info == ""):
+            org_info=" "
+
+        dynamodb=boto3.resource('dynamodb')
+        orga_table=dynamodb.Table('organization')
+
+        orga_table.update_item(
+        Key={
+            'org_id': org_id
+        },
+        UpdateExpression="set org_info = :r",
+        ExpressionAttributeValues={
+            ':r': org_info
+        },
+        ReturnValues="UPDATED_NEW"
+        )
+
+        url="../about/"+str(org_id)
+        print(url)
+        return redirect(url)
+
+    url="../about/"+str(org_id)
     return redirect(url)
 
 
+def about_image_edit(request,org_id):
 
+    if request.method=="POST":
+        img_file=request.FILES['up_file']
 
+        fs = FileSystemStorage()
+        fs.save(img_file.name, img_file)
+        s3 = boto3.client('s3')
+        bucket = 'yike-s3'
 
-    context={
-        'org_name':org_name,
-        'org_info':org_info,
-        'org_img':org_img,
-        'org_id':org_id
-    }
+        file_name = str(img_file)
+        key_name = str(img_file)
 
+        s3.upload_file(file_name, bucket, key_name)
 
-    return render(request,'dashboard/about.html',context)
+        link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
+             bucket,
+             key_name)
+
+        dynamodb=boto3.resource('dynamodb')
+        orga_table=dynamodb.Table('organization')
+
+        orga_table.update_item(
+        Key={
+            'org_id': org_id
+        },
+        UpdateExpression="set image = :i",
+        ExpressionAttributeValues={
+            ':i':link
+        },
+        ReturnValues="UPDATED_NEW"
+        )
+
+        url="../about/"+str(org_id)
+        return redirect(url)
+
+    url="../about/"+str(org_id)
+    return redirect(url)    
+
 
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
