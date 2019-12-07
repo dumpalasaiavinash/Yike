@@ -18,6 +18,15 @@ import hashlib
 # Create your views here.
 
 def home(request):
+    print(request.session.keys())
+    x = []
+    for key in request.session.keys():
+        x.append(key)
+        # print(key)
+    for i in x:
+        del request.session[i]
+    print(request.session.keys())
+
     return render(request, 'home/home.html')
 
 
@@ -27,6 +36,11 @@ def home_log(request):
     password = request.POST.get('pass')
     password=hashlib.sha256(password.encode())
     password=password.hexdigest()
+    type=1
+    if('type' in request.session.keys()):
+        type = request.session['type']
+    else:
+        request.session['type']=1
 
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):
@@ -52,9 +66,43 @@ def home_log(request):
                 request.session['email']=response['Items'][0]['email']
                 request.session['org_created']=response['Items'][0]['organizations_created']
                 request.session['org_joined']=response['Items'][0]['organizations_joined']
-                request.session['type'] = int(response['Items'][0]['type'])
+                # if(request.session['type'] != int(response['Items'][0]['type'])):
+                    # request.session['type'] = int(response['Items'][0]['type'])
+
                 print(request.session['type'])
                 print('abc')
+
+
+                dynamodb = boto3.resource('dynamodb')
+                table = dynamodb.Table('payments')
+
+                inv_response = table.scan(
+                    ProjectionExpression="invoice",
+                )
+                invoice=1
+                if(len(inv_response['Items'])==0):
+                    invoice=1
+                else:
+                    for i in inv_response['Items']:
+                        if(invoice<int(i['invoice'])):
+                            invoice = int(i['invoice'])
+                if(type == 2):
+                    print('a')
+                    paypal_dict = {
+                        "business": 'harsha@god.com',
+                        "amount": 70,
+                        "currency-code":"USD",
+                        "item_name": email,
+                        "invoice": invoice+1000,
+                        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+                        "return": 'http://127.0.0.1:8000/orgadmin/pre_create',
+                        "cancel_return": 'http://127.0.0.1:8000/',
+                    }
+                    form = PayPalPaymentsForm(initial=paypal_dict)
+                    context = {"form": form,"name":request.session['username']}
+                    return render(request, "home/payments.html", context)
+
+
                 return redirect('orgadmin:create')
             else:
                 messages.success(request, 'Failed to login as the password does not match.')
@@ -72,12 +120,34 @@ def home_reg(request):
     email = request.POST.get('email')
     password = request.POST.get('pass')
     re_password = request.POST.get('re_pass')
-    type = request.session['type']
+    type=1
+    if('type' in request.session.keys()):
+        type = request.session['type']
+        print(type)
+    else:
+        request.session['type']=1
 
     if(username!='' and email!='' and password!='' and re_password!=''):
         if(password==re_password):
+
+
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('payments')
+
+            inv_response = table.scan(
+                ProjectionExpression="invoice",
+            )
+            invoice=1
+            if(len(inv_response['Items'])==0):
+                invoice=1
+            else:
+                for i in inv_response['Items']:
+                    if(invoice<int(i['invoice'])):
+                        invoice = int(i['invoice'])
+
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('users')
+
             response = table.scan(
                 ProjectionExpression="email",
                 FilterExpression=Attr('email').eq(email)
@@ -94,7 +164,7 @@ def home_reg(request):
                     'organizations_created':[],
                     'organizations_joined':[],
                     'active':True,
-                    'type':type,
+                    'typ':type,
                     }
                 )
                 request.session['username'] = username
@@ -102,6 +172,23 @@ def home_reg(request):
                 request.session['org_created']=[]
                 request.session['org_joined']=[]
                 request.session['active']=True
+                if(type == 2):
+                    paypal_dict = {
+                        "business": 'harsha@god.com',
+                        "amount": 70,
+                        "currency-code":"USD",
+                        "item_name": email,
+                        "invoice": invoice+1000,
+                        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+                        "return": 'http://127.0.0.1:8000/orgadmin/pre_create',
+                        "cancel_return": 'http://127.0.0.1:8000/',
+                    }
+
+                # Create the instance.
+                    form = PayPalPaymentsForm(initial=paypal_dict)
+                    context = {"form": form}
+                    return render(request, "home/payments.html", context)
+
                 return redirect('orgadmin:create')
 
             else:
@@ -154,23 +241,18 @@ def payments(request,type):
     # What you want the button to do.
     print(type)
     request.session['type'] = type
+
+    # dynamodb = boto3.resource('dynamodb')
+    # table = dynamodb.Table('payments')
+    # response = table.scan()
+    # if(len(response['Items'])==0):
+    #     invoice = 0
+    # else:
+    #     invoice = 0
+    #     if(response['Items'][]):
     if(type == 1):
-        return render(request, "home/signup.html")
+        return render(request, "home/login.html")
     elif(type == 2):
         # print('a')
     # print(type(int(type)))
-        paypal_dict = {
-            "business": 'harsha@god.com',
-            "amount": 70,
-            "currency-code":"USD",
-            "item_name": 11,
-            "invoice": 123,
-            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-            "return": 'http://127.0.0.1:8000/signup/',
-            "cancel_return": 'http://127.0.0.1:8000/',
-        }
-
-        # Create the instance.
-        form = PayPalPaymentsForm(initial=paypal_dict)
-        context = {"form": form}
-        return render(request, "home/payments.html", context)
+        return render(request, "home/login.html")
