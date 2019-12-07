@@ -11,6 +11,8 @@ from django.views.decorators.csrf import requires_csrf_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.files.storage import FileSystemStorage
+import ast
 
 #For sending activation function
 from django.http import HttpResponse
@@ -36,6 +38,95 @@ import hashlib
 
 #For storing images
 from django.core.files.storage import FileSystemStorage
+
+
+
+
+#Creating class for passing the problem
+class assignEmployee:
+
+    def __init__(self,cmp_id,org_id,dep_id=None):
+        self.cmp_id=cmp_id
+        self.org_id=org_id
+        self.dep_id=dep_id
+
+    def assign(self):
+        dynamodb=boto3.resource('dynamodb')
+        emp_table=dynamodb.Table('employees')
+        cmp_table=dynamodb.Table('ComplaintS')
+        dep_table=dynamodb.Table('departments')
+        hie_table=dynamodb.Table('hierarchy')
+
+        if(self.dep_id==None):
+            dep_response = dep_table.scan(
+                ProjectionExpression="department_id,department_name",
+                FilterExpression=Attr('organization_id').eq(self.org_id)
+            )
+
+        else:
+            dep_response = dep_table.scan(
+                ProjectionExpression="department_id,department_name",
+                FilterExpression=Attr('organization_id').eq(self.org_id) & Attr('department_id').eq(self.dep_id)
+            )
+
+            sel_dept=dep_response['Items'][0]['department_id']
+
+            hie_response = hie_table.scan(
+                ProjectionExpression="hierarchy",
+                FilterExpression=Attr('dep_id').eq(sel_dept)
+            )
+
+            hie_dict=hie_response["Items"][0]['hierarchy']
+            hie_updated=hie_dict[1:(len(hie_dict)-1)]
+            hie_updated_dict=ast.literal_eval(hie_updated)
+
+            ind=[]
+
+            j=0
+            for i in range(len(hie_updated_dict)-2,0,-1):
+                if(hie_updated_dict[len(hie_updated_dict)-1]['pid']==hie_updated_dict[i]['pid']):
+                    if(j==0):
+                        ind.append(len(hie_updated_dict)-1)
+                        ind.append(i)
+                        j=j+1
+                    else:
+                        ind.append(i)
+
+
+            emp_id_retrieved=[]
+
+            for i in ind:
+                emp_response=emp_table.scan(
+                    ProjectionExpression="emp_id",
+                    FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
+                )
+
+
+                # emp_id_retrieved.append(emp_response["Items"][0]['emp_id'])
+            for em in emp_response["Items"]:
+                emp_id_retrieved.append(int(em['emp_id']))
+
+            cmp_response=cmp_table.scan(
+                    ProjectionExpression="emp_id",
+                    FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
+                )
+
+
+
+
+def test(request):
+    a=assignEmployee("cmp1",161,9)
+    a.assign()
+
+    url="../about/"+str(103)
+    return redirect(url)
+
+
+
+
+
+
+
 
 
 
@@ -390,6 +481,67 @@ def about(request,org_id):
     for org in orga_table['Items']:
         if(org['org_id']==org_id):
             org_name=org['organization_name']
+            org_info=org['org_info'].strip()
+            org_img=org['image']
+
+    if(org_info=="" and org_img==" "):
+        context={
+            'org_name':org_name,
+            'org_id':org_id,
+            'org_check':'0'
+        }
+    elif(org_img==" "):
+        context={
+            'org_name':org_name,
+            'org_info':org_info,
+            'org_id':org_id,
+            'org_check':'1'
+        }
+    elif(org_info==""):
+        context={
+            'org_name':org_name,
+            'org_img':org_img,
+            'org_id':org_id,
+            'org_check':'2'
+        }
+    else:
+        context={
+        'org_name':org_name,
+        'org_img':org_img,
+        'org_info':org_info,
+        'org_id':org_id,
+        'org_check':'3'
+        }
+    print(context['org_check'])
+    return render(request,'dashboard/about.html',context)
+
+
+def about_name_edit(request,org_id):
+
+    if request.method=="POST":
+        org_name=request.POST.get("cmp_name")
+
+        dynamodb=boto3.resource('dynamodb')
+        orga_table=dynamodb.Table('organization')
+
+        orga_table.update_item(
+        Key={
+            'org_id': org_id
+        },
+        UpdateExpression="set organization_name = :r",
+        ExpressionAttributeValues={
+            ':r': org_name,
+        },
+        ReturnValues="UPDATED_NEW"
+        )
+
+        url="../about/"+str(org_id)
+        return redirect(url)
+
+    url="../about/"+str(org_id)
+    return redirect(url)
+
+
 
 
 
@@ -557,11 +709,9 @@ def created(request):
                         UpdateExpression="set organizations_created = :r",
                         ExpressionAttributeValues={
                             ':r': org_created,
-
                         },
                         ReturnValues="UPDATED_NEW"
-                    )
-
+                        )
 
                     response1 = table.scan(
                         ProjectionExpression="organizations_created,organizations_joined",
@@ -982,6 +1132,8 @@ class complaintrest(APIView):
 
 
 def create_department(request):
+    if(request.session['type'] ==1 ):
+        max = 5
     depname = request.POST.get('depname')
     print(depname)
     dynamoDB=boto3.resource('dynamodb')
@@ -1000,19 +1152,22 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
+    if(len(response1['Items']['department_id'])>= max):
+        messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
-    print(lengt)
-    if(len(response['Items'])==0):
-        response = dynamoTable.put_item(
-           Item={
-            'department_id':lengt+1,
-            'department_name':depname,
-            'organization_id':x
-            }
-        )
-        messages.success(request, 'The new department has been created successfully.')
     else:
-        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+        print(lengt)
+        if(len(response['Items'])==0):
+            response = dynamoTable.put_item(
+               Item={
+                'department_id':lengt+1,
+                'department_name':depname,
+                'organization_id':x
+                }
+            )
+            messages.success(request, 'The new department has been created successfully.')
+        else:
+            messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
     return redirect('../departments')
 
 
