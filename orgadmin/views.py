@@ -79,7 +79,7 @@ class assignEmployee:
             hie_dict=hie_response["Items"][0]['hierarchy']
             hie_updated=hie_dict[1:(len(hie_dict)-1)]
             hie_updated_dict=ast.literal_eval(hie_updated)
-            
+
             ind=[]
 
             j=0
@@ -99,9 +99,9 @@ class assignEmployee:
                 emp_response=emp_table.scan(
                     ProjectionExpression="emp_id",
                     FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
-                )          
+                )
 
-            
+
                 # emp_id_retrieved.append(emp_response["Items"][0]['emp_id'])
             for em in emp_response["Items"]:
                 emp_id_retrieved.append(int(em['emp_id']))
@@ -109,12 +109,12 @@ class assignEmployee:
             cmp_response=cmp_table.scan(
                     ProjectionExpression="emp_id",
                     FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
-                )    
+                )
 
 
 
 
-def test(request):    
+def test(request):
     a=assignEmployee("cmp1",161,9)
     a.assign()
 
@@ -478,9 +478,7 @@ def about(request,org_id):
     dynamodb=boto3.resource('dynamodb')
     orga_table=dynamodb.Table('organization')
 
-    orga_response=orga_table.scan()
-
-    for org in orga_response['Items']:
+    for org in orga_table['Items']:
         if(org['org_id']==org_id):
             org_name=org['organization_name']
             org_info=org['org_info'].strip()
@@ -545,119 +543,21 @@ def about_name_edit(request,org_id):
 
 
 
-def about_info_edit(request,org_id):
-
-    if request.method=="POST":
-        org_info=request.POST.get("info").strip()
-
-        if(org_info == ""):
-            org_info=" "
-
-        dynamodb=boto3.resource('dynamodb')
-        orga_table=dynamodb.Table('organization')
-
-        orga_table.update_item(
-        Key={
-            'org_id': org_id
-        },
-        UpdateExpression="set org_info = :r",
-        ExpressionAttributeValues={
-            ':r': org_info
-        },
-        ReturnValues="UPDATED_NEW"
-        )
-
-        url="../about/"+str(org_id)
-        print(url)
-        return redirect(url)
-
-    url="../about/"+str(org_id)
-    return redirect(url)
 
 
-def about_image_edit(request,org_id):
+    context={
+        'org_name':org_name,
+        'org_info':org_info,
+        'org_img':org_img,
+        'org_id':org_id
+    }
 
-    if request.method=="POST":
-        img_file=request.FILES['up_file']
 
-        fs = FileSystemStorage()
-        fs.save(img_file.name, img_file)
-        s3 = boto3.client('s3')
-        bucket = 'yike-s3'
+    return render(request,'dashboard/about.html',context)
 
-        file_name = str(img_file)
-        key_name = str(img_file)
-
-        s3.upload_file(file_name, bucket, key_name)
-
-        link = "https://s3-ap-south-1.amazonaws.com/{0}/{1}".format(
-             bucket,
-             key_name)
-
-        dynamodb=boto3.resource('dynamodb')
-        orga_table=dynamodb.Table('organization')
-
-        orga_table.update_item(
-        Key={
-            'org_id': org_id
-        },
-        UpdateExpression="set image = :i",
-        ExpressionAttributeValues={
-            ':i':link
-        },
-        ReturnValues="UPDATED_NEW"
-        )
-
-        url="../about/"+str(org_id)
-        return redirect(url)
-
-    url="../about/"+str(org_id)
-    return redirect(url)
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
-
-def pre_create(request):
-    typ = request.session['type']
-    email = request.session['email']
-
-    dynamoDB=boto3.resource('dynamodb')
-    dynamoTable=dynamoDB.Table('users')
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('payments')
-
-    inv_response = table.scan(
-        ProjectionExpression="invoice",
-    )
-    invoice=1
-    if(len(inv_response['Items'])==0):
-        invoice=1
-    else:
-        for i in inv_response['Items']:
-            if(invoice<int(i['invoice'])):
-                invoice = int(i['invoice'])
-
-    response = table.put_item(
-       Item={
-        'invoice': invoice+1000,
-        'email': email,
-        }
-    )
-    print(typ)
-    dynamoDB=boto3.resource('dynamodb')
-    table=dynamoDB.Table('users')
-    response1 = table.update_item(
-        Key={
-            'email':email
-        },
-        UpdateExpression="set typ = :r",
-        ExpressionAttributeValues={
-            ':r': int(typ),
-
-        },
-    )
-
-    return redirect('orgadmin:create')
 
 def create(request):
     try:
@@ -695,6 +595,8 @@ def create(request):
                 FilterExpression=Attr('org_id').eq(int(i))
             )
             # print(response['Items'])
+            print(response)
+            print("###################")
             org_names.append(response['Items'][0]['organization_name'])
             org_code.append(response['Items'][0]['code'])
         # print(email)
@@ -740,14 +642,13 @@ def created(request):
 
     organization_name = request.POST.get('name')
     # code=request.POST.get('code')
-
     if(request.session['type']==1 and len(request.session['org_created'])>=2):
         messages.add_message(request,messages.INFO, 'Try premium to create more organizations. The maximum no.of organizations allowed is 2 for your current subscription.')
     if(request.session['type']==2 and len(request.session['org_created'])>=5):
         messages.add_message(request,messages.INFO, 'Please make a call to us to customize. The maximum no.of organizations allowed is 5 for your current subscription.')
 
     else:
-        if (organization_name!=''):
+        if (organization_name!='' ):
                 dynamodb = boto3.resource('dynamodb')
                 table = dynamodb.Table('organization')
                 response_sno=table.scan(
@@ -759,22 +660,24 @@ def created(request):
                 )
 
                 if(len(response['Items'])==0):
-                    ID=0
+                    ID=100
                     for i in response_sno['Items']:
                         if(ID<int(i['org_id'])):
                             ID=int(i['org_id'])
 
                     print(ID)
                     ID=ID+1
-                    hash_code=organization_name+str(ID)
+                    hash_code=organization_name[:2]+str(ID)
                     print(hash_code)
 
-                    code=hash_code[:-1]
+                    code=hash_code
                     response = table.put_item(
                     Item={
                         'org_id': ID,
                         'organization_name': organization_name,
                         'code':code,
+                        'image':" ",
+                        'org_info':" ",
 
                         }
                     )
@@ -818,7 +721,7 @@ def created(request):
 
                     #print(response1)
                     #print('\n**\n')
-                    print(response1['Items'])
+
                     organizations_created=response1['Items'][0]['organizations_created']
                     organizations_joined=response1['Items'][0]['organizations_joined']
                     # print(organizations_created)
@@ -943,7 +846,7 @@ def created(request):
 
 
 
-                return render(request, 'orgadmin/dummy.html', data)
+                    return render(request, 'orgadmin/dummy.html', data)
 
 
 
@@ -1247,21 +1150,19 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
-    if(len(response1['Items'])>=5 and request.session['type']==1):
-        messages.success(request, 'Try premium to create more departments. The maximum no.of departments allowed is 5 for your current subscription.')
+
+    print(lengt)
+    if(len(response['Items'])==0):
+        response = dynamoTable.put_item(
+           Item={
+            'department_id':lengt+1,
+            'department_name':depname,
+            'organization_id':x
+            }
+        )
+        messages.success(request, 'The new department has been created successfully.')
     else:
-        print(lengt)
-        if(len(response['Items'])==0):
-            response = dynamoTable.put_item(
-               Item={
-                'department_id':lengt+1,
-                'department_name':depname,
-                'organization_id':x
-                }
-            )
-            messages.success(request, 'The new department has been created successfully.')
-        else:
-            messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
     return redirect('../departments')
 
 

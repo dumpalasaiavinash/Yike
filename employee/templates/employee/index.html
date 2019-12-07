@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/>
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link href="{% static 'dashboard/main.cba69814a806ecc7945a.css' %}" rel="stylesheet">
     <style media="screen">
       .notice {
@@ -158,6 +158,10 @@
         border-radius:10px;
         padding:2%;
         border: 1px solid rgb(200,200,200);
+      }
+      .w3-modal{
+          
+          background-color: rgba(0,0,0,0.4); 
       }
 
     </style>
@@ -384,11 +388,8 @@
                                             <div class="widget-subheading">To be solved today</div>
                                             <div class="widget-numbers">8</div>
                                             <div class="widget-description opacity-8 text-focus">
-                                                <div class="d-inline text-danger pr-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">54.1%</span>
-                                                </div>
-                                                less earnings
+                                               
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -403,11 +404,8 @@
                                             <div class="widget-subheading">High Priority</div>
                                             <div class="widget-numbers"><span>4</span></div>
                                             <div class="widget-description opacity-8 text-focus">
-                                                Grow Rate:
-                                                <span class="text-info pl-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">14.1%</span>
-                                                </span>
+                                              
+                                             
                                             </div>
                                         </div>
                                     </div>
@@ -420,13 +418,10 @@
                                             <i class="lnr-apartment text-white"></i></div>
                                         <div class="widget-chart-content">
                                             <div class="widget-subheading">Total left</div>
-                                            <div class="widget-numbers text-success"><span>24</span></div>
+                                            <div class="widget-numbers text-success"><span>{{count}}</span></div>
                                             <div class="widget-description text-focus">
-                                                Increased by
-                                                <span class="text-warning pl-1">
-                                                    <i class="fa fa-angle-up"></i>
-                                                    <span class="pl-1">7.35%</span>
-                                                </span>
+                                                
+                                               
                                             </div>
                                         </div>
                                     </div>
@@ -441,7 +436,7 @@
 
 <!-- ##################################### Complaints #####################################-->
 
-                        <div class="card mb-3" style="width:70%; float:left">
+                        <div class="card mb-3" style="width:70%; float:left;min-height:400px;">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Complaints</div>
                                 <div class="btn-actions-pane-right actions-icon-btn">
@@ -464,33 +459,54 @@
                                 <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
                                     <thead>
                                     <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
+                                        <th style="width:73%">Complaint</th>
+                                        <th style="width:25%">Time Posted</th>
+                                        
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for name,department,hierarchy,no_complaints in info_list %}
+                                    {% for new_complaint in complaint %}
+                                    
                                         <tr>
-                                            <td>{{ name }}</td>
-                                            <td>{{ department }}</td>
-                                            <td>{{ hierarchy }}</td>
-                                            <td>{{ no_complaints }}</td>
+                                            <td onclick="myfun('{{new_complaint}}')">{{new_complaint}}</td>
+                                                <div id="id01" class="w3-modal" >
+                                                    <div class="w3-modal-content w3-animate-zoom" style="min-height: 100px;background-color: rgb(255,255,255);">
+                                                    <header> 
+                                                        <span onclick="document.getElementById('id01').style.display='none'" 
+                                                        class="w3-button w3-display-topright">&times;</span>
+                                                
+                                                    </header>
+                                                    <div style="margin-left: 5%;padding-top:10px ;" id="lg">
+                                                            
+                                                        
+                                                        
+                                                    </div>  
+                                                
+                                                    </div>  
+                                                </div>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th style="width:25%">Name</th>
-                                        <th style="width:25%">Department</th>
-                                        <th style="width:25%">Level</th>
-                                        <th style="width:25%">No Of Complaints Handling</th>
+                                        <th style="width:75%">Complaint</th>
+                                        <th style="width:25%">Time Posted</th>
+                                        
                                     </tr>
                                     </tfoot>
                                 </table><br>
                             </div>
                         </div>
+                        
+                        <script>
+                                function myfun(a) {
+                                  
+                                  document.getElementById("lg").innerHTML = a;
+                                  document.getElementById('id01').style.display='block';
+
+                                  
+                                }
+                        </script>
 
 <!-- ######################################################################################-->
 

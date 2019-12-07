@@ -1,11 +1,11 @@
 $(function() {
 	var yearCounter = 0;
-	var countryColor = {"Media" : "#6dbceb", "Publicity" : "#c8b631", "Events" : "#369ead", "Projects" : "#a2d1cf", "Finance" : "#f79647", "Membership" : "#7f6084", "Sessions" : "#4f81bc",
-											"Website" : "#369ead", "Opensource" : "#86b402", "Core" : "#52514e", "Ecell" : "#a064a1", "Startups" : "#c24642", "Zimbabwe" : "#c24642"};
-	var countryCode = {"Membership":"M","Projects":"P","Startups":"S"};
+	var countryColor = {"Argentina" : "#6dbceb", "Brazil" : "#c8b631", "Canada" : "#369ead", "China" : "#a2d1cf", "Germany" : "#f79647", "India" : "#7f6084", "Japan" : "#4f81bc",
+											"Malawi" : "#369ead", "Nigeria" : "#86b402", "South Korea" : "#52514e", "United Kingdom" : "#a064a1", "United States" : "#c24642", "Zimbabwe" : "#c24642"};
+	var countryCode = {"India":"IN","China":"CN","United States":"US"};
 	var yearSlider = document.getElementById('year-slider');
 	var orderedDataPoints = JSON.parse(JSON.stringify(getDataPoint(yearArr[0])));
-	var DepartmentSizeBubbleChart;
+	var GDPPerCapitaBubbleChart;
 	var merchandiseImportsExportsColumnChart;
 
 //On click of the play button the bubble chart animation starts. Following callback function performs 6 transition between the actual dataPoints of the year(example from 1961 to 1962) to produce the animation effect
@@ -19,7 +19,7 @@ $(function() {
 		yearCounter++;
 		if (yearCounter >= yearArr.length) {
 			yearCounter = 0;
-			DepartmentSizeBubbleChart = createDepartmentSizeChart(getDataPoint(yearArr[yearCounter]));
+			GDPPerCapitaBubbleChart = createGDPPerCapitaChart(getDataPoint(yearArr[yearCounter]));
 			yearSlider.noUiSlider.set(yearArr[yearCounter]);
 		}
 		var nextDataPoints = getDataPoint(yearArr[yearCounter]);
@@ -52,7 +52,7 @@ $(function() {
 						if (nextDataPoints[j].name !== orderedDataPoints[j].name) {
 							orderedDataPoints.splice( j, 0, { x: 0.01, y : 0, z : 0, name: nextDataPoints[j].name } );
 						}
-						if (nextDataPoints[j].name === "Membership" || nextDataPoints[j].name === "Projects" || nextDataPoints[j].name === "Startups") {
+						if (nextDataPoints[j].name === "India" || nextDataPoints[j].name === "China" || nextDataPoints[j].name === "United States") {
 							dynamicDataPoints.push({
 								x: orderedDataPoints[j].x + (nextDataPoints[j].x - orderedDataPoints[j].x) * animationIteration / numberOfTransitions,
 								y: orderedDataPoints[j].y + (nextDataPoints[j].y - orderedDataPoints[j].y) * animationIteration / numberOfTransitions,
@@ -74,11 +74,11 @@ $(function() {
 							});
 						}
 					}
-					DepartmentSizeBubbleChart.options.data[0].dataPoints = JSON.parse(JSON.stringify(dynamicDataPoints));
-					DepartmentSizeBubbleChart.options.subtitles[0].text = yearArr[yearCounter];
+					GDPPerCapitaBubbleChart.options.data[0].dataPoints = JSON.parse(JSON.stringify(dynamicDataPoints));
+					GDPPerCapitaBubbleChart.options.subtitles[0].text = yearArr[yearCounter];
 					animationIteration++;
 			}
-			DepartmentSizeBubbleChart.render();
+			GDPPerCapitaBubbleChart.render();
 			}, 35);
 	});
 
@@ -93,21 +93,21 @@ $(function() {
 	function getDataPoint(year) {
 		var dataPoints=[];
 			$.each(economyData,function (countryName,categoryData) {
-				if (typeof(categoryData["DepartmentSize"][year]) !== "undefined" && typeof(categoryData["Efficiency"][year]) !== "undefined" && typeof(categoryData["population"][year]) !== "undefined") {
-					if (countryName === "Membership" || countryName === "Projects" || countryName === "Startups") {
-						dataPoints.push({x: categoryData["DepartmentSize"][year], y: categoryData["Efficiency"][year], z: categoryData["population"][year], name: countryName, color: countryColor[countryName], cursor: "pointer",
+				if (typeof(categoryData["GDPPerCapita"][year]) !== "undefined" && typeof(categoryData["lifeExpectancy"][year]) !== "undefined" && typeof(categoryData["population"][year]) !== "undefined") {
+					if (countryName === "India" || countryName === "China" || countryName === "United States") {
+						dataPoints.push({x: categoryData["GDPPerCapita"][year], y: categoryData["lifeExpectancy"][year], z: categoryData["population"][year], name: countryName, color: countryColor[countryName], cursor: "pointer",
 														 indexLabel: countryCode[countryName], indexLabelFontColor:"#fbf3de"});
 					} else {
-						dataPoints.push({x: categoryData["DepartmentSize"][year], y: categoryData["Efficiency"][year], z: categoryData["population"][year], name: countryName, color: countryColor[countryName], cursor: "pointer"});
+						dataPoints.push({x: categoryData["GDPPerCapita"][year], y: categoryData["lifeExpectancy"][year], z: categoryData["population"][year], name: countryName, color: countryColor[countryName], cursor: "pointer"});
 					}
 				}
 			});
 		return JSON.parse(JSON.stringify(dataPoints));
 	}
 
-//Department Size vs Efficiency bubble chart
-	function createDepartmentSizeChart(dataPoints) {
-		var DepartmentSizeBubbleChart = new CanvasJS.Chart("GDP-per-capita-bubble-chart",
+//GDP per capita vs Life expectancy bubble chart
+	function createGDPPerCapitaChart(dataPoints) {
+		var GDPPerCapitaBubbleChart = new CanvasJS.Chart("GDP-per-capita-bubble-chart",
 			{
 				backgroundColor: "transparent",
 				axisX: {
@@ -118,9 +118,9 @@ $(function() {
 					maximum: 70000,
 					tickLength: 10,
 					tickThickness: 1,
-					title: "Department Size",
+					title: "GDP per capita",
 					titleFontColor: "#065f66",
-					valueFormatString: "#,###"
+					valueFormatString: "$#,###"
 				},
 				axisY: {
 					gridThickness: 1,
@@ -130,16 +130,16 @@ $(function() {
 					maximum: 100,
 					tickThickness: 1,
 					tickLength: 10,
-					title: "Efficiency",
+					title: "Life Expectancy",
 					titleFontColor: "#065f66",
-					valueFormatString: "#,###"
+					valueFormatString: "#,### yrs"
 				},
 				toolTip: {
 					contentFormatter: function(e) {
 						var content = "";
 						for (var i = 0; i < e.entries.length; i++) {
-							content += "<strong>" + e.entries[i].dataPoint.name + "</strong> <br/> Department Size: " + CanvasJS.formatNumber(e.entries[i].dataPoint.x,"#,###.##") + " <br/> Efficiency: " +
-							CanvasJS.formatNumber(e.entries[i].dataPoint.y,"#,###.##") + " \%<br/> Volume: "+formatTooltipNumber(e.entries[i].dataPoint.z);
+							content += "<strong>" + e.entries[i].dataPoint.name + "</strong> <br/> GDP per capita: US $" + CanvasJS.formatNumber(e.entries[i].dataPoint.x,"#,###.##") + " <br/> Life Expectancy: " +
+							CanvasJS.formatNumber(e.entries[i].dataPoint.y,"#,###.##") + " yrs<br/> Population: "+formatTooltipNumber(e.entries[i].dataPoint.z);
 						}
 						return content;
 					}
@@ -148,7 +148,7 @@ $(function() {
 					{
 						indexLabelPlacement: "outside",
 						legendMarkerType: "circle",
-						name: "Size of Bubble Represents Complaints volume (click on any bubble to see more details)",
+						name: "Size of Bubble Represents Population (click on any bubble to see more details)",
 						showInLegend: true,
 						type: "bubble",
 						click: showChartForSelectedCountry,
@@ -166,11 +166,11 @@ $(function() {
 				],
 			});
 
-		DepartmentSizeBubbleChart.render();
-		return DepartmentSizeBubbleChart;
+		GDPPerCapitaBubbleChart.render();
+		return GDPPerCapitaBubbleChart;
 	}
 
-//On click of the bubble in the bubble chart it scrolls down to the chart of population, working population, and Merchandise import and export chart
+//On click of the bubble in the bubble chart it scrolls down to the chart of population, working population, and Merchandise import and export chart 
 	function showChartForSelectedCountry(e) {
 		$('div #selected-country').each(function(){
 			$(this).html(' - '+e.dataPoint.name);
@@ -185,12 +185,12 @@ $(function() {
 //Set the subtitle of the bubble chart to display the year during the animation of the chart
 	function setBubbleChartSubtitlesFontSize() {
 		if ($('#GDP-per-capita-bubble-chart').height() === 400) {
-			DepartmentSizeBubbleChart.options.subtitles[0].fontSize = 113;
+			GDPPerCapitaBubbleChart.options.subtitles[0].fontSize = 113;
 		}
 		if ($('#GDP-per-capita-bubble-chart').height() === 300) {
-			DepartmentSizeBubbleChart.options.subtitles[0].fontSize = 60;
+			GDPPerCapitaBubbleChart.options.subtitles[0].fontSize = 60;
 		}
-		DepartmentSizeBubbleChart.render();
+		GDPPerCapitaBubbleChart.render();
 	}
 
 //Initiate the slider
@@ -213,7 +213,7 @@ $(function() {
 		});
 	}
 
-//Get the number of jumps to be taken for the year array as per the width of the slider
+//Get the number of jumps to be taken for the year array as per the width of the slider  
 	function getYearJump(){
 		var yearJumps = 0;
 		if($(window).outerWidth() > 1800){
@@ -271,7 +271,7 @@ $(function() {
 	});
 	}
 
-//Bind slider update event
+//Bind slider update event 				
 	function bindYearSliderUpdateEvent() {
 		yearSlider.noUiSlider.on('update', function (values, handle) {
 			$(".noUi-value").each( function () {
@@ -290,7 +290,7 @@ $(function() {
 			yearCounter = yearArr.indexOf(parseInt(values[handle]));
 			if (pauseAnimation === true) {
 				orderedDataPoints = getDataPoint(parseInt(values[handle]));
-				DepartmentSizeBubbleChart = createDepartmentSizeChart(getDataPoint(parseInt(values[handle])));
+				GDPPerCapitaBubbleChart = createGDPPerCapitaChart(getDataPoint(parseInt(values[handle])));
 			}
 		});
 	}
@@ -320,16 +320,16 @@ $(function() {
 				lineThickness: 1,
 				labelFormatter: addSymbols,
 				tickThickness: 1,
-				title: "On-Time",
+				title: "Population",
 				titleFontColor: "#065f66"
-			},
+			},					
 			toolTip: {
 				content: populationChartTooltipContent
 			},
 			data: [
 			{
 				markerSize: 0,
-				name: "Population",
+				name: "Population",				
 				type: "splineArea",
 				xValueFormatString: "####",
 				dataPoints: populationDataPoints
@@ -339,7 +339,7 @@ $(function() {
 
 		populationAreaChart.render();
 	}
-
+	
 // working population chart
 	function createWorkingPopulationChart(selectedCountry) {
 		var workingPopulationDataPoints = [];
@@ -365,7 +365,7 @@ $(function() {
 				lineThickness: 1,
 				suffix: "%",
 				tickThickness: 1,
-				title: "Deadlines Missed",
+				title: "Working Age Population",
 				titleFontColor: "#065f66"
 			},
 			legend: {
@@ -378,7 +378,7 @@ $(function() {
 			{
 				color: "#c24642",
 				markerSize: 0,
-				name: "Deadlines Missed",
+				name: "Working Age Population",
 				type: "splineArea",
 				xValueFormatString: "####",
 				yValueFormatString: "##.##'%'",
@@ -389,7 +389,7 @@ $(function() {
 		workingPopulationAreaChart.render();
 	}
 
-//Complaints Alloted and exports chart
+//Merchandise imports and exports chart
 	function createMerchandiseImportsExportsChart(selectedCountry) {
 		var merchandiseImportsDataPoints = [];
 		var merchandiseExportsDataPoints = [];
@@ -416,7 +416,7 @@ $(function() {
 				labelFormatter: addSymbols,
 				lineThickness: 1,
 				tickThickness: 1,
-				title: "Complaints Alloted & Passed",
+				title: "Merchandise Imports & Exports",
 				titleFontColor: "#065f66",
 				titleFontSize: 30
 			},
@@ -435,19 +435,19 @@ $(function() {
 				}
 			},
 			toolTip: {
-				shared: true,
+				shared: true,				
 				contentFormatter: merchandiseImportsExportsChartTooltipContent
 			},
 			data: [
 			{
-				name: "Complaints Alloted",
+				name: "Merchandise Imports",
 				showInLegend: true,
 				type: "column",
-				visible: true,
+				visible: true,				
 				dataPoints: merchandiseImportsDataPoints
 			},
 			{
-				name: "Complaints Passed-On",
+				name: "Merchandise Exports",
 				showInLegend: true,
 				type: "column",
 				visible: true,
@@ -455,7 +455,7 @@ $(function() {
 			}
 			]
 		});
-		merchandiseImportsExportsColumnChart.render();
+		merchandiseImportsExportsColumnChart.render();	
 		return merchandiseImportsExportsColumnChart;
 	}
 
@@ -473,13 +473,13 @@ $(function() {
 	}
 
 	function addSymbols(e) {
-		var suffixes = ["", "K", "", "", "K"];
+		var suffixes = ["", "K", "M", "B", "T"];
 		var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
-		if (order > suffixes.length - 1)
+		if (order > suffixes.length - 1)                	
 			order = suffixes.length - 1;
 		var suffix = suffixes[order];
-		if (e.chart.options.data[0].name === "Complaints Alloted") {
-			return "" + CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+		if (e.chart.options.data[0].name === "Merchandise Imports") {
+			return "$" + CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
 		} else {
 			return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
 		}
@@ -490,7 +490,7 @@ $(function() {
 			if (e.chart.options.data[1].visible === false) {
 				e.chart.options.axisY.title = e.chart.options.data[0].name;
 			} else {
-				e.chart.options.axisY.title = 'Complaints Alloted & Passed';
+				e.chart.options.axisY.title = 'Merchandise Imports & Exports';
 			}
 		} else {
 			if (e.chart.options.data[1].visible === false) {
@@ -511,25 +511,25 @@ $(function() {
 		var content;
 		if (e.chart.options.data[0].visible === true) {
 			if (e.chart.options.data[1].visible === false) {
-				content = "<strong>" + e.entries[0].dataPoint.x + "</strong> <br/>" + "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " +  "Complaints Alloted:</span> " + formatTooltipNumber(e.entries[0].dataPoint.y);
+				content = "<strong>" + e.entries[0].dataPoint.x + "</strong> <br/>" + "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " +  "Merchandise Imports:</span> US $" + formatTooltipNumber(e.entries[0].dataPoint.y);
 			} else {
-				content = "<strong>" + e.entries[0].dataPoint.x + "</strong> <br/>" + "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " +  "Complaints Alloted:</span> " + formatTooltipNumber(e.entries[0].dataPoint.y)
-				+ "<br/><span style= 'color:" + e.entries[1].dataSeries.color + "'> " + "Complaints Passed-On:</span> "+ formatTooltipNumber(e.entries[1].dataPoint.y);
+				content = "<strong>" + e.entries[0].dataPoint.x + "</strong> <br/>" + "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " +  "Merchandise Imports:</span> US $" + formatTooltipNumber(e.entries[0].dataPoint.y)
+				+ "<br/><span style= 'color:" + e.entries[1].dataSeries.color + "'> " + "Merchandise Exports:</span> US $"+ formatTooltipNumber(e.entries[1].dataPoint.y);
 			}
 		} else {
 			if (e.chart.options.data[1].visible === false) {
 				content = '';
 			} else {
-				content = "<strong>" + e.entries[0].dataPoint.x + "</strong>" + "<br/><span style= 'color:" + e.entries[1].dataSeries.color + "'> "+ "Complaints Passed-On:</span> " + formatTooltipNumber(e.entries[1].dataPoint.y);
+				content = "<strong>" + e.entries[0].dataPoint.x + "</strong>" + "<br/><span style= 'color:" + e.entries[1].dataSeries.color + "'> "+ "Merchandise Exports:</span> US $" + formatTooltipNumber(e.entries[1].dataPoint.y);
 			}
 		}
 		return content;
 	}
 
 	function formatTooltipNumber(number) {
-		var suffixes = ["", "", "", "", "Thousand"];
+		var suffixes = ["", "Thousand", "Million", "Billion", "Trillion"];
 		var order = Math.max(Math.floor(Math.log(number) / Math.log(1000)), 0);
-		if (order > suffixes.length - 1)
+		if (order > suffixes.length - 1)                	
 			order = suffixes.length - 1;
 		var suffix = suffixes[order];
 		return CanvasJS.formatNumber(number / Math.pow(1000, order)) + ' ' + suffix;
@@ -548,10 +548,10 @@ $(function() {
 		createSlider(yearArr[0]);
 		bindClickEventToSliderScale();
 		bindYearSliderUpdateEvent();
-		DepartmentSizeBubbleChart = createDepartmentSizeChart(getDataPoint(yearArr[0]));
-		createPopulationChart("Startups");
-		createWorkingPopulationChart("Startups");
-		merchandiseImportsExportsColumnChart = createMerchandiseImportsExportsChart("Startups");
+		GDPPerCapitaBubbleChart = createGDPPerCapitaChart(getDataPoint(yearArr[0]));
+		createPopulationChart("United States");
+		createWorkingPopulationChart("United States");
+		merchandiseImportsExportsColumnChart = createMerchandiseImportsExportsChart("United States");
 		setBubbleChartSubtitlesFontSize();
 		setMerchandiseImportsExportsColumnChartAxisYTitleFontSize();
 	})();
