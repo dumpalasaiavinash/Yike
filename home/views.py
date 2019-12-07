@@ -6,6 +6,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib import sessions
 from django.contrib import messages
+from paypal.standard.forms import PayPalPaymentsForm
+from paypal.standard.models import ST_PP_COMPLETED
+from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
+from django.urls import reverse
+
 
 #For password hashing
 import hashlib
@@ -26,12 +31,14 @@ def home_log(request):
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):
         table = dynamodb.Table('users')
-        response = table.scan(
-        ProjectionExpression="email,password,organizations_created,organizations_joined,username",
-        FilterExpression=Attr('email').eq(email)
-        )
+        response = table.scan(FilterExpression=Attr('email').eq(email))
+        print(response)
+        # response = table.scan(
+        # ProjectionExpression="email,password,organizations_created,organizations_joined,username",
+        # FilterExpression=Attr('email').eq(email)
+        # )
         print('\n\n\n')
-        # print(response['Items'])
+        print(response['Items'])
         # print(response['Items'][0])
 
         print('\n\n\n')
@@ -45,7 +52,8 @@ def home_log(request):
                 request.session['email']=response['Items'][0]['email']
                 request.session['org_created']=response['Items'][0]['organizations_created']
                 request.session['org_joined']=response['Items'][0]['organizations_joined']
-
+                request.session['type'] = int(response['Items'][0]['type'])
+                print(request.session['type'])
                 print('abc')
                 return redirect('orgadmin:create')
             else:
@@ -64,6 +72,7 @@ def home_reg(request):
     email = request.POST.get('email')
     password = request.POST.get('pass')
     re_password = request.POST.get('re_pass')
+    type = request.session['type']
 
     if(username!='' and email!='' and password!='' and re_password!=''):
         if(password==re_password):
@@ -84,7 +93,8 @@ def home_reg(request):
                     'password': password,
                     'organizations_created':[],
                     'organizations_joined':[],
-                    'active':True
+                    'active':True,
+                    'type':type,
                     }
                 )
                 request.session['username'] = username
@@ -137,3 +147,30 @@ class user_logged_in(APIView):
         }
         data.append(var)
         return Response(data)
+
+
+
+def payments(request,type):
+    # What you want the button to do.
+    print(type)
+    request.session['type'] = type
+    if(type == 1):
+        return render(request, "home/signup.html")
+    elif(type == 2):
+        # print('a')
+    # print(type(int(type)))
+        paypal_dict = {
+            "business": 'harsha@god.com',
+            "amount": 70,
+            "currency-code":"USD",
+            "item_name": 11,
+            "invoice": 123,
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return": 'http://127.0.0.1:8000/signup/',
+            "cancel_return": 'http://127.0.0.1:8000/',
+        }
+
+        # Create the instance.
+        form = PayPalPaymentsForm(initial=paypal_dict)
+        context = {"form": form}
+        return render(request, "home/payments.html", context)

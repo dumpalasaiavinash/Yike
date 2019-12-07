@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'chatbox',
     'channels',
     'rest_framework.authtoken',
-    'android_app_api'
+    'android_app_api',
+    'paypal.standard.ipn',
 
 ]
 
@@ -154,3 +155,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+PAYPAL_RECEIVER_EMAIL='harsha@god.com'
+PAYPAL_TEST = True
