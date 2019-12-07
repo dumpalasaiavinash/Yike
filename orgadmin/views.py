@@ -724,6 +724,8 @@ def created(request):
                         UpdateExpression="set organizations_created = :r",
                         ExpressionAttributeValues={
                             ':r': org_created,
+                            }
+                        )
 
             if(len(response['Items'])==0):
                 ID=100
