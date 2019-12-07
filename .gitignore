@@ -81,3 +81,4 @@ chatbox/__pycache__/__init__.cpython-37.pyc
 android_app_api/__pycache__/models.cpython-37.pyc
 android_app_api/__pycache__/admin.cpython-37.pyc
 android_app_api/__pycache__/__init__.cpython-37.pyc
+*.pyc
