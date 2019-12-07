@@ -25,4 +25,5 @@ urlpatterns = [
     path('form/',include('formCreation.urls')),
     path('Client/',include('Client.urls')),
     path('api/',include('android_app_api.api')),
+    path('paypal/',include('paypal.standard.ipn.urls')),
 ]

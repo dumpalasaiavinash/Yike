@@ -202,7 +202,7 @@ z-index: 0;
     {% if topics_created_size > 0 %}
         {% for i,j,k in topics_created %}
         <div class="main" style="margin-left:2%;" >
-          <a href = "{% url 'employee:dashboard'  %}">
+          <a href = "{% url 'employee:dashboard' j  %}">
 
             <div class="w3-card-4" style="width:15%;float:left;margin-left: 1.5%;padding:none;margin-top: 0%;" >
 
