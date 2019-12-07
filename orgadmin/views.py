@@ -619,6 +619,50 @@ def about_image_edit(request,org_id):
 #------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------#
 
+def pre_create(request):
+    typ = request.session['type']
+    email = request.session['email']
+
+    dynamoDB=boto3.resource('dynamodb')
+    dynamoTable=dynamoDB.Table('users')
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('payments')
+
+    inv_response = table.scan(
+        ProjectionExpression="invoice",
+    )
+    invoice=1
+    if(len(inv_response['Items'])==0):
+        invoice=1
+    else:
+        for i in inv_response['Items']:
+            if(invoice<int(i['invoice'])):
+                invoice = int(i['invoice'])
+
+    response = table.put_item(
+       Item={
+        'invoice': invoice+1000,
+        'email': email,
+        }
+    )
+    print(typ)
+    dynamoDB=boto3.resource('dynamodb')
+    table=dynamoDB.Table('users')
+    response1 = table.update_item(
+        Key={
+            'email':email
+        },
+        UpdateExpression="set typ = :r",
+        ExpressionAttributeValues={
+            ':r': int(typ),
+
+        },
+    )
+
+    return redirect('orgadmin:create')
+
+
+
 def create(request):
     try:
         email=request.session['email']
@@ -1192,6 +1236,8 @@ class complaintrest(APIView):
 
 
 def create_department(request):
+    if(request.session['type'] ==1 ):
+        max = 5
     depname = request.POST.get('depname')
     print(depname)
     dynamoDB=boto3.resource('dynamodb')
@@ -1210,19 +1256,22 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
+    if(len(response1['Items']['department_id'])>= max):
+        messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
-    print(lengt)
-    if(len(response['Items'])==0):
-        response = dynamoTable.put_item(
-           Item={
-            'department_id':lengt+1,
-            'department_name':depname,
-            'organization_id':x
-            }
-        )
-        messages.success(request, 'The new department has been created successfully.')
     else:
-        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+        print(lengt)
+        if(len(response['Items'])==0):
+            response = dynamoTable.put_item(
+               Item={
+                'department_id':lengt+1,
+                'department_name':depname,
+                'organization_id':x
+                }
+            )
+            messages.success(request, 'The new department has been created successfully.')
+        else:
+            messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
     return redirect('../departments')
 
 
