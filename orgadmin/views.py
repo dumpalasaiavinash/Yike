@@ -982,6 +982,8 @@ class complaintrest(APIView):
 
 
 def create_department(request):
+    if(request.session['type'] ==1 ):
+        max = 5
     depname = request.POST.get('depname')
     print(depname)
     dynamoDB=boto3.resource('dynamodb')
@@ -1000,19 +1002,22 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
+    if(len(response1['Items']['department_id'])>= max):
+        messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
-    print(lengt)
-    if(len(response['Items'])==0):
-        response = dynamoTable.put_item(
-           Item={
-            'department_id':lengt+1,
-            'department_name':depname,
-            'organization_id':x
-            }
-        )
-        messages.success(request, 'The new department has been created successfully.')
     else:
-        messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
+        print(lengt)
+        if(len(response['Items'])==0):
+            response = dynamoTable.put_item(
+               Item={
+                'department_id':lengt+1,
+                'department_name':depname,
+                'organization_id':x
+                }
+            )
+            messages.success(request, 'The new department has been created successfully.')
+        else:
+            messages.success(request, 'Please check again as a department with the same name is already created for your organization.')
     return redirect('../departments')
 
 
