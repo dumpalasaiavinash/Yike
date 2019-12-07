@@ -7,10 +7,14 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from datetime import datetime
 from .forms import msgForm
+import collections
+import operator
 
-def MessageBox(req):
+def msg00(req):
     if 'email' in req.session:
-        req.session["rec"]="anirudhambati@gmail.com"
+        req.session["rec"]="yashukikkuri@gmail.com"
+        for i in range (3 ,10) :
+            send(req.session['email'],"yashukikkuri@gmail.com","This is a dummy message" + str(i))    
     return HttpResponse("<h1>Message has been sent</h1>")
 
 # Create your views here.
@@ -85,7 +89,9 @@ def getUserName(email):
     response = table.scan(
         FilterExpression=Attr('email').eq(email)
     )
-    return response['Items'][0]['username']
+    if response["Count"] > 0:
+        return response['Items'][0]['username']
+    return "Yike User"
 
 def getContacts(email):
     dynamodb = boto3.resource('dynamodb')
@@ -103,18 +109,24 @@ def getContacts(email):
             contacts.append(datum['sender'])
     return contacts
 
+def getReciver(email):
+    contacts = getContacts(email)
+    if len(contacts)>0 :
+        return contacts[0]
+    return 0
+
 def send(sender,reciver,msg):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('messages')
-    date0 = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    table = dynamodb.Table('message')
+    date0 = int(datetime.now().strftime("%Y%m%d%H%M%S"))
     response1 = table.scan()
     u_id=len(response1['Items'])+1
     table.put_item(
         Item={
             'msg_id': u_id,
+            'sort_key':date0,
             'sender': sender,
             'reciver': reciver,
-            'date_time': date0,
             'messages': msg,
         }
     )
@@ -156,7 +168,6 @@ def getContactdetails(contacts):
 
 def preview(req):
     email = req.session['email']
-    rec = req.session['rec']
     if req.method=='POST':
         form=msgForm(req.POST)
         if form.is_valid():
@@ -167,8 +178,14 @@ def preview(req):
                     send(email,rec,msg)
         else : 
             print("ummmmmmmm")
-
-    rec = getUserName(req.session['rec'])
+    if "rec" not in req.session :
+        re0 = getReciver(email) 
+        if re0 != 0 :
+            req.session['rec'] = re0
+    if "rec" in req.session:
+        rec = getUserName(req.session['rec'])
+    else:
+        rec = " "
     return render(req,'Chatbox/chatui.html',{ 'rec' : rec})
 
 
@@ -203,11 +220,16 @@ def mesgs(req):
 
 def getMessageList(email,person):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('messages')
+    table = dynamodb.Table('message')
     response = table.scan(
-        FilterExpression = (Attr('sender').eq(email) & Attr('reciver').eq(person)) | (Attr('reciver').eq(email) & Attr('sender').eq(person))
+        ProjectionExpression="msg_id,sender,reciver,messages",
+        FilterExpression = (Attr('sender').eq(email) & Attr('reciver').eq(person)) | (Attr('reciver').eq(email) & Attr('sender').eq(person)),
+        
     )
-    return response['Items']
+    print(response)
+    return response['Items'].sort_key("sort_key")
+
+
 
 def getLastMessageList(email,person):
     dynamodb = boto3.resource('dynamodb')
@@ -222,3 +244,4 @@ def getLastMessageList(email,person):
                 msg['messages'] = msg['messages'][:105]+"....."
         return mesgs
     return []
+
