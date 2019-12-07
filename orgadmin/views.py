@@ -443,6 +443,8 @@ def create(request):
                 FilterExpression=Attr('org_id').eq(int(i))
             )
             # print(response['Items'])
+            print(response)
+            print("###################")
             org_names.append(response['Items'][0]['organization_name'])
             org_code.append(response['Items'][0]['code'])
         # print(email)
@@ -503,22 +505,24 @@ def created(request):
             )
             
             if(len(response['Items'])==0):
-                ID=0
+                ID=100
                 for i in response_sno['Items']:
                     if(ID<int(i['org_id'])):
                         ID=int(i['org_id'])
 
                 print(ID)
                 ID=ID+1
-                hash_code=organization_name+str(ID)
+                hash_code=organization_name[:2]+str(ID)
                 print(hash_code)
                 
-                code=hash_code[:-1]
+                code=hash_code
                 response = table.put_item(
                 Item={
                     'org_id': ID,
                     'organization_name': organization_name,
                     'code':code,
+                    'image':" ",
+                    'org_info':" ",
 
                     }
                 )
