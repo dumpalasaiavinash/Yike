@@ -85,7 +85,7 @@ def complaintIFrame(req):
                             Complaint00["org_id"] = req.POST[field]
                         
                     Complaint00["user_email"] = req.session["email"]
-                    Complaint00["status"] = 0 
+                    Complaint00["complaint_status"] = 0 
                     Complaint00["timestamp"] = datetime.now().strftime("%Y%m%d%H%M%S")
                     
                     
