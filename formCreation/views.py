@@ -46,6 +46,7 @@ def complaintIFrame(req):
                 form =response1["Items"][0] 
                 if foRm.is_valid():
                     Complaint00 = {}
+                    print(req.POST)
                     for field in form :
                         
                         print(field)
@@ -64,6 +65,18 @@ def complaintIFrame(req):
                                 fname = req.session["email"] + datetime.now().strftime("%Y%m%d%H%M")
                                 Complaint00[data00["label"]] = fname
                                 handle_uploaded_file(req.FILES[field],fname)
+                            elif typE == "checkgroup" :
+                                print(data00)
+                                datum00  = {}
+                                i = 0
+                                lim = data00['nR']
+                                while(i<lim):
+                                    datum00[data00['checks'][str(i)]['label']] = req.POST[field+"_"+str(i)]
+                                    print("0")
+                                    i += 1
+                                Complaint00[data00['label']] = json.dumps(datum00)
+
+                                
 
                         elif field == "form_id":
                             Complaint00["form_id"]  =   req.POST[field]
@@ -71,7 +84,9 @@ def complaintIFrame(req):
                         elif field == "org_id" :
                             Complaint00["org_id"] = req.POST[field]
                         
-                    Complaint00["user"] = req.session["email"]
+                    Complaint00["user_email"] = req.session["email"]
+                    Complaint00["complaint_status"] = 0 
+                    Complaint00["timestamp"] = datetime.now().strftime("%Y%m%d%H%M%S")
                     
                     
                     table = dynamodb.Table("ComplaintS")

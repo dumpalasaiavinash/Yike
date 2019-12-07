@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'android_app_api',
     'paypal.standard.ipn',
+    'storages',
 
 ]
 
