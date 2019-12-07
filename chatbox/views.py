@@ -227,7 +227,7 @@ def getMessageList(email,person):
         
     )
     print(response)
-    return response['Items']
+    return response['Items'].sort_key("sort_key")
 
 
 
