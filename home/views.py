@@ -40,8 +40,8 @@ def home_log(request):
     type=1
     if('type' in request.session.keys()):
         type = request.session['type']
-    # else:
-    #     request.session['type']=1
+    else:
+        request.session['type']=1
 
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):

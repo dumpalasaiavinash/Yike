@@ -351,7 +351,7 @@ z-index: 0;
                                     <a href="{% url 'form:form_test'%}">
                                         Complaint_form
                                     </a>
-                                </li>                                
+                                </li>
                                 <li class="mm-active" style="padding-top:5%;font-size:20px">
                                     <a href="{% url 'orgadmin:about' org_id %}">
                                         About
@@ -377,7 +377,7 @@ z-index: 0;
                             {% if org_check == '3' %}
                                 <img class="image" src={{ org_img }} alt="Avatar">
                             {% endif %}
-                             
+
                         </a>
                     </div>
                     <div id="myModal0" class="modal" style="padding-left:23%;">
@@ -395,7 +395,7 @@ z-index: 0;
                         </div>
                     </div>
 
-                    <div class="tabs-animation" style="padding-left:21%;height:235px;">    
+                    <div class="tabs-animation" style="padding-left:21%;height:235px;">
                         <div class="mb-3 card" style="">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
@@ -407,13 +407,13 @@ z-index: 0;
                                 </div>
                             </div>
                             <div style="padding:3%;">
-                                
+
                                     <span style="font-size:60px">
                                         <center>
                                             {{ org_name}}
                                         </center>
-                                    </span>    
-                                
+                                    </span>
+
                             </div>
                             <div class="text-center d-block p-3 card-footer">
                             </div>
@@ -433,8 +433,8 @@ z-index: 0;
                             </form>
                             </div>
                         </div>
-                    </div>    
-                    <div class="tabs-animation">    
+                    </div>
+                    <div class="tabs-animation">
                         <div class="mb-3 card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
@@ -448,7 +448,7 @@ z-index: 0;
                             <div style="padding:2%;overflow-y:scroll;height:18.5em">
                                 <span style="font-size:20px">
                                 {% if org_check == '1'%}
-                                    {{ org_info }}  
+                                    {{ org_info }}
                                 {% endif %}
                                 {% if org_check == '3'  %}
                                     {{ org_info }}
@@ -472,7 +472,7 @@ z-index: 0;
                                         <span style="font-size:30px">ENTER INFO</span><br>
                                         <textarea class="input" name="info" rows="10" cols="54" style="height:10%;">
 {% if org_check == '0'%}Enter Info{% endif %}{% if org_check == '2'  %}Enter Info{% endif %}
-{% if org_check == '1'%}{{ org_info }}{% endif %}{% if org_check == '3' %}{{ org_info }}{% endif %}                       
+{% if org_check == '1'%}{{ org_info }}{% endif %}{% if org_check == '3' %}{{ org_info }}{% endif %}
                                         </textarea>
                                     </div>
                                     <div style="padding-top:5%;font-size:20px">

@@ -84,7 +84,7 @@ class assignEmployee:
                 hie_response = hie_table.scan(
                     ProjectionExpression="hierarchy",
                     FilterExpression=Attr('dep_id').eq(sel_dept)
-                )           
+                )
 
             hie_dict=hie_response["Items"][0]['hierarchy']
             hie_updated=hie_dict[1:(len(hie_dict)-1)]
@@ -107,8 +107,8 @@ class assignEmployee:
                         ind.append(i)
                 else:
                     if(k==0):
-                        ind.append(len(hie_updated_dict)-1)   
-                        break   
+                        ind.append(len(hie_updated_dict)-1)
+                        break
 
             emp_id_retrieved=[]
             for i in ind:
@@ -116,7 +116,7 @@ class assignEmployee:
                     ProjectionExpression="emp_id",
                     FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(sel_dept_temp[1])
                 )
-            
+
             while(len(emp_response["Items"])==0):
                 sel_dept_temp=random.choice(dep_id_list).strip(',')
                 sel_dept=int(sel_dept_temp[0])
@@ -133,7 +133,7 @@ class assignEmployee:
                     hie_response = hie_table.scan(
                         ProjectionExpression="hierarchy",
                         FilterExpression=Attr('dep_id').eq(sel_dept)
-                    )           
+                    )
 
                 hie_dict=hie_response["Items"][0]['hierarchy']
                 hie_updated=hie_dict[1:(len(hie_dict)-1)]
@@ -156,7 +156,7 @@ class assignEmployee:
                     else:
                         if(k==0):
                             ind.append(len(hie_updated_dict)-1)
-                            break      
+                            break
 
                 emp_id_retrieved=[]
 
@@ -165,14 +165,14 @@ class assignEmployee:
                         ProjectionExpression="emp_id",
                         FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(sel_dept_temp[1])
                     )
-            
-            
-            
+
+
+
             for em in emp_response["Items"]:
                 emp_id_retrieved.append(int(em['emp_id']))
 
             cmp_response=cmp_table.scan()
-            
+
             count={}
 
             for i in emp_id_retrieved:
@@ -222,7 +222,7 @@ class assignEmployee:
                         ind.append(i)
                 else:
                     if(k==0):
-                        ind.append(len(hie_updated_dict)-1)        
+                        ind.append(len(hie_updated_dict)-1)
                         break
 
             emp_id_retrieved=[]
@@ -238,7 +238,7 @@ class assignEmployee:
                 emp_id_retrieved.append(int(em['emp_id']))
 
             cmp_response=cmp_table.scan()
-            
+
             count={}
 
             for i in emp_id_retrieved:
@@ -266,14 +266,6 @@ def test(request):
 
     url="../about/"+str(103)
     return redirect(url)
-
-
-
-
-
-
-
-
 
 
 # Create your views here.
@@ -897,7 +889,8 @@ def created(request):
 
     organization_name = request.POST.get('name')
     # code=request.POST.get('code')
-
+    print(request.session['type'])
+    print(len(request.session['org_created']))
     if (organization_name!=''):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('organization')
@@ -909,7 +902,7 @@ def created(request):
                 FilterExpression=Attr('organization_name').eq(organization_name)
             )
 
-            if(len(response['Items'])==0 and (request.session['type']==1 and len(request.session['org_created'])<=2) and (request.session['type']==2 and len(request.session['org_created'])<=5)):
+            if(len(response['Items'])==0 and ((request.session['type']==1 and len(request.session['org_created'])<=2) or (request.session['type']==2 and len(request.session['org_created'])<=5))):
                 ID=100
                 for i in response_sno['Items']:
                     if(ID<int(i['org_id'])):
@@ -1384,10 +1377,11 @@ class complaintrest(APIView):
 
 
 def create_department(request):
+    max = 2000
     if(request.session['type'] ==1 ):
-        max = 5
+        max = 3
     depname = request.POST.get('depname')
-    print(depname)
+    print(max)
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
     print(type(request.session['org_id']))
@@ -1404,7 +1398,7 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
-    if(len(response1['Items']['department_id'])>= max):
+    if(len(response1['Items'])>= max):
         messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
     else:
