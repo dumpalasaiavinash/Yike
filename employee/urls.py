@@ -5,6 +5,7 @@ from . import views
 app_name = 'employee'
 
 urlpatterns = [
-    path('/<int:j>', views.dashboard, name='dashboard'),
-    path('juniors/', views.juniors, name='juniors')
+    path('<int:j>', views.dashboard, name='dashboard'),
+    path('juniors/', views.juniors, name='juniors'),
+    path('validate/<str:complaint_id>/<int:org_id>',views.validate, name='validate')
 ]

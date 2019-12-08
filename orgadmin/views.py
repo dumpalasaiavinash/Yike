@@ -338,6 +338,7 @@ def dashboard(request,j):
             for user in user_response['Items']:
                 if(user['email']==email):
                     org_joined=user['organizations_joined']
+
                     org_joined.append(org_id)
 
                     user_table.update_item(
