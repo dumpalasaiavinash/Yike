@@ -27,12 +27,14 @@ def getMyActiveComplaints(req):
         )
         if resp["Count"] == 1 :
             genDate = resp["Items"][0]['timestamp']
-            if datetime.strptime(genDate, "%y%m%d%H%M%S") + timedelta(minutes=10) > datetime.now() :
-                return Response(
-                            {
-                                "data" : "You Can Fetch Data now"
-                            }
+            if datetime.strptime(genDate, "%y%m%d%H%M%S") + timedelta(minutes=100) > datetime.now() :
+                user = resp["Items"][0]['user']
+                table1 = dynamodb.Table("ComplaintS")
+                resp1=table1.scan(
+                    FilterExpression = Attr('user_email').eq(user)
                 )
+                print(resp1)
+                return Response(resp1["Items"])
             table.delete_item(
                 Key = {
                     'tokken' : token,
@@ -52,7 +54,7 @@ def getMyActiveComplaints(req):
         )
     return Response(
         {
-                
+          "status" : 204      
         }
     )
 
