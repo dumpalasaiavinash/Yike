@@ -15,6 +15,7 @@
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link href="{% static 'dashboard/main.cba69814a806ecc7945a.css' %}" rel="stylesheet">
+
     <style media="screen">
       .notice {
         position: relative;
@@ -214,152 +215,17 @@
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="#" class="mm-active">
+                                        <a href={% url 'employee:juniors' %} class="mm-active">
                                             <i class="metismenu-icon">
                                             </i>Analytics
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
-                                            <i class="metismenu-icon">
-                                            </i>Commerce
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="metismenu-icon">
-                                            </i>Sales
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="metismenu-icon"></i>
-                                            Minimal
-                                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                        </a>
-                                        <ul>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="metismenu-icon">
-                                                    </i>Variation 1
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="metismenu-icon">
-                                                    </i>Variation 2
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="metismenu-icon"></i>
-                                            CRM
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-browser"></i>
-                                    Pages
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="pages-login.html">
-                                            <i class="metismenu-icon"></i>
-                                            Login
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-login-boxed.html">
-                                            <i class="metismenu-icon">
-                                            </i>Login Boxed
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-register.html">
-                                            <i class="metismenu-icon">
-                                            </i>Register
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-register-boxed.html">
-                                            <i class="metismenu-icon">
-                                            </i>Register Boxed
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-forgot-password.html">
-                                            <i class="metismenu-icon">
-                                            </i>Forgot Password
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-forgot-password-boxed.html">
-                                            <i class="metismenu-icon">
-                                            </i>Forgot Password Boxed
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-plugin"></i>
-                                    Applications
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="apps-mailbox.html">
-                                            <i class="metismenu-icon">
-                                            </i>Mailbox
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="apps-chat.html">
-                                            <i class="metismenu-icon">
-                                            </i>Chat
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="apps-faq-section.html">
-                                            <i class="metismenu-icon">
-                                            </i>FAQ Section
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="metismenu-icon"></i>
-                                            Forums
-                                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                        </a>
-                                        <ul>
-                                            <li>
-                                                <a href="apps-forum-list.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Forum Listing
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="apps-forum-threads.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Forum Threads
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="apps-forum-discussion.html">
-                                                    <i class="metismenu-icon">
-                                                    </i>Forum Discussion
-                                                </a>
-                                            </li>
+                                        
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
-                        </ul>
+                            
                     </div>
                 </div>
             </div>
@@ -370,7 +236,7 @@
 
 <!-- ##################################### Stats #####################################-->
 
-                        <div class="mb-3 card">
+                        <div class="mb-3 card" style="z-index: 0;">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                                     <i class="header-icon lnr-charts icon-gradient bg-happy-green"> </i>
@@ -383,10 +249,10 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
-                                            <i class="lnr-laptop-phone text-dark opacity-8"></i></div>
+                                            <i> <span class="glyphicon glyphicon-star"></span></i></div>
                                         <div class="widget-chart-content">
                                             <div class="widget-subheading">To be solved today</div>
-                                            <div class="widget-numbers">8</div>
+                                            <div class="widget-numbers">{{count_date}}</div>
                                             <div class="widget-description opacity-8 text-focus">
                                                
                                                 
@@ -399,10 +265,10 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
-                                            <i class="lnr-graduation-hat text-white"></i></div>
+                                            <i >  <span class="glyphicon glyphicon-ok"></span></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">High Priority</div>
-                                            <div class="widget-numbers"><span>4</span></div>
+                                            <div class="widget-subheading">Complaints Processed</div>
+                                            <div class="widget-numbers"><span>{{count_dealed}}</span></div>
                                             <div class="widget-description opacity-8 text-focus">
                                               
                                              
@@ -415,9 +281,9 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
                                         <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg opacity-9 bg-success"></div>
-                                            <i class="lnr-apartment text-white"></i></div>
+                                            <i> <span class="glyphicon glyphicon-time"></span></i></div>
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">Total left</div>
+                                            <div class="widget-subheading">COmplaints Pending</div>
                                             <div class="widget-numbers text-success"><span>{{count}}</span></div>
                                             <div class="widget-description text-focus">
                                                 
@@ -459,16 +325,25 @@
                                 <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
                                     <thead>
                                     <tr>
-                                        <th style="width:73%">Complaint</th>
-                                        <th style="width:25%">Time Posted</th>
+                                        <th style="width:50%">Complaint</th>
+                                        <th style="width:25%">Date Posted</th>
+                                        <th style="width: 25%;">&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for new_complaint in complaint %}
+                                    {% for new_complaint,date,complaint_id in complaint %}
                                     
                                         <tr>
-                                            <td onclick="myfun('{{new_complaint}}')">{{new_complaint}}</td>
+                                            <td onclick="myfun('{{new_complaint}}')" style="width:50% ;">{{new_complaint}}</td>
+                                            <td style="width: 25%;">{{date}}</td>
+                                            <td style="width: 25%;">
+                                                    <form action="{% url 'employee:validate' complaint_id org_id  %}" method="post">
+                                                            {% csrf_token %}
+                                                            <button  type="submit" class="button" style="width:7em;">Close Issue</button> </div><br><br><br><br><br>
+                                                    </form>
+
+                                            </td>
                                                 <div id="id01" class="w3-modal" >
                                                     <div class="w3-modal-content w3-animate-zoom" style="min-height: 100px;background-color: rgb(255,255,255);">
                                                     <header> 
@@ -490,7 +365,7 @@
                                     <tfoot>
                                     <tr>
                                         <th style="width:75%">Complaint</th>
-                                        <th style="width:25%">Time Posted</th>
+                                        <th style="width:25%">Date Posted</th>
                                         
                                     </tr>
                                     </tfoot>
@@ -514,14 +389,15 @@
 
                         <div class="card mb-3" style="width:27.5%; height:25%; float:right">
                             <div class="card-header-tab card-header">
-                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Notifications</div>
+                                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Messages</div>
                             </div>
 
-
+<!-- 
                             <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-                            <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+                            <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div> -->
 
-                            {% for item in notifications %}
+                            {% for i in notification %}
+                            <div class="notice info"><p>{{i}}</p></div>    
 
                             {% endfor %}
 
@@ -552,17 +428,11 @@
                                             <div class="widget-numbers">
                                               <div class="icon-wrapper rounded-circle">
                                                 <div class="icon-wrapper-bg opacity-10 bg-warning"></div>
-                                                <i class="lnr-laptop-phone text-dark opacity-8"></i>
+                                                <i><span class="glyphicon glyphicon-th-list"></span> </i>
                                               </div>
                                             </div>
-                                            <div class="widget-numbers">216</div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                <div class="d-inline text-danger pr-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">54.1%</span>
-                                                </div>
-                                                less earnings
-                                            </div>
+                                            <div class="widget-numbers">{{total_complaints}}</div>
+                                           
                                         </div>
 
                                     </div>
@@ -575,21 +445,15 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
 
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">Passed over Complaints</div>
+                                            <div class="widget-subheading">Complaints Pending</div>
                                             <div class="widget-numbers">
                                               <div class="icon-wrapper rounded-circle">
                                                   <div class="icon-wrapper-bg opacity-9 bg-danger"></div>
-                                                  <i class="lnr-graduation-hat text-white"></i>
+                                                  <i> <span class="glyphicon glyphicon-time"></span> </i>
                                               </div>
                                             </div>
-                                            <div class="widget-numbers"><span>36</span></div>
-                                            <div class="widget-description opacity-8 text-focus">
-                                                Grow Rate:
-                                                <span class="text-info pl-1">
-                                                    <i class="fa fa-angle-down"></i>
-                                                    <span class="pl-1">14.1%</span>
-                                                </span>
-                                            </div>
+                                            <div class="widget-numbers"><span>{{total_left}}</span></div>
+                                            
                                         </div>
                                     </div>
                                     <div class="divider m-0 d-md-none d-sm-block"></div>
@@ -599,21 +463,15 @@
                                     <div class="card no-shadow rm-border bg-transparent widget-chart text-left">
 
                                         <div class="widget-chart-content">
-                                            <div class="widget-subheading">Overdue Complaints</div>
+                                            <div class="widget-subheading">Complaints Solved</div>
                                             <div class="widget-numbers">
                                               <div class="icon-wrapper rounded-circle">
                                                   <div class="icon-wrapper-bg opacity-9 bg-success"></div>
-                                                  <i class="lnr-apartment text-white"></i>
+                                                  <i >  <span class="glyphicon glyphicon-ok"></span></i>
                                               </div>
                                             </div>
-                                            <div class="widget-numbers"><span>8</span></div>
-                                            <div class="widget-description text-focus">
-                                                Increased by
-                                                <span class="text-warning pl-1">
-                                                    <i class="fa fa-angle-up"></i>
-                                                    <span class="pl-1">7.35%</span>
-                                                </span>
-                                            </div>
+                                            <div class="widget-numbers"><span>{{total_done}}</span></div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -647,22 +505,13 @@
       <span class="close">&times;</span>
 
       <div style="padding:5%;">
-        <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Notifications</div>
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="header-icon lnr-laptop-phone mr-3 text-muted opacity-6"> </i>Messages</div>
         <br><br>
 
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
-        <div class="notice info"><p>This is a an info notice, it provides feedback of a neutral nature to the user.</p></div>
+        {% for i in notification %}
+        <div class="notice info"><p>{{i}}</p></div>    
 
+        {% endfor %}
 
       </div>
 

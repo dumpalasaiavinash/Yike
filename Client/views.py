@@ -23,13 +23,27 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 import datetime
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 #For generating token
 import random
 import string
 
 check = 0
 # Create your views here.
+
+class followview(APIView):
+    def get(self,request):
+        dynamodb=boto3.resource('dynamodb')
+        table=dynamodb.Table('clients')
+        response = table.scan()
+        context = response['Items']
+        return Response(context)
+
+
 def firstpage(request):
     return render(request, 'Client/first.html')
 
@@ -95,15 +109,12 @@ def client_signin(request):
         context = response['Items']
         username = request.POST.get('username')
         email    = request.POST.get('email')
-
         password = request.POST.get('pass')
         repassword = request.POST.get('re_pass')
         Email = email
         print(username,email,password,repassword)
-
         #mail validation
         regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-
         if(re.search(regex,email)):
             m = 1
             print('VALID EMAIL')
