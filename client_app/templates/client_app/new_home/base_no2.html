@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'new_home/style.css' %}"/>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Roboto" rel="stylesheet">
+
+    <style>
+      .float{
+        	position:fixed;
+        	width:60px;
+        	height:60px;
+        	bottom:40px;
+        	right:40px;
+        	background-color:#0C9;
+        	color:#FFF;
+        	border-radius:50px;
+        	text-align:center;
+        	box-shadow: 2px 2px 3px #999;
+        }
+
+      .my-float{
+      	margin-top:22px;
+      }
+      .mybutton {
+          background-color: #4CAF50; /* Green */
+          border: none;
+          color: white;
+          padding: 16px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+          margin: 4px 2px;
+          -webkit-transition-duration: 0.4s; /* Safari */
+          transition-duration: 0.4s;
+          cursor: pointer;
+          background-color: white;
+          color: black;
+          border: 2px solid #0055b4;
+          border-radius:45px;
+          width: 200px;
+      }
+
+      .mybutton:hover {
+          background-color: #0055b4;
+          color: white;
+      }
+      .container-small{
+          border-radius:5px;
+      }
+      footer{
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+      }
+    </style>
+
+    {% block extrahead %}
+
+    {% endblock %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:rgb(10,165,252);font-family:raleway;font-size:400px;">
+    <div class="container-fluid">
+        <div class="navbar-header" style="">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+
+            </button>
+            <span style="font-size:120px;color:black">
+              <a class="navbar-brand" href="#">YIKE</a>
+            </span>
+
+        </di>
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+
+
+            </ul>
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="">
+                    <a href="{% url 'client_app:client_signup %}">
+                        &nbsp;Logout
+                    </a>
+                </li>
+
+                <li class="">
+                    <a href="{% url 'client_app:client_signup' %}">
+                        &nbsp;
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+    </nav>
+
+    <div class="" style="width:100%; position: fixed;top:10%;height:80%;">
+      {% block body %}
+
+      {% endblock %}
+    </div>
+
+
+</body>
+<script>
+
+{% block script %}
+
+{% endblock %}
+
+</script>
+</html>

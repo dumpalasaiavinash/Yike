@@ -16,6 +16,48 @@ from datetime import timedelta
 dynamodb = boto3.resource('dynamodb')
 
 
+@api_view(["GET"])
+def getMyActiveComplaints(req):
+    if ('HTTP_AUTHORIZATION' in req.META):
+        print("HOLA")
+        table = dynamodb.Table("AndroidUserPrimaryTokens")
+        token = req.META['HTTP_AUTHORIZATION']
+        resp = table.scan(
+            FilterExpression=Attr('tokken').eq(token)
+        )
+        if resp["Count"] == 1 :
+            genDate = resp["Items"][0]['timestamp']
+            if datetime.strptime(genDate, "%y%m%d%H%M%S") + timedelta(minutes=10) > datetime.now() :
+                return Response(
+                            {
+                                "data" : "You Can Fetch Data now"
+                            }
+                )
+            table.delete_item(
+                Key = {
+                    'tokken' : token,
+                }                
+            )
+            print("Amigo")
+            return Response(
+                {
+                'status'  : 205
+                }
+            )
+        print("real")
+        return Response(
+                {
+                'status'  : 203
+                }
+        )
+    return Response(
+        {
+                
+        }
+    )
+
+
+
 @api_view(['GET'])
 def get_org(req):
     if req.method == 'GET':
@@ -189,9 +231,9 @@ def randomStringDigits(stringLength=16):
 
 @api_view(['GET'])
 def myComplaintHistory(req):
-    if ('token' in req.GET):
+    if ('HTTP_AUTHORIZATION' in req.META):
             table = dynamodb.Table("AndroidUserPrimaryTokens")
-            token = req.GET['token']
+            token = req.META['HTTP_AUTHORIZATION']
             resp = table.scan(
                 FilterExpression=Attr('tokken').eq(token)
             )

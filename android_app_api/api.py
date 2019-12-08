@@ -8,5 +8,7 @@ urlpatterns = [
     path('tokenpair/',views.getTokenPair),
     path('refreshtoken/',views.get_access_token),
     path('getMyComplaints/',views.myComplaintHistory),
-    path('getComplaintDetails/', views.get_Complaint_Detail)
+    path('getComplaintDetails/', views.get_Complaint_Detail),
+    path('getActiveComplaint/',views.getMyActiveComplaints),
+
 ]

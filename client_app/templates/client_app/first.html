@@ -1,0 +1,273 @@
+{% extends "client_app/new_home/base2.html" %}
+{% load staticfiles %}
+
+{% block body %}
+
+<style>
+
+.meter9 { 
+  top:0%;
+  left: 80%;
+  width: 5%;
+  height: 10%;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.meter9 span {
+  display: block;
+  height: 50%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.progress9 {
+  background-color: #d6185e;
+  animation: progressBar1 3s ease-in-out;
+  animation-fill-mode:forwards;
+}
+
+
+.dot1 {
+  height:5px;
+  width: 5px;
+  margin:1px;
+  border-radius: 50%;
+  background-color: crimson;
+  display: inline-block;
+}
+ 
+.dot2 {
+  height:5px;
+  width: 5px;
+  margin:1px;
+  margin-left: 30%;
+  background-color:green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.card{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 40%;
+  margin-left:auto;margin-right:auto;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+
+table, td, th {
+  border: 0px solid black;
+  text-align: left;
+}
+
+</style>
+<br>
+        <link href='styles.css?version=1' rel='stylesheet'></link>
+    <link rel="stylesheet" href="{% static 'client_app/css/first.css' %}">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      </head>
+      <body>
+
+
+<div>
+  <br>
+<div style="width: 25%;height: 900px;float:left;border-radius: 7px;">
+
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.card1 {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding-left: 5px;
+  width: 400px;
+  margin: auto;
+  height: 640px;
+  text-align: center;
+  font-family: arial;
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
+button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  width: auto;
+  font-size: 18px;
+}
+
+a {
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+}
+
+button:hover, a:hover {
+  opacity: 0.7;
+}
+</style>
+</head>
+
+
+
+
+<body>
+ 
+<div class="card1">
+  <img src="{% static 'client_app/images/images.jfif' %}" alt="image" style="width:300px">
+  
+  <h3>User :  {{name}}</h3>
+  <h4>Mail:    {{mail}}</h4>
+   
+  <br><br><br>
+  <p><button>Edit photo</button></p>
+</div>
+
+</div>
+
+
+
+
+<div class="wrapper" style="float:left;margin-left: 90px;">
+    <div class="tabs">
+      <ul id="tabs_ul">
+        <li class="active" data-list="tab_1">Previous Complaints</li>
+        <li data-list="tab_2">New Complaint</a></li>
+        <li data-list="tab_3">Track</li>
+        <li data-list="tab_4"><p>Chat</p></li>
+      </ul>
+    </div>
+
+
+  <div class="content">
+    <div class="tab_content tab_1" id="tab_1" style="display:block;">
+      <div class="container" >
+        <link rel="stylesheet" href="{% static 'client_app/css/tabs6.css' %}">
+        <div style="width:205;height:200px;margin: auto;width: 50%;padding: 10px;">
+            <h2>Previous complaints</h2>
+          <div style="background-color: brown;width:5px;height:200px;float:left;border-radius:5px ">
+        </div>
+        <div class="panel panel-default" style="float: left;height:200px;width:400px">
+            <div class="panel-body">  
+              {% for cn,c,cs,oi,ei,t in dic0  %}
+                {{ cn }}:
+                {{ c }} <br><br>
+                Complaint status : {{ cs }}   <br><br>
+                Organisation id: {{ oi }}   <br><br>
+                Employee id : {{ ei }}   <br>
+               Time : {{ t }}    
+              {% endfor %}
+            </div>
+        </div>
+      </div>
+    
+    </div>
+    
+    </div>
+    <div class="tab_content tab_2" id="tab_2" style="display:none;">
+     
+<div>
+  <iframe src= "/form/complaint_form?form_id=testform5" style="width: 110%; height:570px"></iframe>
+  
+  </div>
+  
+    </div>
+    
+    <div class="tab_content tab_3" id="tab_3" style="margin-left: 200px;">
+            <div class="panel panel-default" style="height:200px;width:400px">                  
+              <div class="panel-body"> 
+
+                {% if comp %}
+                      {{comp}}
+                {% endif %}
+
+                  {% for cn,c,cs,oi,ei,t in dic1  %}
+                    {{ cn }}:
+                    {{ c }} <br><br>
+                    Complaint status : Processing   <br><br>
+                    Organisation id: {{ oi }}   <br><br>
+                    Employee id : {{ ei }}   <br>
+                   Time : {{ t }}    
+                  {% endfor %}
+                </div>
+            </div>
+        
+        
+          </div>
+
+
+
+
+    <div class="tab_content tab_4" id="tab_4" style="display:none;">
+     
+      <iframe src="/chat/temp" style="width: 110%; height:600px" scrolling ="no" ></iframe>
+    
+    </div>
+  </div>
+  </div>
+ 
+</div>
+  
+<script>
+
+$(".content .tab_content").hide();
+$(".content .tab_content:first-child").show();
+
+$("ul li").click(function(){
+  
+  $("ul li").removeClass("active");
+  $(this).addClass("active");
+  
+  var current_tab = $(this).attr("data-list");
+  $(".content .tab_content").hide();
+  $("."+current_tab).show();
+})
+
+
+var ul = document.getElementById("tabs_ul");
+var li_tabs = ul.getElementsByTagName("li");
+for (var i = 0; i < li_tabs.length; i++) {
+  li_tabs[i].addEventListener("click", function() {
+    var current = ul.getElementsByClassName("active");
+  current[0].className = current[0].className.replace("active", "");
+  this.className += "active";
+    
+    var current_tab_value = this.getAttribute("data-list");
+    document.getElementById(current_tab_value).style.display = "block";
+    
+  });
+}  
+ 
+$(function() {
+  var current_progress = 0;
+  var interval = setInterval(function() {
+      current_progress += 10;
+      $("#dynamic")
+      .css("width", current_progress + "%")
+      .attr("aria-valuenow", current_progress)
+      .text(current_progress + "% Complete");
+      if (current_progress >= 100)
+          clearInterval(interval);
+  }, 1000);
+});
+
+</script>
+{% endblock %}

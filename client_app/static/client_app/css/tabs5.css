@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+
+.wrapper{
+  width: 950px;
+  margin: 80px auto;
+  border-radius: 20px;
+  background-color:aliceblue;;
+}
+
+
+.wrapper .tabs ul{
+  width: 950px;
+  height: auto;
+  display: flex;
+}
+
+.wrapper .tabs ul li{
+  width:200px;
+  height: 68px;
+  padding: inherit;
+  padding-top:20px;
+  text-align: center;
+  background: #212EE4;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 14px;
+  color:aliceblue;
+  transition: all 0.4s ease;
+}
+
+.wrapper .tabs ul li:first-child{
+  border-top-left-radius: 3px;
+}
+
+.wrapper .tabs ul li:last-child{
+  border-top-right-radius: 3px;
+}
+
+.wrapper .content{
+  width:800px;
+  padding: 10px;
+  height:800px;
+  margin-left: 8px;
+  border-radius: 3px;
+}
+
+.wrapper .content .tab_content{
+  width:800px;
+  height:600px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.wrapper .tabs ul li.active{
+  border-top: 3px solid grey;
+  margin-top: -10px;
+  background:#272DCA;
+  color:lightgrey;
+}

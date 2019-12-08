@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yike_mobile_app/Pages/add_complaint.dart';
+import 'package:yike_mobile_app/Pages/profile.dart';
 import 'dart:async';
 import 'package:yike_mobile_app/Widgets/complaint_card.dart';
 
@@ -14,21 +17,47 @@ class ComplaintPage extends StatefulWidget {
 }
 
 class _ComplaintPageState extends State<ComplaintPage> {
-  Future<List> datum;
+  num _currentIndex = 0;
   bool failed = false;
+  gettokken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("token");
+  }
+
+  getRefreshtokken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("refresh_token");
+  }
+
+  getToken() async {
+    // String refreshTokken =
+  }
 
   Future<List> getData() async {
     print("begin");
     List data;
     try {
       http.Response resp = await http.get(
-          Uri.encodeFull("http://10.0.34.121:8000/complaints/?format=json"),
+          Uri.encodeFull(
+              "http://10.0.54.2:8000/api/getActiveComplaint/?format=json"),
           headers: {
+            'Authorization': await gettokken(),
             "Accept": "application/json"
           }).timeout(Duration(seconds: 10));
       //print(resp.body);
       print(resp.statusCode);
       if (resp.statusCode == 200) {
+        print(resp.body);
+        if (resp.body == "{\"status\":203}"){
+          http.Response resp0 = await http.post(
+              "http://10.0.54.2:8000/api/refreshToken/?format=json",
+              headers: {"Content-type": "application/json"},
+              body: '{"refresh_token":"' + await getRefreshtokken() + '"}').timeout(Duration(seconds: 10));
+        print(resp0.statusCode);
+        if (resp0.statusCode == 200) {
+          print(resp0.body);
+        }
+      }
         data = json.decode(resp.body);
         data.add(2);
       }
@@ -76,33 +105,24 @@ class _ComplaintPageState extends State<ComplaintPage> {
     return data;
   }
 
-  Future<List> getData2(){
+  Future<List> getData2() async {
     print("al");
-    Future<List> data =  getData();
+    Future<List> data = (await getData()) as Future<List>;
     print("Failed");
-    if (failed == true){
+    if (failed == true) {
       print("walla");
-      setState(()  {
-        datum = getData();
-      });
     }
     print(data);
+    if (data == null) {
+      print("DJ");
+      await getToken();
+    }
     return data;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    setState(() {
-      datum = getData2();
-    });
-
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
-        BottomNavigationBarItem(
-            title: Text("Profile"), icon: Icon(Icons.person))
-      ]),
-      body: DefaultTabController(
+  _children(BuildContext context, num index) {
+    if (index == 0)
+      return DefaultTabController(
         length: 2,
         child: Scaffold(
             floatingActionButton: FloatingActionButton(
@@ -141,7 +161,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             ),
             body: FutureBuilder(
               initialData: {},
-              future: datum,
+              future: getData2(),
               builder: (BuildContext context, AsyncSnapshot snap) {
                 print(snap.data);
                 if (snap.data != null) {
@@ -171,7 +191,30 @@ class _ComplaintPageState extends State<ComplaintPage> {
                 );
               },
             )),
-      ),
+      );
+    else
+      return ProfilPage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: onTabTapped, // new
+          currentIndex: _currentIndex,
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home), title: Text("Home")),
+            BottomNavigationBarItem(
+                title: Text("Profile"), icon: Icon(Icons.person))
+          ]),
+      body: _children(context, _currentIndex),
     );
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }

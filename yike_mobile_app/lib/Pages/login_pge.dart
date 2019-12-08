@@ -13,12 +13,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  
-  
-  
+  final String paSwd0="";
+  final String eMail0="";
   getData(context) async {
     String paSwd = passwordController.text;
     print(paSwd);
+    print(eMail0);
     String eMail = emailController.text;
     String url = 'http://10.0.54.2:8000/api/tokenpair/?format=json';
     Map<String, String> headers = {"Content-type": "application/json"};
@@ -132,7 +132,7 @@ class LoginPage extends StatelessWidget {
             child: CustomTextFormField(
               hint: "Enter your Email Address",
               label: "Email Address",
-              val: "",
+              val: eMail0,
               controlleR: emailController,
             ),
           ),
