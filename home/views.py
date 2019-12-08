@@ -6,6 +6,12 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib import sessions
 from django.contrib import messages
+from datetime import date
+import datetime
+from paypal.standard.forms import PayPalPaymentsForm
+from paypal.standard.models import ST_PP_COMPLETED
+from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
+from django.urls import reverse
 
 #For password hashing
 import hashlib
@@ -34,8 +40,8 @@ def home_log(request):
     type=1
     if('type' in request.session.keys()):
         type = request.session['type']
-    else:
-        request.session['type']=1
+    # else:
+    #     request.session['type']=1
 
     dynamodb = boto3.resource('dynamodb')
     if(email != '' or password!=''):
@@ -53,6 +59,22 @@ def home_log(request):
         print('\n\n\n')
         if(len(response['Items'])>0):
             if(response['Items'][0]['password']==password):
+
+                dynamodb = boto3.resource('dynamodb')
+                table = dynamodb.Table('payments')
+
+                inv_response = table.scan(
+                    ProjectionExpression="dat",
+                    FilterExpression=Attr('email').eq(email),
+                )
+
+                now = datetime.datetime.now()
+                l_date = datetime.date(now.year, now.month, now.day)
+                f_date = datetime.date(now.year, now.month, now.day)
+                print(inv_response['Items'])
+                if((inv_response['Items']!=[]) and ('dat' in inv_response['Items'][0])):
+                    f_date = inv_response['Items'][0]['dat']
+                delta = l_date - f_date
                 for i in range(0,len(response['Items'][0]['organizations_created'])):
                     response['Items'][0]['organizations_created'][i] = int(response['Items'][0]['organizations_created'][i])
                 for i in range(0,len(response['Items'][0]['organizations_joined'])):
@@ -63,10 +85,12 @@ def home_log(request):
                 request.session['org_joined']=response['Items'][0]['organizations_joined']
                 # if(request.session['type'] != int(response['Items'][0]['type'])):
                     # request.session['type'] = int(response['Items'][0]['type'])
-
+                if(int(response['Items'][0]['typ']) == 2):
+                    request.session['type'] = 2
                 print(request.session['type'])
-                print('abc')
-
+                # print('abc')
+                if(delta.days > 30):
+                    request.session['type'] = 1
 
                 dynamodb = boto3.resource('dynamodb')
                 table = dynamodb.Table('payments')
