@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+
+.wrapper{
+  width: 800px;
+  margin: 80px auto;
+  border-radius: 20px;
+  background-color:aliceblue;
+}
+
+
+.wrapper .tabs ul{
+  width: 800px;
+  height: auto;
+  display: flex;
+}
+
+.wrapper .tabs ul li{
+  width:200px;
+  height: 68px;
+  padding: 0 20px;
+  text-align: center;
+  background: blueviolet;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.wrapper .tabs ul li:first-child{
+  border-top-left-radius: 3px;
+}
+
+.wrapper .tabs ul li:last-child{
+  border-top-right-radius: 3px;
+}
+
+.wrapper .tabs ul li img{
+  width: 45px;
+  height: 10px;
+  display: block;
+  margin: 0 auto 3px;
+}
+
+.wrapper .content{
+  width:800px;
+  padding: 10px;
+  height:800px;
+  margin-left: 8px;
+  border-radius: 3px;
+}
+
+.wrapper .content .tab_content{
+  width:800px;
+  height:600px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.wrapper .tabs ul li.active{
+  border-top: 6px solid pink;
+  margin-top: -15px;
+  background:chocolate;
+  width: 200px;
+  padding-top: 4px;
+}

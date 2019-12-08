@@ -26,7 +26,6 @@ class RegisterPage extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
           child: CustomTextFormField(
-            val: "",
             hint: "Enter your Name",
             label: "User Name",
           ),
@@ -34,7 +33,6 @@ class RegisterPage extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 0, right: 16, left: 16, bottom: 16),
           child: CustomTextFormField(
-            val: "",
             hint: "Enter your Email Address",
             label: "Email Address",
           ),

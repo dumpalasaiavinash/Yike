@@ -1,0 +1,18 @@
+{% extends "client_app/new_home/base2.html" %}
+{% load staticfiles %}
+
+
+{% block body %}
+<div class = "sheet">
+    <link rel="stylesheet" href="{% static "client_app/css/first.css" %}">
+    <div class='head'><a href="{% url 'client_app:secondpage' %}"><button type="button" class="btn btn-primary btn-lg">New Complaint</button></a><div class="badge"></div></button></div>
+    <span class="head1"><button type="button" class="btn btn-primary btn-lg">Track<span class="badge"></span></button></span>
+    <span class="head2"><button type="button" class="btn btn-primary btn-lg">Chat<span class="badge"></span></button></span>
+</div>
+
+<div class="complaintsheet">
+   <h2>Chat UI<h2>
+
+</div>
+
+{% endblock %}

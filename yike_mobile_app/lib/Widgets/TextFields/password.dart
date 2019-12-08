@@ -11,7 +11,7 @@ class PasswordField extends StatefulWidget{
   }
 }
 class _PasswordState extends State<PasswordField>{
-  String _hint="Password",_label="Enter your Password",_password="";  
+  String _hint="Password",_label="Enter your Password";  
   FocusNode _node;
   bool _focused = false,_obscure=true;
   Icon _icon= Icon(Icons.visibility_off,color: Colors.black38,);
@@ -69,12 +69,6 @@ class _PasswordState extends State<PasswordField>{
           _node.requestFocus();
         }
       },
-
-    onChanged: (text){
-        setState(() {
-         _password=text;
-        });
-    },
     
     
     decoration: InputDecoration(
@@ -84,7 +78,7 @@ class _PasswordState extends State<PasswordField>{
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black38, width: 1.0),
                 ),
-    labelText:_focused?_hint:(_password.length==0?_label:_hint) ),
+    labelText:_focused?_hint:(myController.text.length==0?_label:_hint) ),
     ),
     Row(children: <Widget>[IconButton(icon: _icon,onPressed: () => _handleVisibility(),padding: EdgeInsets.only(top:10),)],mainAxisAlignment: MainAxisAlignment.end,),
     ],);

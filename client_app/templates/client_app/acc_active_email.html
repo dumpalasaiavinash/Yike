@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user }}
+
+Please click on the link to Activate your account,
+http://{{ domain }}{% url 'client_app:activate' token=token email=user_email username=user client_id=client_id %}
+
+You will be redirected to Home page please login.
+
+{% endautoescape %}

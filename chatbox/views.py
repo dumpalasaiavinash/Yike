@@ -118,7 +118,9 @@ def getReciver(email):
 def send(sender,reciver,msg):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('message')
-    date0 = int(datetime.now().strftime("%Y%m%d%H%M%S"))
+    date00=datetime.now()
+    date0 = int(date00.strftime("%Y%m%d%H%M%S"))
+    date1 = date00.strftime("%b %d\t|\t%H:%M")
     response1 = table.scan()
     u_id=len(response1['Items'])+1
     table.put_item(
@@ -128,6 +130,7 @@ def send(sender,reciver,msg):
             'sender': sender,
             'reciver': reciver,
             'messages': msg,
+            'date_time':date1,
         }
     )
     table=dynamodb.Table('lastmessage')
@@ -222,12 +225,11 @@ def getMessageList(email,person):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('message')
     response = table.scan(
-        ProjectionExpression="msg_id,sender,reciver,messages",
         FilterExpression = (Attr('sender').eq(email) & Attr('reciver').eq(person)) | (Attr('reciver').eq(email) & Attr('sender').eq(person)),
         
     )
     print(response)
-    return response['Items'].sort_key("sort_key")
+    return response['Items']
 
 
 

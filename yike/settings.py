@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'android_app_api',
     'paypal.standard.ipn',
     'storages',
+    'client_app',
 
 ]
 
