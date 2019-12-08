@@ -31,7 +31,7 @@ import random
 import string
 
 check = 0
-present_user = 0
+present_user = 0 
 present_usermail = 0
 
 
@@ -39,7 +39,7 @@ present_usermail = 0
 # Create your views here.
 def firstpage(request):
     return render(request, 'client_app/first.html',{
-
+        
     })
 
 
@@ -265,14 +265,6 @@ def client_login(request):
 def client_loggedin(request):
     dic = {}
     DIC = {}
-    dynamodb=boto3.resource('dynamodb')
-    forms_table=dynamodb.Table('Complaint_forms')
-    forms_response=forms_table.scan()
-
-    forms_list=[]
-    for f in forms_response["Items"]:
-        forms_list.append(f['form_id'])
-
     if request.method=="POST":
         dynamodb=boto3.resource('dynamodb')
         table=dynamodb.Table('clients')
@@ -287,9 +279,9 @@ def client_loggedin(request):
             if(passw['password'] == password_hashed):
                 table1 =dynamodb.Table('ComplaintS')
                 response = table1.scan()
-                context1 = response['Items']
+                context1 = response['Items']        
                 print(context1)
-
+                
                 comp_num0=[]
                 comp0=[]
                 comp_status0=[]
@@ -324,20 +316,20 @@ def client_loggedin(request):
                             empl_id1.append(i['emp_id'])
                             time_stamp1.append(i['complaint_timestamp'])
                     else:
-                        comp = 'NO COMPLAINTS'
+                        comp = 'NO COMPLAINTS' 
                         print('NO COMPLAINTS')
                 if(comp==''):
                     dic_zip0=zip(comp_num0,comp0,comp_status0,orga_id0,empl_id0,time_stamp0)
                     dic_zip1=zip(comp_num1,comp1,comp_status1,orga_id1,empl_id1,time_stamp1)
-                    context={'dic0':dic_zip0,'dic1':dic_zip1,'name':name,'mail':email}
+                    context={'dic0':dic_zip0,'dic1':dic_zip1,'name':name,'mail':email} 
                 else:
                     dic_zip0=zip(comp_num0,comp0,comp_status0,orga_id0,empl_id0,time_stamp0)
                     dic_zip1=zip(comp_num1,comp1,comp_status1,orga_id1,empl_id1,time_stamp1)
-                    context={'dic0':dic_zip0,'dic1':dic_zip1,'name':name,'mail':email,'comp':comp,'forms_list':forms_list}
+                    context={'dic0':dic_zip0,'dic1':dic_zip1,'name':name,'mail':email,'comp':comp} 
                 return render(request,'client_app/first.html',context)
             else:
                 error = 'Invalid Credentials!'
-                return render(request,'client_app/new_home/login.html',{'error':error,'forms_list':forms_list})
+                return render(request,'client_app/new_home/login.html',{'error':error})
 
     return render(request,'client_app/new_home/login.html')
 
@@ -356,11 +348,4 @@ def mall(a):
     for i in context:
         if(i['email'] == a):
             b = i['username']
-    return b
-
-def formselect(request):
-    if request.method=='POST':
-        form_id=request.POST.get('form_id')
-        print(form_id)
-        return True
-    return True
+    return b 

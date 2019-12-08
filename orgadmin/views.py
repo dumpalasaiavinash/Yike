@@ -736,7 +736,7 @@ def about_image_edit(request,org_id):
              key_name)
 
         dynamodb=boto3.resource('dynamodb')
-        orga_table=dynamodb.Table('clients')
+        orga_table=dynamodb.Table('organization')
 
         orga_table.update_item(
         Key={
