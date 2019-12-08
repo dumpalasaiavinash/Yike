@@ -27,28 +27,28 @@ def complaintIFrame(req):
             )
 
             if response1["Count"] > 0 :
-                form =response1["Items"][0] 
+                form =response1["Items"][0]
                 print(form)
                 form0 = json.dumps(form)
                 return render(req,'formCreation/iframe0.html',{'form':form0})
-                
-                
+
+
         if req.method == "POST":
             formId = req.POST["form_id"]
             foRm=ComplaintForm(req.POST)
-            
+
             table = dynamodb.Table('Complaint_forms')
             response1 = table.scan(
                 FilterExpression=Attr('form_id').eq(formId)
             )
 
             if response1["Count"] > 0 :
-                form =response1["Items"][0] 
+                form =response1["Items"][0]
                 if foRm.is_valid():
                     Complaint00 = {}
                     print(req.POST)
                     for field in form :
-                        
+
                         print(field)
                         if field not in ["form_id" , "org_id" ] :
                             data00 = json.loads(form[field])
@@ -57,10 +57,10 @@ def complaintIFrame(req):
                                 #if req.POST[field] == "" :
                                     #return render(req,'formCreation/iframe0.html',{'form':form0,"msg":"error"})
                                 Complaint00[data00["label"]] = req.POST[field]
-                            
+
                             elif typE == "mobile" :
                                 Complaint00[data00["label"]] = req.POST[field+"_0"]+req.POST[field+"_1"]
-                            
+
                             elif typE == "image_Upload" or typE == "file_Upload" :
                                 fname = req.session["email"] + datetime.now().strftime("%Y%m%d%H%M")
                                 Complaint00[data00["label"]] = fname
@@ -76,19 +76,19 @@ def complaintIFrame(req):
                                     i += 1
                                 Complaint00[data00['label']] = json.dumps(datum00)
 
-                                
+
 
                         elif field == "form_id":
                             Complaint00["form_id"]  =   req.POST[field]
-                        
+
                         elif field == "org_id" :
                             Complaint00["org_id"] = req.POST[field]
-                        
+
                     Complaint00["user_email"] = req.session["email"]
-                    Complaint00["complaint_status"] = 0 
+                    Complaint00["complaint_status"] = 0
                     Complaint00["complaint_timestamp"] = datetime.now().strftime("%Y%m%d%H%M%S")
-                    
-                    
+
+
                     table = dynamodb.Table("ComplaintS")
                     response1 = table.scan()
                     u_id = len(response1['Items'])+1
@@ -97,17 +97,17 @@ def complaintIFrame(req):
                         Item= Complaint00
                     )
                     return HttpResponseRedirect("/")
-                    
-                
+
+
                 form0 = json.dumps(form)
 
                 print(req.POST)
                 return render(req,'formCreation/iframe0.html',{'form':form0})
-            
+
     return HttpResponseRedirect('/login/')
 
 
-       
+
 # Create your views here.
 
 

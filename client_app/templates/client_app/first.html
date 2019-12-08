@@ -5,7 +5,7 @@
 
 <style>
 
-.meter9 { 
+.meter9 {
   top:0%;
   left: 80%;
   width: 5%;
@@ -37,7 +37,7 @@
   background-color: crimson;
   display: inline-block;
 }
- 
+
 .dot2 {
   height:5px;
   width: 5px;
@@ -130,13 +130,13 @@ button:hover, a:hover {
 
 
 <body>
- 
+
 <div class="card1">
   <img src="{% static 'client_app/images/images.jfif' %}" alt="image" style="width:300px">
-  
+
   <h3>User :  {{name}}</h3>
   <h4>Mail:    {{mail}}</h4>
-   
+
   <br><br><br>
   <p><button>Edit photo</button></p>
 </div>
@@ -150,7 +150,7 @@ button:hover, a:hover {
     <div class="tabs">
       <ul id="tabs_ul">
         <li class="active" data-list="tab_1">Previous Complaints</li>
-        <li data-list="tab_2">New Complaint</a></li>
+        <li data-list="tab_2">New Complaint</li>
         <li data-list="tab_3">Track</li>
         <li data-list="tab_4"><p>Chat</p></li>
       </ul>
@@ -166,34 +166,43 @@ button:hover, a:hover {
           <div style="background-color: brown;width:5px;height:200px;float:left;border-radius:5px ">
         </div>
         <div class="panel panel-default" style="float: left;height:200px;width:400px">
-            <div class="panel-body">  
+            <div class="panel-body">
               {% for cn,c,cs,oi,ei,t in dic0  %}
                 {{ cn }}:
                 {{ c }} <br><br>
                 Complaint status : {{ cs }}   <br><br>
                 Organisation id: {{ oi }}   <br><br>
                 Employee id : {{ ei }}   <br>
-               Time : {{ t }}    
+               Time : {{ t }}
               {% endfor %}
             </div>
         </div>
       </div>
-    
+
     </div>
-    
+
     </div>
     <div class="tab_content tab_2" id="tab_2" style="display:none;">
-     
+      <div>
+          <select id='form_id' name="form_id">
+            {% for form_id in forms_list %}
+               <option value="{{form_id}}">
+                 {{ form_id }}
+               </option>
+            {% endfor %}
+          </select>
+          <button id="submit0" type="submit">
+      </div>
 <div>
-  <iframe src= "/form/complaint_form?form_id=testform5" style="width: 110%; height:570px"></iframe>
-  
+  <iframe id="iframe1" src= "/form/complaint_form?form_id=testform5" style="width: 110%; height:570px"></iframe>
+
   </div>
-  
+
     </div>
-    
+
     <div class="tab_content tab_3" id="tab_3" style="margin-left: 200px;">
-            <div class="panel panel-default" style="height:200px;width:400px">                  
-              <div class="panel-body"> 
+            <div class="panel panel-default" style="height:200px;width:400px">
+              <div class="panel-body">
 
                 {% if comp %}
                       {{comp}}
@@ -205,37 +214,42 @@ button:hover, a:hover {
                     Complaint status : Processing   <br><br>
                     Organisation id: {{ oi }}   <br><br>
                     Employee id : {{ ei }}   <br>
-                   Time : {{ t }}    
+                   Time : {{ t }}
                   {% endfor %}
                 </div>
             </div>
-        
-        
+
+
           </div>
 
 
 
 
     <div class="tab_content tab_4" id="tab_4" style="display:none;">
-     
+
       <iframe src="/chat/temp" style="width: 110%; height:600px" scrolling ="no" ></iframe>
-    
+
     </div>
   </div>
   </div>
- 
+
 </div>
-  
+
 <script>
+
+function changeform(){
+  document.getElementById('iframe1').src ="http"+window.location.host+"/form/complaint_form?form_id="+ document.getElementById('form_id').value
+
+}
 
 $(".content .tab_content").hide();
 $(".content .tab_content:first-child").show();
 
 $("ul li").click(function(){
-  
+
   $("ul li").removeClass("active");
   $(this).addClass("active");
-  
+
   var current_tab = $(this).attr("data-list");
   $(".content .tab_content").hide();
   $("."+current_tab).show();
@@ -249,13 +263,13 @@ for (var i = 0; i < li_tabs.length; i++) {
     var current = ul.getElementsByClassName("active");
   current[0].className = current[0].className.replace("active", "");
   this.className += "active";
-    
+
     var current_tab_value = this.getAttribute("data-list");
     document.getElementById(current_tab_value).style.display = "block";
-    
+
   });
-}  
- 
+}
+
 $(function() {
   var current_progress = 0;
   var interval = setInterval(function() {
