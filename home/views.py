@@ -87,7 +87,7 @@ def home_log(request):
                     # request.session['type'] = int(response['Items'][0]['type'])
                 if(int(response['Items'][0]['typ']) == 2):
                     request.session['type'] = 2
-                print(request.session['type'])
+                # print(request.session['type'])
                 # print('abc')
                 if(delta.days > 30):
                     request.session['type'] = 1
