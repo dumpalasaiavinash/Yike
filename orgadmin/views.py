@@ -351,7 +351,6 @@ def dashboard(request,j):
         name=request.POST.get('emp_name')
         department=request.POST.get('department')
         hierarchy=request.POST.get('hierarchy')
-        no_comp=request.POST.get('no_complaints')
         email=request.POST.get('emp_email')
 
         dynamodb=boto3.resource('dynamodb')
@@ -367,6 +366,7 @@ def dashboard(request,j):
         for em in email_present['Items']:
             if(em['email']==email):
                 check=1
+                print("HIiiiii")
         #End of user checking
 
         #Incrementing the primary key
@@ -400,7 +400,7 @@ def dashboard(request,j):
                 'user_email':email,
                 'department':department,
                 'hierarchy':hierarchy,
-                'no_complaints':no_comp,
+                'no_complaints':int(0),
                 'active':False,
                 'token':token
              }
@@ -430,6 +430,7 @@ def dashboard(request,j):
 
         #If user already registered is in added to organisation
         elif(check==1):
+            print("-----------Hi-------------")
             table.put_item(
             Item={
                 'org_id':org_id,
@@ -438,7 +439,7 @@ def dashboard(request,j):
                 'user_email':email,
                 'department':department,
                 'hierarchy':hierarchy,
-                'no_complaints':no_comp,
+                'no_complaints':int(0),
                 'active':True,
                 'token':token
              }
@@ -550,6 +551,7 @@ def dashboard(request,j):
                 'organisation_name':organisation_name
 
             }
+            print(context)
 
             return render(request, 'dashboard/index.html',context)
 
