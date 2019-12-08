@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import FileSystemStorage
 import ast
+import operator
 
 #For sending activation function
 from django.http import HttpResponse
@@ -58,10 +59,136 @@ class assignEmployee:
         hie_table=dynamodb.Table('hierarchy')
 
         if(self.dep_id==None):
+            dep_id_list=[]
+
             dep_response = dep_table.scan(
                 ProjectionExpression="department_id,department_name",
                 FilterExpression=Attr('organization_id').eq(self.org_id)
             )
+
+            for de in dep_response["Items"]:
+                dep_id_list.append(str(int(de['department_id']))+','+str(de['department_name']))
+
+            sel_dept_temp=random.choice(dep_id_list).split(',')
+            sel_dept=int(sel_dept_temp[0])
+
+            hie_response = hie_table.scan(
+                ProjectionExpression="hierarchy",
+                FilterExpression=Attr('dep_id').eq(sel_dept)
+            )
+
+            while(len(hie_response["Items"])==0):
+                sel_dept_temp=random.choice(dep_id_list).split(',')
+                sel_dept=int(sel_dept_temp[0])
+
+                hie_response = hie_table.scan(
+                    ProjectionExpression="hierarchy",
+                    FilterExpression=Attr('dep_id').eq(sel_dept)
+                )           
+
+            hie_dict=hie_response["Items"][0]['hierarchy']
+            hie_updated=hie_dict[1:(len(hie_dict)-1)]
+            hie_updated_dict=ast.literal_eval(hie_updated)
+
+            print(hie_updated_dict)
+
+            ind=[]
+
+            j=0
+            k=0
+            for i in range(len(hie_updated_dict)-2,0,-1):
+                if(hie_updated_dict[len(hie_updated_dict)-1]['pid']==hie_updated_dict[i]['pid']):
+                    k=k+1
+                    if(j==0):
+                        ind.append(len(hie_updated_dict)-1)
+                        ind.append(i)
+                        j=j+1
+                    else:
+                        ind.append(i)
+                else:
+                    if(k==0):
+                        ind.append(len(hie_updated_dict)-1)   
+                        break   
+
+            emp_id_retrieved=[]
+            for i in ind:
+                emp_response=emp_table.scan(
+                    ProjectionExpression="emp_id",
+                    FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(sel_dept_temp[1])
+                )
+            
+            while(len(emp_response["Items"])==0):
+                sel_dept_temp=random.choice(dep_id_list).strip(',')
+                sel_dept=int(sel_dept_temp[0])
+
+                hie_response = hie_table.scan(
+                    ProjectionExpression="hierarchy",
+                    FilterExpression=Attr('dep_id').eq(sel_dept)
+                )
+
+                while(len(hie_response["Items"])==0):
+                    sel_dept_temp=random.choice(dep_id_list).split(',')
+                    sel_dept=int(sel_dept_temp[0])
+
+                    hie_response = hie_table.scan(
+                        ProjectionExpression="hierarchy",
+                        FilterExpression=Attr('dep_id').eq(sel_dept)
+                    )           
+
+                hie_dict=hie_response["Items"][0]['hierarchy']
+                hie_updated=hie_dict[1:(len(hie_dict)-1)]
+                hie_updated_dict=ast.literal_eval(hie_updated)
+
+
+                ind=[]
+
+                j=0
+                k=0
+                for i in range(len(hie_updated_dict)-2,0,-1):
+                    if(hie_updated_dict[len(hie_updated_dict)-1]['pid']==hie_updated_dict[i]['pid']):
+                        k=k+1
+                        if(j==0):
+                            ind.append(len(hie_updated_dict)-1)
+                            ind.append(i)
+                            j=j+1
+                        else:
+                            ind.append(i)
+                    else:
+                        if(k==0):
+                            ind.append(len(hie_updated_dict)-1)
+                            break      
+
+                emp_id_retrieved=[]
+
+                for i in ind:
+                    emp_response=emp_table.scan(
+                        ProjectionExpression="emp_id",
+                        FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(sel_dept_temp[1])
+                    )
+            
+            
+            
+            for em in emp_response["Items"]:
+                emp_id_retrieved.append(int(em['emp_id']))
+
+            cmp_response=cmp_table.scan()
+            
+            count={}
+
+            for i in emp_id_retrieved:
+                for cmpl in cmp_response["Items"]:
+                    if( int(cmpl['emp_id'])==int(i) ):
+                        if(j==0):
+                            count[int(cmpl['emp_id'])]=1
+                        else:
+                            count[int(cmpl['emp_id'])]=count[int(cmpl['emp_id'])]+1
+
+            if (len(count)==0):
+                emp_id_selected=random.choice(emp_id_retrieved)
+                return emp_id_selected,self.cmp_id
+            else:
+                emp_id_selected=sorted(count.items(),key=operator.itemgetter(1))
+                return emp_id_selected[0][0],self.cmp_id
 
         else:
             dep_response = dep_table.scan(
@@ -83,15 +210,20 @@ class assignEmployee:
             ind=[]
 
             j=0
+            k=0
             for i in range(len(hie_updated_dict)-2,0,-1):
                 if(hie_updated_dict[len(hie_updated_dict)-1]['pid']==hie_updated_dict[i]['pid']):
+                    k=k+1
                     if(j==0):
                         ind.append(len(hie_updated_dict)-1)
                         ind.append(i)
                         j=j+1
                     else:
                         ind.append(i)
-
+                else:
+                    if(k==0):
+                        ind.append(len(hie_updated_dict)-1)        
+                        break
 
             emp_id_retrieved=[]
 
@@ -102,21 +234,35 @@ class assignEmployee:
                 )
 
 
-                # emp_id_retrieved.append(emp_response["Items"][0]['emp_id'])
             for em in emp_response["Items"]:
                 emp_id_retrieved.append(int(em['emp_id']))
 
-            cmp_response=cmp_table.scan(
-                    ProjectionExpression="emp_id",
-                    FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(dep_response['Items'][0]['department_name'])
-                )
+            cmp_response=cmp_table.scan()
+            
+            count={}
+
+            for i in emp_id_retrieved:
+                j=0
+                for cmpl in cmp_response["Items"]:
+                    if( int(cmpl['emp_id'])==int(i) ):
+                        if(j==0):
+                            count[int(cmpl['emp_id'])]=1
+                        else:
+                            count[int(cmpl['emp_id'])]=count[int(cmpl['emp_id'])]+1
+
+            if (len(count)==0):
+                emp_id_selected=random.choice(emp_id_retrieved)
+                return emp_id_selected,self.cmp_id
+            else:
+                emp_id_selected=sorted(count.items(),key=operator.itemgetter(1))
+                return emp_id_selected[0][0],self.cmp_id
 
 
 
 
 def test(request):
     a=assignEmployee("cmp1",161,9)
-    a.assign()
+    print(a.assign())
 
     url="../about/"+str(103)
     return redirect(url)
@@ -338,6 +484,7 @@ def dashboard(request,j):
             for user in user_response['Items']:
                 if(user['email']==email):
                     org_joined=user['organizations_joined']
+
                     org_joined.append(org_id)
 
                     user_table.update_item(
