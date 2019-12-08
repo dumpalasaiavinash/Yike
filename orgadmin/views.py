@@ -1375,10 +1375,11 @@ class complaintrest(APIView):
 
 
 def create_department(request):
+    max = 2000
     if(request.session['type'] ==1 ):
         max = 3
     depname = request.POST.get('depname')
-    print(depname)
+    print(max)
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
     print(type(request.session['org_id']))
