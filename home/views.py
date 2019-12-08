@@ -40,6 +40,7 @@ def home_log(request):
     type=1
     if('type' in request.session.keys()):
         type = request.session['type']
+        temporary = 88
     else:
         request.session['type']=1
 
@@ -105,7 +106,7 @@ def home_log(request):
                     for i in inv_response['Items']:
                         if(invoice<int(i['invoice'])):
                             invoice = int(i['invoice'])
-                if(type == 2):
+                if(type == 2 and temporary ==88):
                     print('a')
                     paypal_dict = {
                         "business": 'harsha@god.com',

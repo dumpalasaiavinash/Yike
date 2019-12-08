@@ -84,7 +84,7 @@ class assignEmployee:
                 hie_response = hie_table.scan(
                     ProjectionExpression="hierarchy",
                     FilterExpression=Attr('dep_id').eq(sel_dept)
-                )           
+                )
 
             hie_dict=hie_response["Items"][0]['hierarchy']
             hie_updated=hie_dict[1:(len(hie_dict)-1)]
@@ -107,8 +107,8 @@ class assignEmployee:
                         ind.append(i)
                 else:
                     if(k==0):
-                        ind.append(len(hie_updated_dict)-1)   
-                        break   
+                        ind.append(len(hie_updated_dict)-1)
+                        break
 
             emp_id_retrieved=[]
             for i in ind:
@@ -116,7 +116,7 @@ class assignEmployee:
                     ProjectionExpression="emp_id",
                     FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(sel_dept_temp[1])
                 )
-            
+
             while(len(emp_response["Items"])==0):
                 sel_dept_temp=random.choice(dep_id_list).strip(',')
                 sel_dept=int(sel_dept_temp[0])
@@ -133,7 +133,7 @@ class assignEmployee:
                     hie_response = hie_table.scan(
                         ProjectionExpression="hierarchy",
                         FilterExpression=Attr('dep_id').eq(sel_dept)
-                    )           
+                    )
 
                 hie_dict=hie_response["Items"][0]['hierarchy']
                 hie_updated=hie_dict[1:(len(hie_dict)-1)]
@@ -156,7 +156,7 @@ class assignEmployee:
                     else:
                         if(k==0):
                             ind.append(len(hie_updated_dict)-1)
-                            break      
+                            break
 
                 emp_id_retrieved=[]
 
@@ -165,14 +165,14 @@ class assignEmployee:
                         ProjectionExpression="emp_id",
                         FilterExpression=Attr('org_id').eq(self.org_id) & Attr('hierarchy').eq(hie_updated_dict[i]['hierarchy']) and Attr('department').eq(sel_dept_temp[1])
                     )
-            
-            
-            
+
+
+
             for em in emp_response["Items"]:
                 emp_id_retrieved.append(int(em['emp_id']))
 
             cmp_response=cmp_table.scan()
-            
+
             count={}
 
             for i in emp_id_retrieved:
@@ -222,7 +222,7 @@ class assignEmployee:
                         ind.append(i)
                 else:
                     if(k==0):
-                        ind.append(len(hie_updated_dict)-1)        
+                        ind.append(len(hie_updated_dict)-1)
                         break
 
             emp_id_retrieved=[]
@@ -238,7 +238,7 @@ class assignEmployee:
                 emp_id_retrieved.append(int(em['emp_id']))
 
             cmp_response=cmp_table.scan()
-            
+
             count={}
 
             for i in emp_id_retrieved:
@@ -359,7 +359,6 @@ def dashboard(request,j):
         name=request.POST.get('emp_name')
         department=request.POST.get('department')
         hierarchy=request.POST.get('hierarchy')
-        no_comp=request.POST.get('no_complaints')
         email=request.POST.get('emp_email')
 
         dynamodb=boto3.resource('dynamodb')
@@ -408,7 +407,7 @@ def dashboard(request,j):
                 'user_email':email,
                 'department':department,
                 'hierarchy':hierarchy,
-                'no_complaints':no_comp,
+                'no_complaints':int(0),
                 'active':False,
                 'token':token
              }
@@ -446,7 +445,7 @@ def dashboard(request,j):
                 'user_email':email,
                 'department':department,
                 'hierarchy':hierarchy,
-                'no_complaints':no_comp,
+                'no_complaints':int(0),
                 'active':True,
                 'token':token
              }
