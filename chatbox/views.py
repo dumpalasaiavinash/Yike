@@ -14,7 +14,7 @@ def msg00(req):
     if 'email' in req.session:
         req.session["rec"]="yashukikkuri@gmail.com"
         for i in range (3 ,10) :
-            send(req.session['email'],"yashukikkuri@gmail.com","This is a dummy message" + str(i))    
+            send(req.session['email'],"yashukikkuri@gmail.com","This is a dummy message" + str(i))
     return HttpResponse("<h1>Message has been sent</h1>")
 
 # Create your views here.
@@ -50,7 +50,7 @@ def chat(request):
                         if form.is_valid():
                             if (form.cleaned_data['msg'] is not None) | (form.cleaned_data['img'] is not None):
                                 msg=form.cleaned_data['msg']
-                                if msg != "" : 
+                                if msg != "" :
                                     send(email,rec,msg)
                     form=msgForm()
                     return render(request,'Chatbox/chat.html',{'user_data':username,'form':form})
@@ -80,9 +80,9 @@ def userisvalid(email):
     )
     if(len(response['Items'])==1):
         return True
-    
+
     return False
-    
+
 def getUserName(email):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('users')
@@ -157,7 +157,7 @@ def send(sender,reciver,msg):
             'messages': msg,
         }
     )
-    
+
 def getContactdetails(contacts):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('users')
@@ -166,7 +166,7 @@ def getContactdetails(contacts):
             ProjectionExpression="username,email",
             FilterExpression=Attr('email').is_in(contacts)
         )
-        return response['Items'] 
+        return response['Items']
     return contacts
 
 def preview(req):
@@ -177,12 +177,12 @@ def preview(req):
             print("dil")
             if (form.cleaned_data['msg'] is not None) | (form.cleaned_data['img'] is not None):
                 msg=form.cleaned_data['msg']
-                if msg != "" : 
+                if msg != "" :
                     send(email,rec,msg)
-        else : 
+        else :
             print("ummmmmmmm")
     if "rec" not in req.session :
-        re0 = getReciver(email) 
+        re0 = getReciver(email)
         if re0 != 0 :
             req.session['rec'] = re0
     if "rec" in req.session:
@@ -204,7 +204,7 @@ def recents(req):
             contactsdetails = getContactdetails(contacts)
             j=0
             recents=[]
-            for contact in contactsdetails : 
+            for contact in contactsdetails :
                 recents.append([contact,messages[j]])
                 j+=1
             return render(req,'Chatbox/recentchatui.html',{'recents':recents,'rec':req.session['rec']})
@@ -217,7 +217,7 @@ def mesgs(req):
     mesgs = getMessageList(email, reciver )
     print(mesgs)
     return render(req,'Chatbox/mesgs.html',{
-        'mesgs'  : mesgs , 
+        'mesgs'  : mesgs ,
          'rec' : reciver ,
     })
 
@@ -226,7 +226,7 @@ def getMessageList(email,person):
     table = dynamodb.Table('message')
     response = table.scan(
         FilterExpression = (Attr('sender').eq(email) & Attr('reciver').eq(person)) | (Attr('reciver').eq(email) & Attr('sender').eq(person)),
-        
+
     )
     print(response)
     return response['Items']
@@ -242,8 +242,7 @@ def getLastMessageList(email,person):
         )
         mesgs = response['Items']
         for msg in mesgs:
-            if len(msg['messages']) > 110 : 
+            if len(msg['messages']) > 110 :
                 msg['messages'] = msg['messages'][:105]+"....."
         return mesgs
     return []
-
