@@ -1348,9 +1348,9 @@ class complaintrest(APIView):
 
     def get(self,request):
             dynamodb = boto3.resource('dynamodb')
-            table = dynamodb.Table('complaint')
+            table = dynamodb.Table('ComplaintS')
             response_complaint = table.scan(
-            ProjectionExpression="complaint",
+            ProjectionExpression="Complaint",
 
             )
 
