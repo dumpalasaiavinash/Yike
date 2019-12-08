@@ -248,6 +248,7 @@
 
         .msg_history {
             height: 516px;
+            margin-top: 80px;
             overflow-y: auto;
         }
     </style>
@@ -256,7 +257,9 @@
 
 <body>
     <div class="msg_history" id="msgContainer">
+        
         {% for msg in mesgs  %}
+
         {% if msg.sender == rec %}
         <div class="incoming_msg">
             <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">

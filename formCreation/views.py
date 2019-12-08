@@ -86,7 +86,7 @@ def complaintIFrame(req):
                         
                     Complaint00["user_email"] = req.session["email"]
                     Complaint00["complaint_status"] = 0 
-                    Complaint00["timestamp"] = datetime.now().strftime("%Y%m%d%H%M%S")
+                    Complaint00["complaint_timestamp"] = datetime.now().strftime("%Y%m%d%H%M%S")
                     
                     
                     table = dynamodb.Table("ComplaintS")
