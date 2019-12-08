@@ -476,6 +476,7 @@ def dashboard(request,j):
             for user in user_response['Items']:
                 if(user['email']==email):
                     org_joined=user['organizations_joined']
+
                     org_joined.append(org_id)
 
                     user_table.update_item(
@@ -1375,7 +1376,7 @@ class complaintrest(APIView):
 
 def create_department(request):
     if(request.session['type'] ==1 ):
-        max = 5
+        max = 3
     depname = request.POST.get('depname')
     print(depname)
     dynamoDB=boto3.resource('dynamodb')
@@ -1394,7 +1395,7 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
-    if(len(response1['Items']['department_id'])>= max):
+    if(len(response1['Items'])>= max):
         messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
     else:
