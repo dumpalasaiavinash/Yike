@@ -26,6 +26,7 @@ def juniors(request):
         context = {"name":request.session['username'],"j":request.session['j']}
         return render(request, 'employee/disabled_juniors.html',context)
     else:
+       
         return render(request, 'employee/juniors.html')
 
 
