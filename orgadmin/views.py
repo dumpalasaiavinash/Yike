@@ -268,14 +268,6 @@ def test(request):
     return redirect(url)
 
 
-
-
-
-
-
-
-
-
 # Create your views here.
 def dashboard(request,j):
 
@@ -374,6 +366,7 @@ def dashboard(request,j):
         for em in email_present['Items']:
             if(em['email']==email):
                 check=1
+                print("HIiiiii")
         #End of user checking
 
         #Incrementing the primary key
@@ -437,6 +430,7 @@ def dashboard(request,j):
 
         #If user already registered is in added to organisation
         elif(check==1):
+            print("-----------Hi-------------")
             table.put_item(
             Item={
                 'org_id':org_id,
@@ -557,6 +551,7 @@ def dashboard(request,j):
                 'organisation_name':organisation_name
 
             }
+            print(context)
 
             return render(request, 'dashboard/index.html',context)
 
@@ -894,7 +889,8 @@ def created(request):
 
     organization_name = request.POST.get('name')
     # code=request.POST.get('code')
-
+    print(request.session['type'])
+    print(len(request.session['org_created']))
     if (organization_name!=''):
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table('organization')
@@ -1199,7 +1195,7 @@ def departments(request):
             departments.append(i['department_name'])
             dep_id.append(i['department_id'])
         print(departments)
-
+    request.session['dep_in_org'] = len(response['Items'])
     return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username'],'org_id':organization_id})
 
 
@@ -1381,10 +1377,11 @@ class complaintrest(APIView):
 
 
 def create_department(request):
+    max = 2000
     if(request.session['type'] ==1 ):
         max = 3
     depname = request.POST.get('depname')
-    print(depname)
+    print(max)
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('departments')
     print(type(request.session['org_id']))
@@ -1401,7 +1398,7 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
-    if(len(response1['Items'])>= max):
+    if(request.session['dep_in_org']>= max):
         messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
     else:
