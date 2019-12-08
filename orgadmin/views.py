@@ -1193,7 +1193,7 @@ def departments(request):
             departments.append(i['department_name'])
             dep_id.append(i['department_id'])
         print(departments)
-
+    request.session['dep_in_org'] = len(response['Items'])
     return render(request,'orgadmin/org_departments.html',{'dep':zip(departments,dep_id),'topics_size':len(departments),'uname':request.session['username'],'org_id':organization_id})
 
 
@@ -1396,7 +1396,7 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
-    if(len(response1['Items'])>= max):
+    if(request.session['dep_in_org']>= max):
         messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
     else:
