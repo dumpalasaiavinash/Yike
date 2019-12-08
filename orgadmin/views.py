@@ -760,7 +760,7 @@ def created(request):
                 FilterExpression=Attr('organization_name').eq(organization_name)
             )
 
-            if(len(response['Items'])==0 and (request.session['type']==1 and len(request.session['org_created'])<=2) and (request.session['type']==2 and len(request.session['org_created'])<=5)):
+            if(len(response['Items'])==0 and ((request.session['type']==1 and len(request.session['org_created'])<=2) or (request.session['type']==2 and len(request.session['org_created'])<=5))):
                 ID=100
                 for i in response_sno['Items']:
                     if(ID<int(i['org_id'])):
@@ -1236,7 +1236,7 @@ class complaintrest(APIView):
 
 def create_department(request):
     if(request.session['type'] ==1 ):
-        max = 5
+        max = 3
     depname = request.POST.get('depname')
     print(depname)
     dynamoDB=boto3.resource('dynamodb')
@@ -1255,7 +1255,7 @@ def create_department(request):
             lengt = int(i['department_id'])
         else:
             continue
-    if(len(response1['Items']['department_id'])>= max):
+    if(len(response1['Items'])>= max):
         messages.success(request, 'You have reached the maximum limit. Please subscribe to premium')
 
     else:
