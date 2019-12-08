@@ -53,7 +53,7 @@ def dashboard(request,j):
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('ComplaintS')
     response_disp_complaint = dynamoTable.scan(
-        ProjectionExpression="Complaint,complaint_number,org_id",
+        ProjectionExpression="Complaint,complaint_number,org_id,complaint_status",
         FilterExpression = Attr('emp_id').eq(employee_id),
     )
     # print(response_disp_complaint) 
@@ -61,13 +61,26 @@ def dashboard(request,j):
     complaints=[]
     complaint_id=[]
     org_id=[]
+    Status=[]
     for i in range(0,len(response_disp_complaint['Items'])):
         complaints.append(response_disp_complaint['Items'][i]['Complaint'])
         complaint_id.append(response_disp_complaint['Items'][i]['complaint_number'])
         org_id.append(response_disp_complaint['Items'][i]['org_id'])
+        Status.append(response_disp_complaint['Items'][i]['complaint_status'])
     print(complaints)
+    print(Status)
     print(org_id)
     print(complaint_id)
+    status1=[]
+    sta=str(Status)
+    status1.append(sta.split("'"))
+    status2=[]
+    for i in range(0,len(status1[0])):
+        if i%2 != 0:
+            status2.append(int(status1[0][i]))
+    print(status2)  
+
+
     ids=str(org_id)
     list1=[]
     list1.append(ids.split("'"))
@@ -90,4 +103,19 @@ def dashboard(request,j):
     data={'complaint': new_complaint,'count':len(new_complaint)}
 
     return render(request, 'employee/index.html',data)
+
+
+    # def validate(request):
+    #     dynamoDB=boto3.resource('dynamodb')
+    #     dynamoTable=dynamoDB.Table('ComplaintS')
+    #     response_status = dynamoTable.scan(
+    #         ProjectionExpression="complaint_number,org_id,status",
+    #         FilterExpression = Attr('emp_id').eq(employee_id),
+
+    
+
+    
+
+
+
 

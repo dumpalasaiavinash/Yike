@@ -687,7 +687,7 @@ def about_name_edit(request,org_id):
         return redirect(url)
 
     url="../about/"+str(org_id)
-    return redirect(url)    
+    return redirect(url)
 
 
 
@@ -758,7 +758,7 @@ def about_image_edit(request,org_id):
         return redirect(url)
 
     url="../about/"+str(org_id)
-    return redirect(url)    
+    return redirect(url)
 
 
 #------------------------------------------------------------------------------------------------------------#
@@ -768,7 +768,8 @@ def about_image_edit(request,org_id):
 def pre_create(request):
     typ = request.session['type']
     email = request.session['email']
-
+    now = datetime.datetime.now()
+    dat = datetime.date(now.year, now.month, now.day)
     dynamoDB=boto3.resource('dynamodb')
     dynamoTable=dynamoDB.Table('users')
     dynamodb = boto3.resource('dynamodb')
@@ -789,6 +790,7 @@ def pre_create(request):
        Item={
         'invoice': invoice+1000,
         'email': email,
+        'dat' : dat,
         }
     )
     print(typ)
@@ -892,184 +894,105 @@ def created(request):
 
     organization_name = request.POST.get('name')
     # code=request.POST.get('code')
-    if(request.session['type']==1 and len(request.session['org_created'])>=2):
-        messages.add_message(request,messages.INFO, 'Try premium to create more organizations. The maximum no.of organizations allowed is 2 for your current subscription.')
-    if(request.session['type']==2 and len(request.session['org_created'])>=5):
-        messages.add_message(request,messages.INFO, 'Please make a call to us to customize. The maximum no.of organizations allowed is 5 for your current subscription.')
 
-    else:
-        if (organization_name!='' ):
-                dynamodb = boto3.resource('dynamodb')
-                table = dynamodb.Table('organization')
-                response_sno=table.scan(
-                    ProjectionExpression="org_id",
+    if (organization_name!=''):
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('organization')
+            response_sno=table.scan(
+                ProjectionExpression="org_id",
+            )
+            response = table.scan(
+                ProjectionExpression="organization_name",
+                FilterExpression=Attr('organization_name').eq(organization_name)
+            )
+
+            if(len(response['Items'])==0 and (request.session['type']==1 and len(request.session['org_created'])<=2) and (request.session['type']==2 and len(request.session['org_created'])<=5)):
+                ID=100
+                for i in response_sno['Items']:
+                    if(ID<int(i['org_id'])):
+                        ID=int(i['org_id'])
+
+                print(ID)
+                ID=ID+1
+                hash_code=organization_name[:2]+str(ID)
+                print(hash_code)
+
+                code=hash_code
+                response = table.put_item(
+                Item={
+                    'org_id': ID,
+                    'organization_name': organization_name,
+                    'code':code,
+                    'image':" ",
+                    'org_info':" ",
+
+                    }
                 )
-                response = table.scan(
-                    ProjectionExpression="organization_name",
-                    FilterExpression=Attr('organization_name').eq(organization_name)
+                email=request.session['email']
+                # print(response_sno)
+                # print("####################")
+
+                # sno=response_sno['Items'][0]['org_id']
+                # print(sno)
+                request.session['org_created']=request.session['org_created']+[ID]
+                org_created = request.session['org_created']
+                # print(org_created)
+                # print(ID)
+                # print(request.session['org_created'])
+                # print('\n\n\n')
+                # # request.session['org_created'].append(ID)
+                org_joined = request.session['org_joined']
+
+                dynamoDB=boto3.resource('dynamodb')
+                table=dynamoDB.Table('users')
+                # print("\n\n\n")
+                # print(org_created)
+                # print("\n\n\n")
+                # print(request.session['org_created'])
+                response = table.update_item(
+                    Key={
+                        'email':email
+                    },
+                    UpdateExpression="set organizations_created = :r",
+                    ExpressionAttributeValues={
+                        ':r': org_created,
+                    },
+                    ReturnValues="UPDATED_NEW"
+                    )
+
+                response1 = table.scan(
+                    ProjectionExpression="organizations_created,organizations_joined",
+                    FilterExpression=Attr('email').eq(email)
                 )
 
-                if(len(response['Items'])==0):
-                    ID=100
-                    for i in response_sno['Items']:
-                        if(ID<int(i['org_id'])):
-                            ID=int(i['org_id'])
 
-                    print(ID)
-                    ID=ID+1
-                    hash_code=organization_name[:2]+str(ID)
-                    print(hash_code)
+                #print(response1)
+                #print('\n**\n')
 
-                    code=hash_code
-                    response = table.put_item(
-                    Item={
-                        'org_id': ID,
-                        'organization_name': organization_name,
-                        'code':code,
-                        'image':" ",
-                        'org_info':" ",
+                organizations_created=response1['Items'][0]['organizations_created']
+                organizations_joined=response1['Items'][0]['organizations_joined']
+                # print(organizations_created)
+                # print(organizations_joined)
+                total_org_ids=copy.deepcopy(organizations_created)
+                for i in organizations_joined:
+                    total_org_ids.append(i)
+                for i in range(0,len(response1['Items'][0]['organizations_joined'])):
+                    response1['Items'][0]['organizations_joined'][i] = int(response1['Items'][0]['organizations_joined'][i])
+                    org_join_id=response1['Items'][0]['organizations_joined']
 
-                        }
+
+                org_names=[]
+                org_code=[]
+                dynamoTable=dynamoDB.Table('organization')
+                for i in total_org_ids:
+                    #print(type(int(i)))
+                    response1 = dynamoTable.scan(
+                        ProjectionExpression="organization_name,code",
+                        FilterExpression=Attr('org_id').eq(int(i))
                     )
-                    email=request.session['email']
-                    # print(response_sno)
-                    # print("####################")
-
-                    # sno=response_sno['Items'][0]['org_id']
-                    # print(sno)
-                    request.session['org_created']=request.session['org_created']+[ID]
-                    org_created = request.session['org_created']
-                    # print(org_created)
-                    # print(ID)
-                    # print(request.session['org_created'])
-                    # print('\n\n\n')
-                    # # request.session['org_created'].append(ID)
-                    org_joined = request.session['org_joined']
-
-                    dynamoDB=boto3.resource('dynamodb')
-                    table=dynamoDB.Table('users')
-                    # print("\n\n\n")
-                    # print(org_created)
-                    # print("\n\n\n")
-                    # print(request.session['org_created'])
-                    response = table.update_item(
-                        Key={
-                            'email':email
-                        },
-                        UpdateExpression="set organizations_created = :r",
-                        ExpressionAttributeValues={
-                            ':r': org_created,
-                        },
-                        ReturnValues="UPDATED_NEW"
-                        )
-
-                    response1 = table.scan(
-                        ProjectionExpression="organizations_created,organizations_joined",
-                        FilterExpression=Attr('email').eq(email)
-                    )
-
-
-                    #print(response1)
-                    #print('\n**\n')
-
-                    organizations_created=response1['Items'][0]['organizations_created']
-                    organizations_joined=response1['Items'][0]['organizations_joined']
-                    # print(organizations_created)
-                    # print(organizations_joined)
-                    total_org_ids=copy.deepcopy(organizations_created)
-                    for i in organizations_joined:
-                        total_org_ids.append(i)
-                    for i in range(0,len(response1['Items'][0]['organizations_joined'])):
-                        response1['Items'][0]['organizations_joined'][i] = int(response1['Items'][0]['organizations_joined'][i])
-                        org_join_id=response1['Items'][0]['organizations_joined']
-
-
-                    org_names=[]
-                    org_code=[]
-                    dynamoTable=dynamoDB.Table('organization')
-                    for i in total_org_ids:
-                        #print(type(int(i)))
-                        response1 = dynamoTable.scan(
-                            ProjectionExpression="organization_name,code",
-                            FilterExpression=Attr('org_id').eq(int(i))
-                        )
-                        org_names.append(response1['Items'][0]['organization_name'])
-                        org_code.append(response1['Items'][0]['code'])
-                        #print(org_names)
-                        organizations_created_names=[]
-                        organizations_joined_names=[]
-                        count=0
-                        for i in org_names:
-                            if(count>=len(organizations_created)):
-                                organizations_joined_names.append(i)
-                            else:
-                                organizations_created_names.append(i)
-                            count=count+1
-                    # print('a')
-                    # print(organizations_joined_names)
-                    # print('b')
-                    # print(organizations_created_names)
-                    # print('c')
-                    # print(organizations_created)
-                    # print('d')
-                    # print(organizations_joined)
-
-
-
-                    extra = (len(organizations_created)%4)-1
-                    data = {'topics' : zip(organizations_created_names,organizations_created,org_code), 'topics_created' : zip(organizations_joined_names,organizations_joined,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
-                    # print(request.session['org_created'])
-                    return render(request, 'orgadmin/dummy.html', data)
-
-
-
-                else:
-                    messages.add_message(request,messages.INFO, 'Organization with same name already exists, try with another name')
-
-                    print(messages)
-                    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                    # print(request.session['org_created'])
-                    #print('abc')
-                    #print(request.session['email'])
-                    email=request.session['email']
-
-                    dynamoDB=boto3.resource('dynamodb')
-                    dynamoTable=dynamoDB.Table('users')
-
-
-                    response = dynamoTable.scan(
-                        ProjectionExpression="organizations_created,organizations_joined",
-                        FilterExpression=Attr('email').eq(email)
-                    )
-
-                    # print(response)
-                    # print('\n**\n')
-
-                    organizations_created=response['Items'][0]['organizations_created']
-                    total_org_ids=copy.deepcopy(organizations_created)
-                    organizations_joined=response['Items'][0]['organizations_joined']
-                    for i in organizations_joined:
-                        total_org_ids.append(i)
-
-                    # print(total_org_ids)
-                    for i in range(0,len(response['Items'][0]['organizations_joined'])):
-                        response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
-                    org_join_id=response['Items'][0]['organizations_joined']
-
-
-                    org_names=[]
-                    org_code=[]
-                    dynamoTable=dynamoDB.Table('organization')
-                    for i in total_org_ids:
-                        print(type(int(i)))
-                        response = dynamoTable.scan(
-                            ProjectionExpression="organization_name,code",
-                            FilterExpression=Attr('org_id').eq(int(i))
-                        )
-                        print(response['Items'])
-                        org_names.append(response['Items'][0]['organization_name'])
-                        org_code.append(response['Items'][0]['code'])
-
+                    org_names.append(response1['Items'][0]['organization_name'])
+                    org_code.append(response1['Items'][0]['code'])
+                    #print(org_names)
                     organizations_created_names=[]
                     organizations_joined_names=[]
                     count=0
@@ -1079,25 +1002,101 @@ def created(request):
                         else:
                             organizations_created_names.append(i)
                         count=count+1
-                    #print(organizations_joined_names)
-                    #print(organizations_created_names)
-
-                    extra = (len(organizations_created)%4)-1
-                    data = {'topics' : zip(organizations_created_names,organizations_created,org_code), 'topics_created' : zip(organizations_joined_names,org_join_id,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
-                    # print('a')
-                    # print(organizations_joined_names)
-                    # print('b')
-                    # print(organizations_created_names)
-                    # print('c')
-                    # print(organizations_created)
-                    # print('d')
-                    # print(organizations_joined)
+                # print('a')
+                # print(organizations_joined_names)
+                # print('b')
+                # print(organizations_created_names)
+                # print('c')
+                # print(organizations_created)
+                # print('d')
+                # print(organizations_joined)
 
 
 
+                extra = (len(organizations_created)%4)-1
+                data = {'topics' : zip(organizations_created_names,organizations_created,org_code), 'topics_created' : zip(organizations_joined_names,organizations_joined,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+                # print(request.session['org_created'])
+                return render(request, 'orgadmin/dummy.html', data)
 
-                    return render(request, 'orgadmin/dummy.html', data)
 
+
+            else:
+                if(request.session['type']==1 and len(request.session['org_created'])>=2):
+                    messages.add_message(request,messages.INFO, 'Try premium to create more organizations. The maximum no.of organizations allowed is 2 for your current subscription.')
+                if(request.session['type']==2 and len(request.session['org_created'])>=5):
+                    messages.add_message(request,messages.INFO, 'Please make a call to us to customize. The maximum no.of organizations allowed is 5 for your current subscription.')
+                else:
+                    messages.add_message(request,messages.INFO, 'Organization with same name already exists, try with another name')
+
+
+                print(messages)
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                # print(request.session['org_created'])
+                #print('abc')
+                #print(request.session['email'])
+                email=request.session['email']
+
+                dynamoDB=boto3.resource('dynamodb')
+                dynamoTable=dynamoDB.Table('users')
+
+
+                response = dynamoTable.scan(
+                    ProjectionExpression="organizations_created,organizations_joined",
+                    FilterExpression=Attr('email').eq(email)
+                )
+
+                # print(response)
+                # print('\n**\n')
+
+                organizations_created=response['Items'][0]['organizations_created']
+                total_org_ids=copy.deepcopy(organizations_created)
+                organizations_joined=response['Items'][0]['organizations_joined']
+                for i in organizations_joined:
+                    total_org_ids.append(i)
+
+                # print(total_org_ids)
+                for i in range(0,len(response['Items'][0]['organizations_joined'])):
+                    response['Items'][0]['organizations_joined'][i] = int(response['Items'][0]['organizations_joined'][i])
+                org_join_id=response['Items'][0]['organizations_joined']
+
+
+                org_names=[]
+                org_code=[]
+                dynamoTable=dynamoDB.Table('organization')
+                for i in total_org_ids:
+                    print(type(int(i)))
+                    response = dynamoTable.scan(
+                        ProjectionExpression="organization_name,code",
+                        FilterExpression=Attr('org_id').eq(int(i))
+                    )
+                    print(response['Items'])
+                    org_names.append(response['Items'][0]['organization_name'])
+                    org_code.append(response['Items'][0]['code'])
+
+                organizations_created_names=[]
+                organizations_joined_names=[]
+                count=0
+                for i in org_names:
+                    if(count>=len(organizations_created)):
+                        organizations_joined_names.append(i)
+                    else:
+                        organizations_created_names.append(i)
+                    count=count+1
+                #print(organizations_joined_names)
+                #print(organizations_created_names)
+
+                extra = (len(organizations_created)%4)-1
+                data = {'topics' : zip(organizations_created_names,organizations_created,org_code), 'topics_created' : zip(organizations_joined_names,org_join_id,org_code), 'topics_size' : len(organizations_created), 'topics_created_size' : len(organizations_joined), 'extra_grid' : extra,}
+                # print('a')
+                # print(organizations_joined_names)
+                # print('b')
+                # print(organizations_created_names)
+                # print('c')
+                # print(organizations_created)
+                # print('d')
+                # print(organizations_joined)
+
+                return render(request, 'orgadmin/dummy.html', data)
 
 
 
