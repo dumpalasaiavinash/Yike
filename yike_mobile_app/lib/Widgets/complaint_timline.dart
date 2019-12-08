@@ -40,27 +40,27 @@ class _ComplaintTimlineState extends State<ComplaintTimline> {
             TimelineChild(
               color: Color.fromRGBO(123, 229, 187, 1),
               heading: "Complaint Recived",
-              date: "28 Oct 2019",
+              date: "7 Dec 2019",
             ),
             TimelineChild(
               color: Color.fromRGBO(123, 229, 187, 1),
               heading: "Complaint Forwarded to CCE",
-              date: "28 Oct 2019",
+              date: "8 Dec 2019",
             ),
             TimelineChild(
               color: Color.fromRGBO(123, 229, 187, 1),
               heading: "Complaint Recived by CCE",
-              date: "28 Oct 2019",
+              date: "8 Dec 2019",
             ),
             TimelineChild(
               color: Colors.black54,
               heading: "Yet to Assign to Agent",
-              date: "28 Oct 2019",
+              date: "9 Dec 2019",
             ),
             TimelineChild(
               color: Colors.black38,
               heading: "Estimated Completion",
-              date: "7 Nov 2019",
+              date: "11 Dec 2019",
               isLast: true,
             ),
             Container(margin:EdgeInsets.only(bottom: 16) ,),

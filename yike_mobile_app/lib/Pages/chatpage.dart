@@ -19,9 +19,8 @@ class Recived extends ListItem{
 
 class ChatPage extends StatelessWidget {
   List items=<ListItem>[
-    Sent(msg:"Hello There",time: "10:20",),
     Recived(msg: "Hello . How may i Help you ?", time: "10:21",),
-    Sent(msg:"yesterday I registered a complaint about my AC.So when are you going to resolve it",time:"10:22"),
+    Sent(msg:"yesterday I registered a complaint about my Redgear Controller.So when are you going to resolve it",time:"10:22"),
     Recived(msg:"Sorry for inconvince But We aleready processed your Request and technician will come to your house within next four hours",time: "10:22",),
     Sent(msg: "0k",time: "10:23",)
   ];
@@ -36,8 +35,8 @@ class ChatPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("Company Pvt. Ltd.", style: TextStyle(color: Colors.white,fontSize: 16),),
-          Text("Agent_name",style:TextStyle(fontSize: 12,color: Colors.white))
+          Text("Red Gear Pvt. Ltd.", style: TextStyle(color: Colors.white,fontSize: 16),),
+          Text("Sai Pranay raju",style:TextStyle(fontSize: 12,color: Colors.white))
         ],) ,
       ),
       body: ListView.builder(

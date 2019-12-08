@@ -1,40 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:yike_mobile_app/Pages/complaint_form_page.dart';
+import 'package:yike_mobile_app/Widgets/complint_form.dart';
 
 class AddComplaint extends StatelessWidget {
   List<OrgSearch> org = [
     OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
+        formId:"testform11",
+        orgName: "PixaBay",
         orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
+            "https://s3-ap-south-1.amazonaws.com/yike-s3/pixabay.png"),
     OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
+        formId:"testform12",
+        orgName: "hello",
         orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
+            "https://s3-ap-south-1.amazonaws.com/yike-s3/hello.png"),
     OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
+        formId:"testform13",
+        orgName: "IOTA",
         orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
-    OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
-        orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
-    OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
-        orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
-    OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
-        orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
-    OrgSearch(
-        orgName: "Amazon pvt. Ltd.",
-        orgLogo:
-            "https://www.clipartwiki.com/clipimg/detail/297-2971739_icon-amazon-logo-png.png"),
+            "https://s3-ap-south-1.amazonaws.com/yike-s3/IOTA.jpg"),
+    
   ];
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -61,9 +50,12 @@ class AddComplaint extends StatelessWidget {
         body: Column(
           children: <Widget>[
             Container(
-              color: Colors.blue,
+              color: Colors.indigo,
               margin: EdgeInsets.all(0),
-              child: TextFormField(
+              child: Container(
+                color: Colors.indigo,
+                margin: EdgeInsets.only(left: 16),
+                child:TextFormField(
                 decoration: InputDecoration(
                   hintText: "Search Orgnistaion here",
                   hintStyle: TextStyle(
@@ -71,14 +63,24 @@ class AddComplaint extends StatelessWidget {
                   ),
                   focusColor: Color.fromRGBO(255, 255, 255, 0.9),
 
-                ),
+                ),),
               ),
             ),
             Expanded(
               child: ListView.builder(
                 itemCount: org.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
+                  return InkWell(
+                      onLongPress: (){
+                        print("HELLO");
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Complaint_Form(formId: org[index].formId,)));},
+                      onDoubleTap: (){
+                        print("HELLO");
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Complaint_Form(formId: org[index].formId,)));}, 
+                      onTap: (){
+                        print("HELLO");
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Complaint_Form(formId: org[index].formId,)));},
+                      child:Card(
                     margin:
                         EdgeInsets.only(bottom: 4, top: 4, right: 16, left: 16),
                     color: Colors.white,
@@ -86,14 +88,15 @@ class AddComplaint extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: ListTile(
+                    child:
+                     ListTile(
                       onTap: () {},
                       title: OrgTile(
                         orgLogo: org[index].orgLogo,
                         orgName: org[index].orgName,
                       ),
                     ),
-                  );
+                  ));
                 },
               ),
             )
@@ -133,5 +136,6 @@ class OrgTile extends StatelessWidget {
 class OrgSearch {
   final String orgName;
   final String orgLogo;
-  OrgSearch({this.orgName, this.orgLogo});
+  final String formId;
+  OrgSearch({this.orgName, this.orgLogo, this.formId});
 }

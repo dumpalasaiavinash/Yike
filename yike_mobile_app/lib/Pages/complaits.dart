@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yike_mobile_app/Pages/add_complaint.dart';
@@ -39,27 +38,17 @@ class _ComplaintPageState extends State<ComplaintPage> {
     try {
       http.Response resp = await http.get(
           Uri.encodeFull(
-              "http://10.0.54.2:8000/api/getActiveComplaint/?format=json"),
+              "http://10.0.34.121:8000/complaints/?format=json"),
           headers: {
             'Authorization': await gettokken(),
             "Accept": "application/json"
-          }).timeout(Duration(seconds: 10));
+          }).timeout(Duration(seconds: 30));
       //print(resp.body);
       print(resp.statusCode);
       if (resp.statusCode == 200) {
-        print(resp.body);
-        if (resp.body == "{\"status\":203}"){
-          http.Response resp0 = await http.post(
-              "http://10.0.54.2:8000/api/refreshToken/?format=json",
-              headers: {"Content-type": "application/json"},
-              body: '{"refresh_token":"' + await getRefreshtokken() + '"}').timeout(Duration(seconds: 10));
-        print(resp0.statusCode);
-        if (resp0.statusCode == 200) {
-          print(resp0.body);
-        }
-      }
         data = json.decode(resp.body);
-        data.add(2);
+        print("Value of data");
+        print(data);
       }
     } on TimeoutException catch (_) {
       print("LOL0");
@@ -99,7 +88,6 @@ class _ComplaintPageState extends State<ComplaintPage> {
           ),
         ],
       ).show();
-      data.add(1);
     }
 
     return data;
@@ -108,6 +96,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   Future<List> getData2() async {
     print("al");
     Future<List> data = (await getData()) as Future<List>;
+    print(data);
     print("Failed");
     if (failed == true) {
       print("walla");
@@ -160,14 +149,14 @@ class _ComplaintPageState extends State<ComplaintPage> {
               ),
             ),
             body: FutureBuilder(
-              initialData: {},
-              future: getData2(),
+              initialData: {"data":"No problem"},
+              future: getData(),
               builder: (BuildContext context, AsyncSnapshot snap) {
                 print(snap.data);
-                if (snap.data != null) {
                   return ListView.builder(
                     itemCount: snap.data.length,
                     itemBuilder: (BuildContext context, int index) {
+                      
                       return ComplaintCard(
                         prob: snap.data[index]['prob'],
                         complN: snap.data[index]['compN'],
@@ -181,15 +170,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
                       );
                     },
                   );
-                } else if (snap.data == null) {
-                  return Center(
-                    child: Text(" No Complaint Found "),
-                  );
-                }
-                return Center(
-                  child: Text(" No Complaint Found "),
-                );
-              },
+              }
+              
             )),
       );
     else

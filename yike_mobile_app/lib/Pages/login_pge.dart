@@ -20,7 +20,7 @@ class LoginPage extends StatelessWidget {
     print(paSwd);
     print(eMail0);
     String eMail = emailController.text;
-    String url = 'http://10.0.54.2:8000/api/tokenpair/?format=json';
+    String url = 'http://10.0.34.121:8000/api/tokenpair/?format=json';
     Map<String, String> headers = {"Content-type": "application/json"};
     String json0 = '{"password": "' + paSwd + '", "email": "' + eMail + '"}';
     Response response = await post(url, headers: headers, body: json0);

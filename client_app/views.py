@@ -38,9 +38,6 @@ present_usermail = 0
 
 # Create your views here.
 def firstpage(request):
-
-  
-
     return render(request, 'client_app/first.html',{
         
     })
