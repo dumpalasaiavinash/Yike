@@ -139,6 +139,7 @@ def dashboard(request,j):
             if i%2 != 0:
                 list2.append(int(list1[0][i]))
         print(list2)
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         new_complaint=[]
         new_complaint_id=[]
         for i in range(0,len(response_disp_complaint['Items'])):
@@ -155,7 +156,49 @@ def dashboard(request,j):
         if (count_date==0):
             notification.append("High Priprity Complaints are completed, do the rest and make your organization proud")
         print(notification)
-        data={'complaint':zip(new_complaint,b,complaint_id),'count':len(new_complaint),'count_dealed':count_dealed,'count_date':count_date,'notification':notification,'org_id':j }
+
+        print(j)
+        print("@@@@@@@@@@@@@@@@@@@@@@@@")
+        dynamoDB=boto3.resource('dynamodb')
+        dynamoTable=dynamoDB.Table('ComplaintS')
+        response_juiors_stats = dynamoTable.scan(
+            ProjectionExpression="complaint_number",
+            FilterExpression = Attr('org_id').eq(str(j))
+        )
+        print(response_juiors_stats)
+        total_complaints=len(response_juiors_stats['Items'])
+        print(total_complaints)
+
+        dynamoDB=boto3.resource('dynamodb')
+        dynamoTable=dynamoDB.Table('ComplaintS')
+        response_juiors_left = dynamoTable.scan(
+            ProjectionExpression="complaint_number",
+            FilterExpression = Attr('org_id').eq(str(j)) & Attr('complaint_status').eq(0) 
+        )
+        print(response_juiors_left)
+        total_left=len(response_juiors_left['Items'])
+        print(total_left)
+
+        dynamoDB=boto3.resource('dynamodb')
+        dynamoTable=dynamoDB.Table('ComplaintS')
+        response_juiors_done = dynamoTable.scan(
+            ProjectionExpression="complaint_number",
+            FilterExpression = Attr('org_id').eq(str(j)) & Attr('complaint_status').eq(1) 
+        )
+        print(response_juiors_done)
+        total_done=len(response_juiors_done['Items'])
+        print(total_done)
+
+
+
+
+
+
+
+
+
+
+        data={'complaint':zip(new_complaint,b,complaint_id),'count':len(new_complaint),'count_dealed':count_dealed,'count_date':count_date,'notification':notification,'org_id':j,'total_done':total_done,'total_left':total_left,'total_complaints':total_complaints }
 
         return render(request, 'employee/index.html',data)
 
